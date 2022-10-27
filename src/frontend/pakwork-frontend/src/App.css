@@ -1,0 +1,27 @@
+.App {
+  text-align: center;
+}
+.solid-green-btn {
+  background-color: #006837 !important;
+  border-color: #006837 !important;
+  outline: none;
+}
+.solid-green-btn:hover {
+  background-color: #fff !important;
+  border-color: #006837 !important;
+  color: #006837 !important;
+  outline: none;
+}
+
+.hollow-green-btn {
+  background-color: #fff !important;
+  color: #006837 !important;
+  border-color: #006837 !important;
+  outline: none;
+}
+.hollow-green-btn:hover {
+  background-color: #006837 !important;
+  border-color: #006837 !important;
+  color: #fff !important;
+  outline: none;
+}
