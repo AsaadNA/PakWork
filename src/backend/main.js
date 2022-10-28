@@ -18,16 +18,6 @@ app.use("/api/v1/auth/", authRoutes);
 
 const authMiddleware = require("./middlewares/auth");
 
-/*
-app.get("/secret", authMiddleware, (req, res) => {
-  if (res.locals.payload.data.user_type === "freelancer") {
-    res.send("freelancer shhee");
-  } else {
-    res.send("ohh the clients...");
-  }
-});
-*/
-
 app.listen(process.env.MAIN_SERVER_PORT, (err) => {
   if (err) {
     logger.error(err.message);
