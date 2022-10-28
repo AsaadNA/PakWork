@@ -5,7 +5,7 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import logo from "../../assets/pakwork_logo.svg";
 
-import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
 
 const NavBar = () => {
@@ -51,7 +51,7 @@ const NavBar = () => {
             </Button>
             <Button
               style={{ marginLeft: "10px", fontWeight: "bold" }}
-              className="hollow-green-btn"
+              className="hollow-green-btn mt-1 mt-md-0"
             >
               Sell Your Services
             </Button>
