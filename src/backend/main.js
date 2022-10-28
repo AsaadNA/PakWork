@@ -5,6 +5,7 @@ const morgan = require("morgan"); //HTTP Logger
 const mongoose = require("mongoose");
 
 const authRoutes = require("./routes/auth.js");
+const profileRoutes = require("./routes/profile");
 
 dotenv.config();
 
@@ -14,9 +15,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/api/v1/auth/", authRoutes);
+app.use(express.static(__dirname + "/resources/"));
 
-const authMiddleware = require("./middlewares/auth");
+app.use("/api/v1/auth/", authRoutes);
+app.use("/api/v1/profile/", profileRoutes);
 
 app.listen(process.env.MAIN_SERVER_PORT, (err) => {
   if (err) {
