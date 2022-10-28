@@ -10,7 +10,7 @@ import "../../App.css";
 
 const NavBar = () => {
   return (
-    <Navbar collapseOnSelect expand="lg" bg="light" variant="light">
+    <Navbar collapseOnSelect expand="lg" className="nav-light" variant="light">
       <Container>
         <Navbar.Brand href="#home">
           <img src={logo} alt={logo} height="50px" width="150px"></img>

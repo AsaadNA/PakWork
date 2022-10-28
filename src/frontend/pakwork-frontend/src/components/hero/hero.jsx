@@ -8,7 +8,7 @@ import heroImage from "../../assets/pakwork_home1.svg";
 const Hero = () => {
   return (
     <Row
-      className="vh-100 d-flex justify-content-center align-items-center"
+      className="vh-100 d-flex justify-content-center align-items-center home-section"
       style={{ paddingBottom: "150px" }}
     >
       <Col md={6} className="search-box">

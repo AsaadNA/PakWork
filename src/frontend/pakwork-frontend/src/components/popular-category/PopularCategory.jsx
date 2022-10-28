@@ -1,6 +1,8 @@
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
 import { FaChevronRight } from "react-icons/fa";
+import "bootstrap/dist/css/bootstrap.css";
+import "../../App.css";
 
 const PopularCategory = () => {
   const Categories = [
@@ -38,51 +40,51 @@ const PopularCategory = () => {
     },
   ];
   return (
-    <Row className="vh-100">
-      <Row
-        className="p-1 d-flex justify-content-center align-items-center"
-        style={{ boxSizing: "border-box" }}
-      >
+    <Row className="vh-md-100 home-section">
+      <Col style={{ boxSizing: "border-box" }}>
         <h1
-          style={{ textAlign: "left", marginTop: "60px", fontWeight: "bold" }}
+          style={{ marginTop: "60px", fontWeight: "bold" }}
+          className="section-heading"
         >
           Popular Categories:
         </h1>
-        {Categories.map((Category) => {
-          return (
-            <Col md={6} lg={4} xl={3} class="m-1">
-              <Card
-                style={{ width: "100%", height: "190px" }}
-                className="category-card"
-              >
-                <Card.Body style={{ textAlign: "left" }}>
-                  <p
-                    style={{
-                      lineHeight: "5px",
-                      marginTop: "15px",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {Category.name}
-                  </p>
-                  <p> {Category.type}</p>
-                  <p
-                    className="explore-text"
-                    style={{
-                      marginTop: "60px",
-                      fontWeight: "bold",
-                      cursor: "pointer",
-                    }}
-                  >
-                    Explore
-                    <FaChevronRight className="chevron-icon-small"></FaChevronRight>
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-          );
-        })}
-      </Row>
+        <Row className="p-1">
+          {Categories.map((Category) => {
+            return (
+              <Col md={6} lg={4} xl={3}>
+                <Card
+                  style={{ width: "100%", height: "190px" }}
+                  className="category-card m-1"
+                >
+                  <Card.Body style={{ textAlign: "left" }}>
+                    <p
+                      style={{
+                        lineHeight: "5px",
+                        marginTop: "15px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {Category.name}
+                    </p>
+                    <p> {Category.type}</p>
+                    <p
+                      className="explore-text"
+                      style={{
+                        marginTop: "60px",
+                        fontWeight: "bold",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Explore
+                      <FaChevronRight className="chevron-icon-small"></FaChevronRight>
+                    </p>
+                  </Card.Body>
+                </Card>
+              </Col>
+            );
+          })}
+        </Row>
+      </Col>
     </Row>
   );
 };

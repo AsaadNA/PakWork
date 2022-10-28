@@ -1,6 +1,9 @@
 .App {
   text-align: center;
 }
+.nav-light {
+  background-color: #fff !important;
+}
 .solid-green-btn {
   background-color: #006837 !important;
   border-color: #006837 !important;
@@ -49,24 +52,6 @@
   text-align: start;
   flex-direction: column;
 }
-@media (max-width: 767.98px) {
-  .search-bar {
-    width: 100%;
-  }
-  .search-green-btn {
-    width: 50%;
-  }
-  .search-box {
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center;
-  }
-}
-@media (max-width: 499px) {
-  .searched-items {
-    display: none;
-  }
-}
 
 .searched-item {
   border-radius: 15px;
@@ -99,9 +84,70 @@
   transition: 0.3s all;
 }
 .explore-text:hover .chevron-icon-small {
-  
   margin-left: 3px;
 }
 .chevron-icon-small:hover {
   margin-left: 3px;
+}
+.vh-md-100 {
+  height: 100vh !important;
+}
+.section-heading {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dark-section {
+  background-color: #006837;
+}
+@media (max-width: 767.98px) {
+  .search-bar {
+    width: 100%;
+  }
+  .search-green-btn {
+    width: 50%;
+  }
+  .search-box {
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center;
+  }
+
+  .section-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .section-text {
+    padding-left: 10px;
+  }
+  .vh-md-100 {
+    height: 100% !important;
+    display: flex !important;
+    justify-content: start !important;
+    align-items: center !important;
+    flex-direction: column !important;
+  }
+}
+@media (max-width: 1200px) {
+  .vh-md-100 {
+    height: 100% !important;
+    display: flex !important;
+    justify-content: start !important;
+    align-items: start !important;
+    flex-direction: column !important;
+  }
+}
+@media (max-width: 499px) {
+  .searched-items {
+    display: none;
+  }
+}
+@media (min-width: 1024px) {
+  .home-section {
+    padding-left: 7em !important;
+    padding-right: 7em !important;
+  }
 }
