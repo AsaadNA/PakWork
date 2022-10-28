@@ -37,6 +37,7 @@ const Promotional = () => {
             fontWeight: "bold",
             fontSize: "1.05em",
             lineHeight: "25px",
+            paddingLeft: "1rem !important",
           }}
         >
           <li>

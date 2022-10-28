@@ -33,7 +33,7 @@ const Footer = () => {
                   <div className="footer-widget-heading">
                     <h3>Useful Links</h3>
                   </div>
-                  <ul>
+                  <ul className="footer-links">
                     <li>
                       <a href="#">Home</a>
                     </li>
