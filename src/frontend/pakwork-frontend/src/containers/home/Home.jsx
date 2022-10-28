@@ -6,6 +6,7 @@ import PopularCategory from "../../components/popular-category/PopularCategory";
 import Promotional from "../../components/promotional-hero/promotional";
 import HowItWorks from "../../components/how-it-works/HowItWorks";
 import Footer from "../../components/footer/Footer";
+import { Element } from "react-scroll";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
@@ -15,10 +16,18 @@ const Home = () => {
     <>
       <NavBar></NavBar>
       <Container fluid>
-        <Hero></Hero>
-        <PopularCategory></PopularCategory>
-        <Promotional></Promotional>
-        <HowItWorks></HowItWorks>
+        <Element>
+          <Hero></Hero>
+        </Element>
+        <Element name="popular-categories">
+          <PopularCategory></PopularCategory>
+        </Element>
+        <Element name="pakwork-promo">
+          <Promotional></Promotional>
+        </Element>
+        <Element name="how-it-works">
+          <HowItWorks></HowItWorks>
+        </Element>
       </Container>
       <Footer></Footer>
     </>

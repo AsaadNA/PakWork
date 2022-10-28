@@ -4,6 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import logo from "../../assets/pakwork_logo.svg";
+import { Link } from "react-scroll";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
@@ -18,27 +19,39 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link
-              href="#how-it-works"
-              className="text-dark"
-              style={{ fontWeight: "bold " }}
-            >
-              How it works?
+            <Nav.Link className="text-dark" style={{ fontWeight: "bold " }}>
+              <Link
+                to="how-it-works"
+                spy={true}
+                smooth={true}
+                offset={50}
+                duration={500}
+              >
+                How it works?
+              </Link>
             </Nav.Link>
-            <Nav.Link
-              href="#categories"
-              className="text-dark"
-              style={{ fontWeight: "bold " }}
-            >
-              Browser Categories
+            <Nav.Link className="text-dark" style={{ fontWeight: "bold " }}>
+              <Link
+                to="popular-categories"
+                spy={true}
+                smooth={true}
+                duration={500}
+              >
+                Browser Categories
+              </Link>
             </Nav.Link>
           </Nav>
           <Nav>
-            <Nav.Link
-              href="#organization"
-              style={{ fontWeight: "bold", color: "#006837" }}
-            >
-              Pakwork For Organizations
+            <Nav.Link style={{ fontWeight: "bold", color: "#006837" }}>
+              <Link
+                to="pakwork-promo"
+                spy={true}
+                smooth={true}
+                offset={50}
+                duration={500}
+              >
+                Pakwork For Organizations
+              </Link>
             </Nav.Link>
             <Nav.Link className="text-dark" style={{ fontWeight: "bold" }}>
               Sign In
