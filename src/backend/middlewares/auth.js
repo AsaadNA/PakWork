@@ -7,7 +7,12 @@ const verifyToken = (req, res, next) => {
   } else {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      res.locals.payload = decoded;
+      res.locals.userType = decoded.data.user_type;
+      res.locals.userID =
+        decoded.data.freelancer_id ||
+        decoded.data.client_id ||
+        decoded.data.company_client_id ||
+        decoded.data.admin_id;
     } catch (err) {
       return res.status(401).send("Invalid token");
     }

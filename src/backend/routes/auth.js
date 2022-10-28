@@ -1,5 +1,4 @@
 const express = require("express");
-const router = express.Router();
 const randtoken = require("rand-token");
 
 const db = require("../configs/database");
@@ -9,6 +8,8 @@ const generateEmailVerification =
   require("../common/helper").generateEmailVerification;
 
 const emailVerificationSchema = require("../models/emailVerification");
+
+const router = express.Router();
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
