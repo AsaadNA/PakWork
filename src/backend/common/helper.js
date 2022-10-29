@@ -93,4 +93,7 @@ const generateEmailVerification = (res, data) => {
   });
 };
 
-module.exports = { returnLoginPayloadResponse, generateEmailVerification };
+module.exports = {
+  returnLoginPayloadResponse,
+  generateEmailVerification,
+};

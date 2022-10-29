@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
+const uploadRoutes = require("./routes/upload");
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.use(express.static(__dirname + "/resources/"));
 
 app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/profile/", profileRoutes);
+app.use("/api/v1/upload/", uploadRoutes);
 
 app.listen(process.env.MAIN_SERVER_PORT, (err) => {
   if (err) {
