@@ -29,20 +29,12 @@ CREATE TABLE `administrator` (
   `username` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT 'admin',
   PRIMARY KEY (`admin_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `administrator`
---
-
-LOCK TABLES `administrator` WRITE;
-/*!40000 ALTER TABLE `administrator` DISABLE KEYS */;
-/*!40000 ALTER TABLE `administrator` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `client`
@@ -59,25 +51,20 @@ CREATE TABLE `client` (
   `email` varchar(45) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
-  `phone_number` varchar(11) DEFAULT NULL,
+  `phone_number` varchar(40) DEFAULT NULL,
   `region` varchar(45) DEFAULT NULL,
   `country` varchar(45) DEFAULT NULL,
-  `registration_date` date DEFAULT NULL,
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `user_type` varchar(45) DEFAULT 'client',
+  `is_active` tinyint(1) DEFAULT '0',
+  `is_verified` tinyint(1) DEFAULT '0',
+  `state` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`client_id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `phone_number_UNIQUE` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `client`
---
-
-LOCK TABLES `client` WRITE;
-/*!40000 ALTER TABLE `client` DISABLE KEYS */;
-/*!40000 ALTER TABLE `client` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `company_client`
@@ -91,26 +78,17 @@ CREATE TABLE `company_client` (
   `email` varchar(45) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
   `company_name` varchar(45) DEFAULT NULL,
-  `company_website` varchar(45) DEFAULT NULL,
-  `industry_name` varchar(45) DEFAULT NULL,
-  `employeed_range` varchar(45) DEFAULT NULL,
-  `registration_date` date DEFAULT NULL,
-  `phone_number` varchar(11) DEFAULT NULL,
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `phone_number` varchar(40) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT 'company_client',
+  `is_active` tinyint(1) DEFAULT '0',
+  `is_verified` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`company_client_id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `phone_number_UNIQUE` (`phone_number`),
   UNIQUE KEY `company_name_UNIQUE` (`company_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `company_client`
---
-
-LOCK TABLES `company_client` WRITE;
-/*!40000 ALTER TABLE `company_client` DISABLE KEYS */;
-/*!40000 ALTER TABLE `company_client` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `freelancer`
@@ -127,28 +105,21 @@ CREATE TABLE `freelancer` (
   `email` varchar(45) DEFAULT NULL,
   `password` varchar(45) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
-  `phone_number` varchar(11) DEFAULT NULL,
+  `phone_number` varchar(40) DEFAULT NULL,
   `region` varchar(45) DEFAULT NULL,
   `country` varchar(45) DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT NULL,
-  `is_verified` tinyint(1) DEFAULT NULL,
-  `registration_date` date DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `is_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `user_type` varchar(45) DEFAULT 'freelancer',
+  `state` varchar(45) DEFAULT NULL,
+  `resubmit_verification` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`freelancer_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `phone_number_UNIQUE` (`phone_number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `freelancer`
---
-
-LOCK TABLES `freelancer` WRITE;
-/*!40000 ALTER TABLE `freelancer` DISABLE KEYS */;
-INSERT INTO `freelancer` VALUES ('0','Ahsan','Tahseen','TnTBoy','tntboy69@@gmail.com','1234','Male','03223389933','Asia','Pakistan',0,0,NULL),('1','Asaad','Abbasi','AsaadNA','asaad.abbasi@gmail.com','1234','Male','03222666528','Asia','Pakistan',0,0,NULL);
-/*!40000 ALTER TABLE `freelancer` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `gigs`
@@ -172,15 +143,6 @@ CREATE TABLE `gigs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `gigs`
---
-
-LOCK TABLES `gigs` WRITE;
-/*!40000 ALTER TABLE `gigs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `gigs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `gigs_images`
 --
 
@@ -190,49 +152,12 @@ DROP TABLE IF EXISTS `gigs_images`;
 CREATE TABLE `gigs_images` (
   `image_id` varchar(45) NOT NULL,
   `gig_id` varchar(45) DEFAULT NULL,
-  `image` longblob,
+  `image` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`image_id`),
   KEY `gigs_images_gig_id_idx` (`gig_id`),
   CONSTRAINT `gigs_images_gig_id` FOREIGN KEY (`gig_id`) REFERENCES `gigs` (`gig_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `gigs_images`
---
-
-LOCK TABLES `gigs_images` WRITE;
-/*!40000 ALTER TABLE `gigs_images` DISABLE KEYS */;
-/*!40000 ALTER TABLE `gigs_images` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `gigs_packages`
---
-
-DROP TABLE IF EXISTS `gigs_packages`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gigs_packages` (
-  `package_id` varchar(45) NOT NULL,
-  `gig_id` varchar(45) DEFAULT NULL,
-  `title` varchar(45) DEFAULT NULL,
-  `details` varchar(150) DEFAULT NULL,
-  `price` int DEFAULT NULL,
-  PRIMARY KEY (`package_id`),
-  KEY `gigs_packages_gig_id_idx` (`gig_id`),
-  CONSTRAINT `gigs_packages_gig_id` FOREIGN KEY (`gig_id`) REFERENCES `gigs` (`gig_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `gigs_packages`
---
-
-LOCK TABLES `gigs_packages` WRITE;
-/*!40000 ALTER TABLE `gigs_packages` DISABLE KEYS */;
-/*!40000 ALTER TABLE `gigs_packages` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `jobs`
@@ -260,15 +185,6 @@ CREATE TABLE `jobs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `jobs`
---
-
-LOCK TABLES `jobs` WRITE;
-/*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `jobs_attached_files`
 --
 
@@ -278,21 +194,12 @@ DROP TABLE IF EXISTS `jobs_attached_files`;
 CREATE TABLE `jobs_attached_files` (
   `attached_files_id` varchar(45) NOT NULL,
   `job_id` varchar(45) DEFAULT NULL,
-  `file` longblob,
+  `file` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`attached_files_id`),
   KEY `jobs_attached_files_job_id_idx` (`job_id`),
   CONSTRAINT `jobs_attached_files_job_id` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `jobs_attached_files`
---
-
-LOCK TABLES `jobs_attached_files` WRITE;
-/*!40000 ALTER TABLE `jobs_attached_files` DISABLE KEYS */;
-/*!40000 ALTER TABLE `jobs_attached_files` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `order_files`
@@ -304,21 +211,12 @@ DROP TABLE IF EXISTS `order_files`;
 CREATE TABLE `order_files` (
   `file_id` varchar(45) NOT NULL,
   `order_id` varchar(45) DEFAULT NULL,
-  `file` longblob,
+  `file` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`file_id`),
   KEY `order_files_order_id_idx` (`order_id`),
   CONSTRAINT `order_files_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_files`
---
-
-LOCK TABLES `order_files` WRITE;
-/*!40000 ALTER TABLE `order_files` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_files` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `order_revisions`
@@ -335,15 +233,6 @@ CREATE TABLE `order_revisions` (
   CONSTRAINT `order_revisions_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `order_revisions`
---
-
-LOCK TABLES `order_revisions` WRITE;
-/*!40000 ALTER TABLE `order_revisions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `order_revisions` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `orders`
@@ -376,15 +265,6 @@ CREATE TABLE `orders` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `orders`
---
-
-LOCK TABLES `orders` WRITE;
-/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `profile`
 --
 
@@ -402,19 +282,16 @@ CREATE TABLE `profile` (
   `secondary` varchar(45) DEFAULT NULL,
   `higher_secondary` varchar(45) DEFAULT NULL,
   `year_experience` int DEFAULT NULL,
-  `cv` longblob,
+  `cv` varchar(300) DEFAULT NULL,
+  `company_website` varchar(45) DEFAULT NULL,
+  `industry_name` varchar(45) DEFAULT NULL,
+  `employeed_range` varchar(45) DEFAULT NULL,
+  `github_link` varchar(45) DEFAULT NULL,
+  `linkedin_link` varchar(45) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`profile_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `profile`
---
-
-LOCK TABLES `profile` WRITE;
-/*!40000 ALTER TABLE `profile` DISABLE KEYS */;
-/*!40000 ALTER TABLE `profile` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `verification_images`
@@ -425,23 +302,13 @@ DROP TABLE IF EXISTS `verification_images`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `verification_images` (
   `image_id` varchar(45) NOT NULL,
-  `image` longblob,
+  `image` varchar(300) DEFAULT NULL,
   `freelancer_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`image_id`),
   KEY `freelancer_id_idx` (`freelancer_id`),
   CONSTRAINT `verification_images_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `verification_images`
---
-
-LOCK TABLES `verification_images` WRITE;
-/*!40000 ALTER TABLE `verification_images` DISABLE KEYS */;
-INSERT INTO `verification_images` VALUES ('0',NULL,'0'),('1',NULL,'0'),('2',NULL,'1');
-/*!40000 ALTER TABLE `verification_images` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -452,4 +319,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-23 23:38:43
+-- Dump completed on 2022-10-30 12:43:38
