@@ -24,7 +24,7 @@ const Promotional = () => {
               whiteSpace: "pre",
               textAlign: "left",
               fontWeight: "bold",
-              fontSize: "1.4em",
+              fontSize: "18px",
               lineHeight: "30px",
             }}
           >
@@ -36,7 +36,7 @@ const Promotional = () => {
             textAlign: "left",
             whiteSpace: "pre",
             fontWeight: "bold",
-            fontSize: "1.05em",
+            fontSize: "15px",
             lineHeight: "25px",
             paddingLeft: "1rem !important",
           }}
@@ -46,13 +46,18 @@ const Promotional = () => {
           </li>
           <li className="my-1">{`Advanced Statistics for better\ncomparasions`}</li>
           <li>
-            {`Manage teamwork and boost productivity\nwith one powerful workspace`}
+            {`Manage teamwork and boost \nproductivity with one powerful \nworkspace`}
           </li>
         </ul>
-        <Link to="/signup/organization" style={{ textDecoration: "none" }}>
+
+        <Link
+          to="/signup/organization"
+          style={{ textDecoration: "none" }}
+          className="promotional-hero-link"
+        >
           <Button
             variant={"success"}
-            className="w-50 mt-3 d-block"
+            className="w-50 mt-3 mb-2 d-block"
             style={{ borderRadius: "20px" }}
           >
             Get Started 🚀
