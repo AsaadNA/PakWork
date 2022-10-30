@@ -1,5 +1,5 @@
 * {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 .App {
   text-align: center;
@@ -104,6 +104,47 @@
 .dark-section {
   background-color: #006837;
 }
+.login-image-container {
+  border-right: 1px solid rgba(31, 29, 33, 0.1);
+}
+.pakwork-background-green {
+  background-image: url("./assets/signup_background_green.svg");
+  background-size: cover;
+  background-position: right top;
+  background-color: #023430;
+}
+.pakwork-background-blue {
+  background-image: url("./assets/signup_background_blue.svg");
+  background-size: cover;
+  background-position: right top;
+  background-color: #192a56;
+}
+.pakwork-background-red {
+  background-image: url("./assets/signup_background_red.svg");
+  background-size: cover;
+  background-position: right top;
+  background-color: #c23616;
+}
+.react-tel-input .form-control {
+  width: 100% !important;
+}
+.blue-text {
+  color: #192a56 !important;
+}
+.blue-btn {
+  background-color: #192a56 !important;
+  outline: none !important;
+  border: 0 !important;
+}
+.red-text {
+  color: #c23616 !important;
+}
+.red-btn {
+  background-color: #c23616 !important;
+  outline: none !important;
+  border: 0 !important;
+}
+
 @media (max-width: 767.98px) {
   .search-bar {
     width: 100%;
@@ -145,6 +186,9 @@
 }
 @media (max-width: 499px) {
   .searched-items {
+    display: none;
+  }
+  .login-image-container {
     display: none;
   }
 }

@@ -46,6 +46,12 @@ const Footer = () => {
                     <li>
                       <a href="#">How does Pakwork actually work?</a>
                     </li>
+                    <li>
+                      <a href="#">Help & Support</a>
+                    </li>
+                    <li>
+                      <a href="#">How to become a freelancer at Pakwork?</a>
+                    </li>
                   </ul>
                 </div>
               </div>

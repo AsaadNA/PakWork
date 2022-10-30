@@ -1,5 +1,6 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import PakworkPlus from "../../assets/pakwork_logo_plus.svg";
 import PakworkPlusHome from "../../assets/pakwork_plus_home.svg";
 import "bootstrap/dist/css/bootstrap.css";
@@ -48,6 +49,15 @@ const Promotional = () => {
             {`Manage teamwork and boost productivity\nwith one powerful workspace`}
           </li>
         </ul>
+        <Link to="/signup/organization" style={{ textDecoration: "none" }}>
+          <Button
+            variant={"success"}
+            className="w-50 mt-3 d-block"
+            style={{ borderRadius: "20px" }}
+          >
+            Get Started 🚀
+          </Button>
+        </Link>
       </Col>
       <Col md={6}>
         <img

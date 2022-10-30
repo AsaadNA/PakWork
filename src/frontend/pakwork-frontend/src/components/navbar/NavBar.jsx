@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useContext } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import logo from "../../assets/pakwork_logo.svg";
+import { ShowLoginModalContext } from "../../contexts/ModalContext";
 import { Link } from "react-scroll";
+import { Link as RouterLink } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
 
 const NavBar = () => {
+  const { handleShowLogin } = useContext(ShowLoginModalContext);
+
   return (
     <Navbar collapseOnSelect expand="lg" className="nav-light" variant="light">
       <Container>
@@ -53,21 +57,32 @@ const NavBar = () => {
                 Pakwork For Organizations
               </Link>
             </Nav.Link>
-            <Nav.Link className="text-dark" style={{ fontWeight: "bold" }}>
+            <Nav.Link
+              className="text-dark"
+              style={{ fontWeight: "bold" }}
+              onClick={handleShowLogin}
+            >
               Sign In
             </Nav.Link>
-            <Button
-              style={{ marginLeft: "10px", fontWeight: "bold" }}
-              className="solid-green-btn"
+            <RouterLink to="/signup/client" style={{ textDecoration: "none" }}>
+              <Button
+                style={{ marginLeft: "10px", fontWeight: "bold" }}
+                className="solid-green-btn"
+              >
+                Post a Job
+              </Button>
+            </RouterLink>
+            <RouterLink
+              to="/signup/freelancer"
+              style={{ textDecoration: "none" }}
             >
-              Post a Job
-            </Button>
-            <Button
-              style={{ marginLeft: "10px", fontWeight: "bold" }}
-              className="hollow-green-btn mt-1 mt-md-0"
-            >
-              Sell Your Services
-            </Button>
+              <Button
+                style={{ marginLeft: "10px", fontWeight: "bold" }}
+                className="hollow-green-btn mt-1 mt-md-0"
+              >
+                Sell Your Services
+              </Button>
+            </RouterLink>
           </Nav>
         </Navbar.Collapse>
       </Container>

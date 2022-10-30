@@ -42,7 +42,7 @@ const HowItWorks = () => {
         <Row className="p-1">
           {Steps.map((Step) => {
             return (
-              <Col md={6} lg={4} xl={3} class="m-1">
+              <Col md={6} lg={4} xl={3} className="mb-1">
                 <Card style={{ width: "100%" }} className="category-card m-1">
                   <Card.Img
                     variant="top"
