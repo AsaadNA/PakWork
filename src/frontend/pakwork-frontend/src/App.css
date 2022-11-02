@@ -1,6 +1,7 @@
 * {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
+
 .App {
   text-align: center;
 }
@@ -112,18 +113,21 @@
   background-size: cover;
   background-position: right top;
   background-color: #023430;
+  overflow-y: scroll;
 }
 .pakwork-background-blue {
   background-image: url("./assets/signup_background_blue.svg");
   background-size: cover;
   background-position: right top;
   background-color: #192a56;
+  overflow-y: scroll;
 }
 .pakwork-background-red {
   background-image: url("./assets/signup_background_red.svg");
   background-size: cover;
   background-position: right top;
   background-color: #c23616;
+  overflow-y: scroll;
 }
 .react-tel-input .form-control {
   width: 100% !important;

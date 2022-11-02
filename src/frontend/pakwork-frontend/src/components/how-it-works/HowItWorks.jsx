@@ -31,7 +31,7 @@ const HowItWorks = () => {
     },
   ];
   return (
-    <Row className="vh-md-100 home-section">
+    <Row className="vh-md-100 home-section mb-5">
       <Col style={{ boxSizing: "border-box" }}>
         <h1
           style={{ marginTop: "60px", fontWeight: "bold" }}
@@ -57,7 +57,7 @@ const HowItWorks = () => {
                         lineHeight: "5px",
                         marginTop: "15px",
                         fontWeight: "bold",
-                        fontSize: "20px",
+                        fontSize: "19px",
                       }}
                     >
                       {Step.name}

@@ -99,16 +99,7 @@ const OrganizationalClient = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">
-                  <Form.Group as={Col} md={4} controlId="formGridGender">
-                    <Form.Label>Type Of Organization</Form.Label>
-                    <Select
-                      options={genders}
-                      placeholder="Select Type"
-                      value={companyType}
-                      onChange={(value) => setCompanyType(value)}
-                    />
-                  </Form.Group>
-                  <Form.Group as={Col} md={4} controlId="formGridRegion">
+                  <Form.Group as={Col} md={6} controlId="formGridRegion">
                     <Form.Label>Region</Form.Label>
                     <Select
                       options={regions}
@@ -117,7 +108,7 @@ const OrganizationalClient = () => {
                       onChange={(value) => setRegion(value)}
                     />
                   </Form.Group>
-                  <Form.Group as={Col} md={4} controlId="formGridCountry">
+                  <Form.Group as={Col} md={6} controlId="formGridCountry">
                     <Form.Label>Country</Form.Label>
                     <Select
                       options={countries}

@@ -95,7 +95,7 @@ const RegularClient = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">
-                  <Form.Group as={Col} md={4} controlId="formGridGender">
+                  <Form.Group as={Col} md={12} controlId="formGridGender">
                     <Form.Label>Gender</Form.Label>
                     <Select
                       options={genders}
@@ -104,6 +104,8 @@ const RegularClient = () => {
                       onChange={(value) => setGender(value)}
                     />
                   </Form.Group>
+                </Row>
+                <Row className="mt-2">
                   <Form.Group as={Col} md={4} controlId="formGridRegion">
                     <Form.Label>Region</Form.Label>
                     <Select
@@ -122,8 +124,17 @@ const RegularClient = () => {
                       onChange={(value) => setCountry(value)}
                     />
                   </Form.Group>
+                  <Form.Group as={Col} md={4} controlId="formGridState">
+                    <Form.Label>State</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter State/Province"
+                      required
+                    ></Form.Control>
+                    <Form.Text>Preferred Official Names</Form.Text>
+                  </Form.Group>
                 </Row>
-                <Row className="mt-3">
+                <Row className="mt-1">
                   <Form.Group as={Col} md={6} controlId="formGridEmail">
                     <Form.Label>Email Address</Form.Label>
                     <Form.Control

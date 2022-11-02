@@ -58,7 +58,7 @@ const Freelancer = () => {
   return (
     <Container fluid className="pakwork-background-green vh-md-100">
       <Row className="d-flex justify-content-center align-items-center flex-column">
-        <Col md={12} className="mt-3 mb-3 mt-xl-4">
+        <Col md={12} className="mt-1 mb-3 mt-xl-4">
           <img src={PakworkLogo} alt={PakworkLogo} width={250}></img>
           <p className="text-light h6">Trusted By Freelancers</p>
         </Col>
@@ -95,7 +95,7 @@ const Freelancer = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">
-                  <Form.Group as={Col} md={4} controlId="formGridGender">
+                  <Form.Group as={Col} md={12} controlId="formGridGender">
                     <Form.Label>Gender</Form.Label>
                     <Select
                       options={genders}
@@ -104,6 +104,8 @@ const Freelancer = () => {
                       onChange={(value) => setGender(value)}
                     />
                   </Form.Group>
+                </Row>
+                <Row className="mt-3">
                   <Form.Group as={Col} md={4} controlId="formGridRegion">
                     <Form.Label>Region</Form.Label>
                     <Select
@@ -122,8 +124,17 @@ const Freelancer = () => {
                       onChange={(value) => setCountry(value)}
                     />
                   </Form.Group>
+                  <Form.Group as={Col} md={4} controlId="formGridState">
+                    <Form.Label>State</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter State/Province"
+                      required
+                    ></Form.Control>
+                    <Form.Text>Preferred Legal Names</Form.Text>
+                  </Form.Group>
                 </Row>
-                <Row className="mt-3">
+                <Row className="mt-1">
                   <Form.Group as={Col} md={6} controlId="formGridEmail">
                     <Form.Label>Email Address</Form.Label>
                     <Form.Control
@@ -155,7 +166,7 @@ const Freelancer = () => {
                     </Form.Text>
                   </Form.Group>
                 </Row>
-                <Row className="mt-3">
+                <Row className="mt-2">
                   <Form.Group as={Col} md={6} controlId="formGridUsername">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
