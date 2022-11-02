@@ -165,8 +165,9 @@ router.post("/register/:userType", (req, res) => {
       }
     });
   } else if (userType === "company-client") {
-    const { email, password, company_name, phone_number } = req.body;
-    let query = `INSERT INTO company_client(company_client_id,email,password,company_name,phone_number) VALUES ("${generatedID}","${email}","${password}","${company_name}","${phone_number}");`;
+    const { email, password, company_name, phone_number, country, region } =
+      req.body;
+    let query = `INSERT INTO company_client(company_client_id,email,password,company_name,phone_number,country,region) VALUES ("${generatedID}","${email}","${password}","${company_name}","${phone_number}","${country}","${region}");`;
     db.query(query, (e, r, f) => {
       if (e) {
         res.status(400).send({

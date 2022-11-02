@@ -83,6 +83,8 @@ CREATE TABLE `company_client` (
   `user_type` varchar(45) DEFAULT 'company_client',
   `is_active` tinyint(1) DEFAULT '0',
   `is_verified` tinyint(1) DEFAULT '0',
+  `country` varchar(45) DEFAULT NULL,
+  `region` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`company_client_id`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `phone_number_UNIQUE` (`phone_number`),
@@ -278,7 +280,7 @@ CREATE TABLE `profile` (
   `degree` varchar(50) DEFAULT NULL,
   `degree_period` varchar(45) DEFAULT NULL,
   `company` varchar(45) DEFAULT NULL,
-  `profile_picture` longblob,
+  `profile_picture` varchar(300) DEFAULT NULL,
   `secondary` varchar(45) DEFAULT NULL,
   `higher_secondary` varchar(45) DEFAULT NULL,
   `year_experience` int DEFAULT NULL,
@@ -289,6 +291,7 @@ CREATE TABLE `profile` (
   `github_link` varchar(45) DEFAULT NULL,
   `linkedin_link` varchar(45) DEFAULT NULL,
   `user_type` varchar(45) DEFAULT NULL,
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`profile_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -309,6 +312,14 @@ CREATE TABLE `verification_images` (
   CONSTRAINT `verification_images_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping events for database 'pakwork'
+--
+
+--
+-- Dumping routines for database 'pakwork'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -319,4 +330,4 @@ CREATE TABLE `verification_images` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-10-30 12:43:38
+-- Dump completed on 2022-11-02 16:40:24
