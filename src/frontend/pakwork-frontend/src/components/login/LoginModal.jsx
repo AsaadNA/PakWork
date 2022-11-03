@@ -1,14 +1,49 @@
-import React, { useContext, useEffect } from "react";
-import { Button, Modal, Form, Row, Container, Col } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import {
+  Button,
+  Modal,
+  Form,
+  Row,
+  Container,
+  Col,
+  Alert,
+} from "react-bootstrap";
 import { ShowLoginModalContext } from "../../contexts/ModalContext";
 import PakworkPlusHome from "../../assets/pakwork_plus_home.svg";
 import PakworkLogo from "../../assets/pakwork_logo.svg";
+import axios from "../../Api/Api";
 
 const LoginModal = () => {
   const { showLogin, handleCloseLogin } = useContext(ShowLoginModalContext);
-  useEffect(() => {
-    console.log(showLogin);
-  }, [showLogin]);
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [loading, setloading] = useState(false);
+  const [showAlert, setshowAlert] = useState(false);
+  const [AlertMessage, setAlertMessage] = useState("");
+  const [AlertType, setAlertType] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log({
+      email: email,
+      passsword: password,
+    });
+    try {
+      let response = await axios.post("/auth/login", {
+        email: email,
+        passsword: password,
+      });
+      console.log(response);
+      setshowAlert(true);
+      setAlertMessage(response.data.message);
+      setAlertType("success");
+    } catch (error) {
+      console.log(error);
+      setshowAlert(true);
+      setAlertMessage(error.response.data.error);
+      setAlertType("danger");
+    }
+  };
 
   return (
     <>
@@ -31,12 +66,18 @@ const LoginModal = () => {
                 <h3 style={{ color: "#198754", fontWeight: "bold" }}>
                   Sign In To Continue
                 </h3>
-                <Form>
+                <Alert key={"1"} variant={AlertType} show={showAlert}>
+                  {AlertMessage}
+                </Alert>
+                <Form onSubmit={handleSubmit}>
                   <Form.Group className="mb-3">
                     <Form.Label>Email Address</Form.Label>
                     <Form.Control
                       type="email"
                       placeholder="Enter email"
+                      value={email}
+                      onChange={(e) => setemail(e.target.value)}
+                      required
                     ></Form.Control>
                     <Form.Text className="text-muted">
                       PakWork ensures complete privacy of it's users
@@ -47,11 +88,15 @@ const LoginModal = () => {
                     <Form.Control
                       type="password"
                       placeholder="Enter password"
+                      value={password}
+                      onChange={(e) => setpassword(e.target.value)}
+                      required
                     ></Form.Control>
                   </Form.Group>
                   <Button
                     variant="success"
                     className="w-100 mt-3"
+                    disabled={loading}
                     type="submit"
                   >
                     Sign In
