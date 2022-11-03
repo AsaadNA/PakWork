@@ -29,19 +29,28 @@ const LoginModal = () => {
       passsword: password,
     });
     try {
-      let response = await axios.post("/auth/login", {
-        email: email,
-        passsword: password,
-      });
-      console.log(response);
+      let response = await axios.post(
+        "/auth/login",
+        {
+          email: email,
+          password: password,
+        },
+        {
+          "Access-Control-Expose-Headers": "x-access-token",
+        }
+      );
+      console.log(response.headers["x-access-token"]);
+      console.log(response.headers.get("x-access-token"));
       setshowAlert(true);
       setAlertMessage(response.data.message);
       setAlertType("success");
+      setloading(false);
     } catch (error) {
       console.log(error);
       setshowAlert(true);
       setAlertMessage(error.response.data.error);
       setAlertType("danger");
+      setloading(false);
     }
   };
 
