@@ -5,9 +5,7 @@ import PakworkPlusHome from "../../assets/pakwork_plus_home.svg";
 import PakworkLogo from "../../assets/pakwork_logo.svg";
 
 const LoginModal = () => {
-  const { showLogin, handleShowLogin, handleCloseLogin } = useContext(
-    ShowLoginModalContext
-  );
+  const { showLogin, handleCloseLogin } = useContext(ShowLoginModalContext);
   useEffect(() => {
     console.log(showLogin);
   }, [showLogin]);

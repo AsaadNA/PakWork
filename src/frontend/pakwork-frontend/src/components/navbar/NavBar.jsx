@@ -23,7 +23,7 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link className="text-dark" style={{ fontWeight: "bold " }}>
+            <Nav.Link className="text-dark-50" style={{ fontWeight: "bold " }}>
               <Link
                 to="how-it-works"
                 spy={true}
@@ -34,7 +34,7 @@ const NavBar = () => {
                 How it works?
               </Link>
             </Nav.Link>
-            <Nav.Link className="text-dark" style={{ fontWeight: "bold " }}>
+            <Nav.Link className="text-dark-50" style={{ fontWeight: "bold " }}>
               <Link
                 to="popular-categories"
                 spy={true}
@@ -58,7 +58,7 @@ const NavBar = () => {
               </Link>
             </Nav.Link>
             <Nav.Link
-              className="text-dark"
+              className="text-dark-50"
               style={{ fontWeight: "bold" }}
               onClick={handleShowLogin}
             >

@@ -1,6 +1,5 @@
 import React from "react";
 import { Row, Col, Card } from "react-bootstrap";
-import { FaChevronRight } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
 

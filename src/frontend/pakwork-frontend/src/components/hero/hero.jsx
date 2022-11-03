@@ -13,7 +13,7 @@ const Hero = () => {
     >
       <Col md={6} className="search-box">
         <h1
-          style={{ whiteSpace: "break-spaces" }}
+          style={{ whiteSpace: "break-spaces", fontWeight: "bold" }}
         >{`Save time, Hire a\nProfessional`}</h1>
         <h4 className="text-success" style={{ fontWeight: "bold" }}>
           Turn your idea into a reality

@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const logger = require("./configs/logger"); //Different stuff logger
 const morgan = require("morgan"); //HTTP Logger
 const mongoose = require("mongoose");
+const cors = require("cors");
 
 const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
@@ -13,6 +14,7 @@ dotenv.config();
 
 const app = express();
 
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("dev"));
