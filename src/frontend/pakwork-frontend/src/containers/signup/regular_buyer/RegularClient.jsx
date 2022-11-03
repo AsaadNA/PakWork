@@ -184,7 +184,7 @@ const RegularClient = () => {
                 paddingTop: "10px",
               }}
             >
-              Register yourself as a freelancer!
+              Register yourself as a buyer!
             </Card.Title>
             <Card.Body>
               <Form style={{ textAlign: "start" }} onSubmit={handleSubmit}>
