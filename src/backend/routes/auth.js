@@ -11,14 +11,35 @@ const emailVerificationSchema = require("../models/emailVerification");
 
 const router = express.Router();
 
+router.post("/login/admin", (req, res) => {
+  const { email, password } = req.body;
+  db.query(
+    `SELECT username from administrator where email="${email}" and password="${password}"`,
+    (e, r) => {
+      if (e) {
+        res.status(500).send({
+          error: e.message,
+        });
+      } else if (r) {
+        if (r.length !== 0) {
+          req.session.username = r[0].username;
+          res.sendStatus(200);
+        } else {
+          res.status(400).send({
+            error: "Invalid Email or Password",
+          });
+        }
+      }
+    }
+  );
+});
+
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
   db.query(
     `select user_type , freelancer_id as id from freelancer where email="${email}" and password="${password}" UNION 
     select user_type , company_client_id as id from company_client where email="${email}" and password="${password}" UNION
-    select user_type , client_id as id from client where email="${email}" and password="${password}" UNION 
-    select user_type , admin_id as id from administrator where email="${email}" and password="${password}"`,
-
+    select user_type , client_id as id from client where email="${email}" and password="${password}"`,
     (e, r, f) => {
       if (e) {
         res.status(500).send({
@@ -39,11 +60,6 @@ router.post("/login", (req, res) => {
           returnLoginPayloadResponse(
             res,
             `SELECT * from client where client_id="${r[0].id}"`
-          );
-        } else {
-          returnLoginPayloadResponse(
-            res,
-            `SELECT * from administrator where admin_id="${r[0].id}"`
           );
         }
       } else {

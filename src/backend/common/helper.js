@@ -27,13 +27,7 @@ const returnLoginPayloadResponse = (res, query) => {
         payload.user_type = r[0].user_type;
         payload.email = r[0].email;
         payload.username = r[0].username;
-      } else {
-        payload.admin_id = r[0].admin_id;
-        payload.user_type = r[0].user_type;
-        payload.email = r[0].email;
-        payload.username = r[0].username;
       }
-
       let token = jwt.sign({ data: payload }, process.env.JWT_SECRET, {
         expiresIn: parseInt(process.env.TOKEN_EXPIRY_TIME),
       });
