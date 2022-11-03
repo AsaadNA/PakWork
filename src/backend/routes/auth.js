@@ -170,9 +170,8 @@ router.post("/register/:userType", (req, res) => {
     let query = `INSERT INTO company_client(company_client_id,email,password,company_name,phone_number,country,region) VALUES ("${generatedID}","${email}","${password}","${company_name}","${phone_number}","${country}","${region}");`;
     db.query(query, (e, r, f) => {
       if (e) {
-        res.status(400).send({
-          error:
-            "Company already registered with the same company name, phone or email",
+        res.status(500).send({
+          error: e.message,
         });
       } else if (r) {
         db.query(
