@@ -11,6 +11,11 @@ const emailVerificationSchema = require("../models/emailVerification");
 
 const router = express.Router();
 
+router.get("/logout/admin", (req, res) => {
+  req.session.destroy();
+  res.redirect("/api/v1/admin/");
+});
+
 router.post("/login/admin", (req, res) => {
   const { email, password } = req.body;
   db.query(
@@ -33,6 +38,8 @@ router.post("/login/admin", (req, res) => {
     }
   );
 });
+
+///////////////////////////////
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
@@ -153,9 +160,8 @@ router.post("/register/:userType", (req, res) => {
 
     db.query(query, (e, r, f) => {
       if (e) {
-        res.status(400).send({
-          error:
-            "User already registered with the same username, phone or email",
+        res.status(500).send({
+          error: e.message,
         });
       } else if (r) {
         db.query(

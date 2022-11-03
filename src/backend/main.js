@@ -9,7 +9,6 @@ const cors = require("cors");
 const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
 const uploadRoutes = require("./routes/upload");
-const verficationRoutes = require("./routes/verification");
 const adminRoutes = require("./routes/admin");
 
 dotenv.config();
@@ -40,7 +39,6 @@ app.use(express.static(__dirname + "/resources/"));
 app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/profile/", profileRoutes);
 app.use("/api/v1/upload/", uploadRoutes);
-app.use("/api/v1/verification/", verficationRoutes);
 app.use("/api/v1/admin/", adminRoutes);
 
 app.get("*", (req, res) => {

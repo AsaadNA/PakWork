@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/js/lightbox/dist/css/lightbox.css"
+    <link rel="stylesheet" href="/css/dataTables.bootstrap5.min.css">
+    <script type="text/javascript" src="/js/jquery-3.5.1.js"></script>
+    <script type="text/javascript" src="/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/js/dataTables.buttons.min.js"></script>
+    <script src="/js/lightbox/dist/js/lightbox.js"></script>
+    <script type="text/javascript" src="/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/js/dataTables.buttons.min.js"></script>
+    <title>Admin Dashboard</title>
+</head>
+
+<body class="h-100">
+    <nav class="navbar navbar-dark bg-dark text-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="/images/pakwork_logo_light.svg" alt="./pakwork_logo_light" style="width: 100%;height: 35px;">
+            </a>
+            <div class="d-flex justify-content-center align-items-center flex-column">
+                <p>Logged in as: @model.username
+                </p>
+                <form action="/api/v1/auth/logout/admin" method="get" class="w-100">
+                    <button type="submit" class="btn btn-danger text-center w-100">🚀 Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="container-fluid d-flex justify-content-center align-items-center">
+        <div class="row mt-md-5">
+            <div class="col-md-12">
+                @{ if(model.error === undefined) {
+                <div class=" container">
+                    <h3> Displaying Unverified Freelancers  </h3> <br><br>
+                    <table class="display overflow-auto" id="user-data">
+                        <thead>
+                            <tr>
+                                <th>Freelancer ID</th>
+                                <th>Verification Images</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>Phone Number</th>
+                                <th>Region</th>
+                                <th>Country</th>
+                                <th>State</th>
+                                <th>Registration Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @model.data.forEach((freelancer,i) => {
+                                <tr>
+                                    <td>@freelancer.freelancer_id </td>
+                                    <td>
+                                        @freelancer.images.forEach((img,idx) => {
+                                            <a href="@img" data-lightbox="@freelancer.freelancer_id">🖼️</a>
+                                        })
+                                    </td>
+                                    <td>@freelancer.first_name</td>
+                                    <td>@freelancer.last_name</td>
+                                    <td>@freelancer.username</td>
+                                    <td>@freelancer.email</td>
+                                    <td>@freelancer.gender</td>
+                                    <td>@freelancer.phone_number</td>
+                                    <td>@freelancer.region</td>
+                                    <td>@freelancer.country</td>
+                                    <td>@freelancer.state</td>
+                                    <td>@freelancer.registration_date</td>
+                                    <td class="d-flex">
+                                        <button type="button" onclick="onApprove({title:'@freelancer.freelancer_id'})" class="btn btn-success mr-1" style="width:100px">Accept</button>                       
+                                        <button type="button" onclick="onReject({title:'@freelancer.freelancer_id'})" class="btn btn-danger mr-1" style="margin-left:3px;width:100px">Reject</button>
+                                    </td>
+                                </tr>
+                            })
+                        </tbody>
+                    </table>
+                </div>
+            } else {
+                <h3>@model.error</h3>
+            }}
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function onApprove(data) {
+            fetch("/api/v1/admin/accept/"+data.title, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+            }).then(res => {
+                if (res.status === 200) {
+                    window.location.reload();
+                } else if (res.status === 400) {
+                    window.location.reload();
+                }
+            });
+        }
+
+        function onReject(data) {
+            fetch("/api/v1/admin/reject/" + data.title, {
+                method: "PUT",
+                headers: { 'Content-Type': 'application/json' },
+            }).then(res => {
+                if (res.status === 200) {
+                    window.location.reload();
+                } else if (res.status === 400) {
+                    window.location.reload();
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            var table = $('#user-data').DataTable({
+                scrollX: true
+            });
+        });
+    </script>
+</body>
+
+</html>
