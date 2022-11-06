@@ -42,6 +42,7 @@ app.use("/api/v1/upload/", uploadRoutes);
 app.use("/api/v1/admin/", adminRoutes);
 
 app.get("*", (req, res) => {
+  //
   res.send("Wrong address buddy");
 });
 
