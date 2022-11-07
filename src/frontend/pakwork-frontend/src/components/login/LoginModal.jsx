@@ -12,6 +12,8 @@ import { ShowLoginModalContext } from "../../contexts/ModalContext";
 import PakworkPlusHome from "../../assets/pakwork_plus_home.svg";
 import PakworkLogo from "../../assets/pakwork_logo.svg";
 import axios from "../../Api/Api";
+import { useNavigate } from "react-router-dom";
+import { decodeToken } from "react-jwt";
 
 const LoginModal = () => {
   const { showLogin, handleCloseLogin } = useContext(ShowLoginModalContext);
@@ -21,6 +23,8 @@ const LoginModal = () => {
   const [showAlert, setshowAlert] = useState(false);
   const [AlertMessage, setAlertMessage] = useState("");
   const [AlertType, setAlertType] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,16 +43,18 @@ const LoginModal = () => {
           "Access-Control-Expose-Headers": "x-access-token",
         }
       );
-      console.log(response.headers["x-access-token"]);
-      console.log(response.headers.get("x-access-token"));
       setshowAlert(true);
       setAlertMessage(response.data.message);
       setAlertType("success");
       setloading(false);
+      let token = response.headers["x-access-token"];
+      localStorage.setItem("userToken", token);
+      localStorage.setItem("user", JSON.stringify(decodeToken(token).data));
+      navigate("/dashboard/profile");
     } catch (error) {
       console.log(error);
       setshowAlert(true);
-      setAlertMessage(error.response.data.error);
+      setAlertMessage(error.response.data.error || error.message);
       setAlertType("danger");
       setloading(false);
     }

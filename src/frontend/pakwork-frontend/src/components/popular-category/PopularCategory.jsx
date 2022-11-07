@@ -49,9 +49,9 @@ const PopularCategory = () => {
           Popular Categories:
         </h1>
         <Row className="p-1">
-          {Categories.map((Category) => {
+          {Categories.map((Category, i) => {
             return (
-              <Col md={6} lg={4} xl={3}>
+              <Col md={6} lg={4} xl={3} key={i}>
                 <Card
                   style={{ width: "100%", height: "190px" }}
                   className="category-card m-1"

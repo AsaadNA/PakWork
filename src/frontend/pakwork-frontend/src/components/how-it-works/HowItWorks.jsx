@@ -39,9 +39,9 @@ const HowItWorks = () => {
           How does it work?
         </h1>
         <Row className="p-1">
-          {Steps.map((Step) => {
+          {Steps.map((Step, i) => {
             return (
-              <Col md={6} lg={4} xl={3} className="mb-1">
+              <Col md={6} lg={4} xl={3} className="mb-1" key={i}>
                 <Card style={{ width: "100%" }} className="category-card m-1">
                   <Card.Img
                     variant="top"

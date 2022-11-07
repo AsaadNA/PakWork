@@ -1,0 +1,67 @@
+.profile-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 160px;
+  width: 160px;
+  box-sizing: border-box;
+}
+.profile-picture-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 49.9%;
+}
+.profile-picture {
+  border-radius: 50%;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  display: block;
+  object-position: center;
+}
+.level1-badge {
+  height: 28px;
+  width: 90px;
+  background-color: purple;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-bottom-right-radius: 10px;
+}
+
+.level2-badge {
+  height: 28px;
+  width: 90px;
+  background-color: brown;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  border-bottom-right-radius: 10px;
+}
+
+.verified-badge {
+  height: 28px;
+  width: 90px;
+  background-color: #1c9cea;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 35px;
+  left: 0px;
+  border-bottom-right-radius: 10px;
+}
+.unverified-badge {
+  height: 28px;
+  width: 90px;
+  background-color: #eaa91c;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 35px;
+  left: 0px;
+  border-bottom-right-radius: 10px;
+}

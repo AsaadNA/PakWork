@@ -19,6 +19,9 @@
   color: #006837 !important;
   outline: none;
 }
+a {
+  color: #737373 !important;
+}
 
 .hollow-green-btn {
   background-color: #fff !important;

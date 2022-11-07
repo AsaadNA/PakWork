@@ -6,7 +6,9 @@ import Home from "./containers/home/Home";
 import Freelancer from "./containers/signup/freelancer/Freelancer";
 import RegularClient from "./containers/signup/regular_buyer/RegularClient";
 import OrganizationalClient from "./containers/signup/organizational_buyer/OrganizationalClient";
+import Profile from "./containers/profile/freelancer/Profile";
 import AnimatedLayout from "./components/animated-layout/AnimatedLayout";
+import ProtectedRoute from "./Auth/ProtectRoute";
 
 function App() {
   return (
@@ -31,6 +33,17 @@ function App() {
                 exact
                 element={<OrganizationalClient></OrganizationalClient>}
               ></Route>
+              <Route
+                path="/dashboard/profile"
+                exact
+                element={<ProtectedRoute></ProtectedRoute>}
+              >
+                <Route
+                  path="/dashboard/profile"
+                  exact
+                  element={<Profile></Profile>}
+                ></Route>
+              </Route>
             </Route>
           </Routes>
         </Fragment>
