@@ -10,7 +10,7 @@ const Gigs = () => {
         Create New Gig
         <FaPlus className="mt-1" style={{ marginLeft: "5px" }}></FaPlus>
       </Button>
-      <Row className="d-flex justify-content-center-md align-items-center flex-column-md">
+      <Row className="d-flex mt-4 justify-content-center-md align-items-center flex-column-md">
         <Col md={4}>
           <Card style={{ width: "100%", maxWidth: "320px" }}>
             <Card.Img src="https://fiverr-res.cloudinary.com/images/t_medium7,q_auto,f_auto,q_auto,f_auto/gigs/252110108/original/68202f99bd3150cc08bf0236d69de69548ad119e/html-css-javascript-nodejs-development.png"></Card.Img>

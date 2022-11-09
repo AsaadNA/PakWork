@@ -14,7 +14,7 @@ import { ShowVerificationModalContext } from "../../contexts/ModalContext";
 import axios from "../../Api/Api";
 
 const VerificationModal = () => {
-  const [files, setFiles] = useState();
+  const [files, setFiles] = useState(null);
   const [allowUpload, setAllowUpload] = useState(false);
   const [loading, setloading] = useState(false);
   const [showAlert, setshowAlert] = useState(false);
@@ -24,37 +24,34 @@ const VerificationModal = () => {
   const { showVerification, handleCloseVerification } = useContext(
     ShowVerificationModalContext
   );
+
   const handleUpload = async (e) => {
     setloading(true);
     const formData = new FormData();
     e.preventDefault();
-    console.log(files);
+    //console.log(files);
     for (let i = 0; i < files.length; i++) {
-      console.log(files[i]);
+      // console.log(files[i]);
       formData.append(`images`, files[i]);
     }
+
     try {
-      let response = await axios.post(
-        "/upload/verification",
-        {
-          data: formData,
+      let response = await axios.post("/upload/verification", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-access-token": localStorage.getItem("userToken").toString(),
         },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "x-access-token": localStorage.getItem("userToken").toString(),
-          },
-        }
-      );
+      });
       setshowAlert(true);
       setAlertMessage(response.data);
       setAlertType("success");
       setloading(false);
+      setAllowUpload(false);
       console.log(response);
     } catch (error) {
       console.log(error);
       setshowAlert(true);
-      setAlertMessage(error.response.data.error || error.message);
+      setAlertMessage("Invalid File Type or Upload Limit Reached");
       setAlertType("danger");
       setloading(false);
     }
@@ -108,7 +105,7 @@ const VerificationModal = () => {
                   only. Other associate's documents found to be used will result
                   in cancellation of account's verification.
                 </p>
-                <Form onSubmit={handleUpload}>
+                <Form method="POST" onSubmit={handleUpload}>
                   <input
                     type="file"
                     accept="image/*"
