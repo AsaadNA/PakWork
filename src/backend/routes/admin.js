@@ -63,7 +63,6 @@ router.get("/", (req, res) => {
               error: "No Pending Approvals",
             });
           } else {
-            //
             let resultJSON = JSON.parse(JSON.stringify(result));
             resultJSON.forEach((r) => {
               r.images = r.images.split(",");
