@@ -11,7 +11,7 @@ import {
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
-import { ShowEditFreelancerProfileModalContext } from "../../../contexts/ModalContext";
+import { ShowEditClientProfileModalContext } from "../../../contexts/ModalContext";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 const EditModal = () => {
@@ -43,8 +43,8 @@ const EditModal = () => {
   const [loading, setLoading] = useState(false);
   const [formSubmitted, setformSubmitted] = useState(false);
 
-  const { showEditProfie, handleCloseFreelancerEditProfile } = useContext(
-    ShowEditFreelancerProfileModalContext
+  const { showEditProfie, handleCloseClientEditProfile } = useContext(
+    ShowEditClientProfileModalContext
   );
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ const EditModal = () => {
     <>
       <Modal
         show={showEditProfie}
-        onHide={handleCloseFreelancerEditProfile}
+        onHide={handleCloseClientEditProfile}
         size={"xl"}
       >
         <Modal.Header closeButton>

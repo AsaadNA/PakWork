@@ -18,7 +18,7 @@ import "./ProfileInfo.css";
 import DefaultProfile from "../../../assets/profile_pic_default.png";
 import {
   ShowVerificationModalContext,
-  ShowEditFreelancerProfileModalContext,
+  ShowEditClientProfileModalContext,
   ShowProfilePictureUploadModalContext,
 } from "../../../contexts/ModalContext";
 
@@ -27,8 +27,8 @@ const ProfileInfo = () => {
   const [verified, setVerified] = useState(false);
   const [CompletedProfile, setCompletedProfile] = useState(false);
   const { handleShowVerification } = useContext(ShowVerificationModalContext);
-  const { handleShowFreelancerEditProfile } = useContext(
-    ShowEditFreelancerProfileModalContext
+  const { handleShowClientEditProfile } = useContext(
+    ShowEditClientProfileModalContext
   );
   const { handleShowProfilePictureUpload } = useContext(
     ShowProfilePictureUploadModalContext
@@ -64,7 +64,7 @@ const ProfileInfo = () => {
 
   return (
     <>
-      {!CompletedProfile ? (
+      {CompletedProfile ? (
         <Card
           style={{ width: "100%", maxWidth: "350px", background: "#f7f7f7" }}
         >
@@ -81,15 +81,22 @@ const ProfileInfo = () => {
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
+                  {verified ? (
+                    <div className="verified-badge">
+                      <FaUserCheck></FaUserCheck> Verified
+                    </div>
+                  ) : (
+                    <div className="unverified-badge">Unverified</div>
+                  )}
                 </div>
               </div>
               <div className="mt-2">
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  Muhammad Ahsan
+                  Shafique Pillar
                 </span>
                 <br />
                 <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                  @ahsantahseen
+                  @sqpillar
                 </span>
               </div>
               <hr className="w-100"></hr>
@@ -107,17 +114,19 @@ const ProfileInfo = () => {
                 <Button
                   className="mb-3 w-100"
                   variant="danger"
-                  onClick={handleShowFreelancerEditProfile}
+                  onClick={handleShowClientEditProfile}
                 >
                   Complete Your Profile!
                 </Button>
               )}
-              <Button
-                className="solid-green-btn w-100"
-                onClick={handleShowVerification}
-              >
-                Get Verified! ✔️
-              </Button>
+              {verified ? null : (
+                <Button
+                  className="solid-green-btn w-100"
+                  onClick={handleShowVerification}
+                >
+                  Get Verified! ✔️
+                </Button>
+              )}
             </div>
           </Card.Body>
         </Card>
@@ -136,12 +145,11 @@ const ProfileInfo = () => {
                     ></FaImage>
                     <img
                       src={
-                        "https://fiverr-res.cloudinary.com/image/upload/t_profile_original,q_auto,f_auto/v1/attachments/profile/photo/d7de608727a04b03fd8ce4d5c664e622-1665365749459/d3bd39f9-9925-4e49-905f-0d6b64392c72.png"
+                        "https://avatars.akamai.steamstatic.com/fa8236cd125666bed7f7c94a2fa47b854fed91a4_full.jpg"
                       }
                       className="profile-picture  "
                       alt="profile_pic"
                     ></img>
-                    <div className="level1-badge">Level 1</div>
                     {verified ? (
                       <div className="verified-badge">
                         <FaUserCheck></FaUserCheck> Verified
@@ -153,11 +161,11 @@ const ProfileInfo = () => {
                 </div>
                 <div className="mt-2">
                   <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                    Muhammad Ahsan
+                    Shafique Pillar
                   </span>
                   <br />
                   <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                    @ahsantahseen
+                    @sqpillar
                   </span>
                 </div>
                 <hr className="w-100"></hr>
@@ -170,11 +178,9 @@ const ProfileInfo = () => {
                 <br></br>
                 <span>
                   <FaIndustry></FaIndustry> Industry: &nbsp;
-                  <strong>Web Development</strong>
+                  <strong>Programming & Tech</strong>
                 </span>
                 <br></br>
-                <FaClock></FaClock> Experience: &nbsp;
-                <strong>2 Years</strong>
               </div>
             </Card.Body>
           </Card>
@@ -195,10 +201,8 @@ const ProfileInfo = () => {
                       About Me:
                     </span>
                     <br></br>
-                    I'm a professional full stack developer with 2 years of
-                    experience in html css javascript nodejs reactjs sql with
-                    excellent git version control skills along with professional
-                    graphics designing skills.
+                    I'm a good buyer, i give you money you give me work we happy
+                    and you happy
                   </p>
                   <hr className="w-100"></hr>
                   <p style={{ textAlign: "left" }}>
@@ -208,8 +212,6 @@ const ProfileInfo = () => {
                     <br></br>
                     <div style={{ fontSize: "30px" }}>
                       <FaLinkedin></FaLinkedin>
-                      &nbsp;
-                      <FaGithub></FaGithub>
                     </div>
                   </p>
                 </div>

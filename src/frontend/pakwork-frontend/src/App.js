@@ -4,13 +4,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SwitchTransition, CSSTransition } from "react-transition-group";
 import Home from "./containers/home/Home";
 import Freelancer from "./containers/signup/freelancer/Freelancer";
-import RegularClient from "./containers/signup/regular_buyer/RegularClient";
-import OrganizationalClient from "./containers/signup/organizational_buyer/OrganizationalClient";
-import Profile from "./containers/profile/freelancer/Profile";
+import RegularClient from "./containers/signup/client/RegularClient";
+import OrganizationalClient from "./containers/signup/organization/OrganizationalClient";
+import FreelancerProfile from "./containers/profile/freelancer/Profile";
+import ClientProfile from "./containers/profile/client/Profile";
+import OrganizationProfile from "./containers/profile/organization/Profile";
 import AnimatedLayout from "./components/animated-layout/AnimatedLayout";
 import ProtectedRoute from "./Auth/ProtectRoute";
 
 function App() {
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <div className="App">
       <Router>
@@ -41,7 +44,15 @@ function App() {
                 <Route
                   path="/dashboard/profile"
                   exact
-                  element={<Profile></Profile>}
+                  element={
+                    user.user_type === "freelancer" ? (
+                      <FreelancerProfile></FreelancerProfile>
+                    ) : user.user_type === "client" ? (
+                      <ClientProfile></ClientProfile>
+                    ) : user.user_type === "company_client" ? (
+                      <OrganizationProfile></OrganizationProfile>
+                    ) : null
+                  }
                 ></Route>
               </Route>
             </Route>
