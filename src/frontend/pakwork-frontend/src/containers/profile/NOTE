@@ -1,9 +1,0 @@
-- Since after logging in you are redirecting it to /dashboard/profile
-- to display respective dashboards for different user types
-- you would need to create a single container for profile and based on the user type display
-- all the components of respective user type
-
-OR
-
-- create a new container and import all the 3 containers and depending on user type from local session token
-- display them

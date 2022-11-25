@@ -45,12 +45,14 @@ function App() {
                   path="/dashboard/profile"
                   exact
                   element={
-                    user.user_type === "freelancer" ? (
-                      <FreelancerProfile></FreelancerProfile>
-                    ) : user.user_type === "client" ? (
-                      <ClientProfile></ClientProfile>
-                    ) : user.user_type === "company_client" ? (
-                      <OrganizationProfile></OrganizationProfile>
+                    user ? (
+                      user.user_type === "freelancer" ? (
+                        <FreelancerProfile></FreelancerProfile>
+                      ) : user.user_type === "client" ? (
+                        <ClientProfile></ClientProfile>
+                      ) : user.user_type === "company_client" ? (
+                        <OrganizationProfile></OrganizationProfile>
+                      ) : null
                     ) : null
                   }
                 ></Route>

@@ -26,7 +26,7 @@
   color: white;
   font-weight: bold;
   position: absolute;
-  top: 0px;
+  top: 33px !important;
   left: 0px;
   border-bottom-right-radius: 10px;
 }
@@ -38,7 +38,7 @@
   color: white;
   font-weight: bold;
   position: absolute;
-  top: 0px;
+  top: 33px !important;
   left: 0px;
   border-bottom-right-radius: 10px;
 }
