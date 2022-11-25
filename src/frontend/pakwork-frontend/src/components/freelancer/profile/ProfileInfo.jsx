@@ -45,7 +45,7 @@ const ProfileInfo = () => {
       });
       console.log(response.data);
       if (
-        (response.data[0].bio === null && response.data[0].level === null) ||
+        (response.data[0].bio === null ||  response.data[0].level === null) ||
         response.data[0].isVerified === false
       ) {
         setCompletedProfile(false);
@@ -103,7 +103,6 @@ const ProfileInfo = () => {
                 Click the Button Below, Fill in additional details to compelete
                 your profile.
               </p>
-              {user.bio === null && (
                 <Button
                   className="mb-3 w-100"
                   variant="danger"
@@ -111,7 +110,6 @@ const ProfileInfo = () => {
                 >
                   Complete Your Profile!
                 </Button>
-              )}
               <Button
                 className="solid-green-btn w-100"
                 onClick={handleShowVerification}

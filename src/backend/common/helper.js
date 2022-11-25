@@ -44,6 +44,49 @@ const returnLoginPayloadResponse = (res, query) => {
   });
 };
 
+const regenEmailVerification = (res,data) => {
+  let { email, userType } = data;
+  let generatedUID = randtoken.uid(30);
+  let generatedLink = `http://localhost:4000/api/v1/auth/verify/${generatedUID}`;
+
+  const newData = new emailVerificationSchema({
+    uid: generatedUID,
+    email,
+    userType,
+  });
+
+  let mailOptions = {
+    from: process.env.EMAILING_SYSTEM_EMAIL,
+    to: email,
+    subject: "Kindly verify email",
+    text: `Generated Verification link : ${generatedLink} , validity is for 5 min`,
+  };
+  transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      res.status(500).send({
+        message: err.message,
+      });
+    } else if (info) {
+      const result = newData.save((err, data) => {
+        if (err) {
+          return res.status(500).send({
+            error: err.message,
+          });
+        } else if (data) {
+          return res.status(400).send({
+            generatedLink,
+            error: `New Verification Link sent to ${email}`,
+          });
+        } else {
+          return res.status(400).send({
+            error: "Could not sent verification email",
+          });
+        }
+      });
+    }
+  });
+}
+
 const generateEmailVerification = (res, data) => {
   let { email, userType } = data;
   let generatedUID = randtoken.uid(30);
@@ -90,4 +133,5 @@ const generateEmailVerification = (res, data) => {
 module.exports = {
   returnLoginPayloadResponse,
   generateEmailVerification,
+  regenEmailVerification
 };
