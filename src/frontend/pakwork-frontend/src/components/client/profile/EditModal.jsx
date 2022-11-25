@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState , useEffect } from "react";
 import {
   Modal,
   Form,
@@ -13,6 +13,7 @@ import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { ShowEditClientProfileModalContext } from "../../../contexts/ModalContext";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
+import axios from "../../../Api/Api";
 
 const EditModal = () => {
   const Industries = [
@@ -46,22 +47,61 @@ const EditModal = () => {
   const { showEditProfie, handleCloseClientEditProfile } = useContext(
     ShowEditClientProfileModalContext
   );
-  const handleSubmit = (e) => {
+
+  const getProfileData = async () => {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      let response = await axios.get(`/profile`, {
+        headers: {
+          "x-access-token": userToken,
+        },
+      });
+
+      setBio(response.data[0].bio);
+     
+      //Setting industry from combobox
+      let idx = Industries.find((industry,index) => {
+        if(response.data[0].industry_name === industry.value) {
+          setIndustry(Industries[index]);
+        }
+      });
+
+      setlinkedInLink(response.data[0].linkedin_link);
+
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getProfileData();
+  } , []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setformSubmitted(true);
     setLoading(true);
-    toast.success("Processing Data..", {
-      position: "top-right",
-      delay: 1000,
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+
+    try {
+      let response = await axios.put("/profile/",{
+        bio: Bio,
+        industry_name: Industry.value,
+        linkedin_link: linkedInLink
+      }, {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken").toString(),
+        }
+      });
+
+      if(response.status === 200) {
+        setLoading(false);
+        window.location.reload();
+      }
+    } catch(err) {
+      console.log(err);
+    }
+
   };
+
   return (
     <>
       <Modal

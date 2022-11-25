@@ -38,6 +38,7 @@ const ProfilePhotoUploadModal = () => {
           "x-access-token": localStorage.getItem("userToken").toString(),
         },
       });
+      if(response.status === 200) {window.location.reload()} 
       setshowAlert(true);
       setAlertMessage(response.data.message);
       setAlertType("success");

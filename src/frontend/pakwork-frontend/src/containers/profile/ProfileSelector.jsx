@@ -1,5 +1,5 @@
 import React from "react";
-import FreelancerProfile from "../profile/freelancer/Profile";
+import FreelancerProfile from "./freelancer/Profile";
 import ClientProfile from "../profile/client/Profile";
 import OrganizationProfile from "../profile/organization/Profile";
 import PakworkLogo from "../../assets/pakwork_logo.svg";

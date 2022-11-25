@@ -9,3 +9,6 @@ select f.username , group_concat(v.image) as images from freelancer f inner join
 /* Get The Profile Info From Freelancer & Profile Table for a specific freelancer */
 select p.profile_picture,p.level,f.first_name,f.last_name,f.username,f.country,p.year_experience,p.bio,p.linkedin_link,p.github_link,f.is_verified,f.is_active from profile p inner join freelancer f on f.freelancer_id = p.profile_id where p.profile_id="1amXm27IqY11rjGxuBcMpOs9gkPyojoPQMPQUgehMh4kR";
 select p.profile_picture,p.level,f.first_name,f.last_name,f.username,f.country,p.year_experience,p.bio,p.linkedin_link,p.github_link,f.is_verified,f.is_active from profile p inner join freelancer f on f.freelancer_id = p.profile_id;
+
+/* Get The Profile Info From Client & Profile Table for a specific client */
+select c.first_name,c.last_name,c.username,c.country,p.profile_picture,p.industry_name,p.bio,p.linkedin_link from profile p inner join client c on c.client_id = p.profile_id where p.profile_id="";

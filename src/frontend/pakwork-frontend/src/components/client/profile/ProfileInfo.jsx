@@ -1,17 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import {
-  FaCheck,
-  FaCheckDouble,
-  FaClock,
-  FaGithub,
   FaImage,
   FaIndustry,
   FaLinkedin,
   FaLocationArrow,
-  FaQuoteLeft,
-  FaQuoteRight,
-  FaUserCheck,
 } from "react-icons/fa";
 import axios from "../../../Api/Api";
 import "./ProfileInfo.css";
@@ -23,7 +16,6 @@ import {
 
 const ProfileInfo = () => {
   const [user, setUser] = useState({});
-  const [verified, setVerified] = useState(false);
   const [CompletedProfile, setCompletedProfile] = useState(false);
   const { handleShowClientEditProfile } = useContext(
     ShowEditClientProfileModalContext
@@ -40,11 +32,17 @@ const ProfileInfo = () => {
           "x-access-token": userToken,
         },
       });
-      console.log(response.data);
-      if (
-        (response.data[0].bio === null && response.data[0].level === null) ||
-        response.data[0].isVerified === false
-      ) {
+
+      //Check if profile is incomplete
+      const entries = Object.entries(response.data[0]);
+      const nonEmptyOrNull = entries.filter(
+        ([key, val]) =>
+          (val === "" || val === null) &&
+          key !== "linkedin_link" &&
+          key !== "profile_picture"
+      );
+
+      if (nonEmptyOrNull.length > 0) {
         setCompletedProfile(false);
       } else {
         setCompletedProfile(true);
@@ -74,7 +72,12 @@ const ProfileInfo = () => {
                     onClick={handleShowProfilePictureUpload}
                   ></FaImage>
                   <img
-                    src={DefaultProfile}
+                    src={
+                      user.profile_picture === "" ||
+                      user.profile_picture === null
+                        ? DefaultProfile
+                        : `http://localhost:4000/${user.profile_picture}`
+                    }
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
@@ -82,11 +85,11 @@ const ProfileInfo = () => {
               </div>
               <div className="mt-2">
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  Shafique Pillar
+                  {user.first_name} {user.last_name}
                 </span>
                 <br />
                 <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                  @sqpillar
+                  @{user.username}
                 </span>
               </div>
               <hr className="w-100"></hr>
@@ -100,7 +103,7 @@ const ProfileInfo = () => {
                 Click the Button Below, Fill in additional details to compelete
                 your profile.
               </p>
-              {user.bio === null && (
+              {CompletedProfile ? null : (
                 <Button
                   className="mb-3 w-100"
                   variant="danger"
@@ -127,27 +130,30 @@ const ProfileInfo = () => {
                     ></FaImage>
                     <img
                       src={
-                        "https://avatars.akamai.steamstatic.com/fa8236cd125666bed7f7c94a2fa47b854fed91a4_full.jpg"
+                        user.profile_picture === "" ||
+                        user.profile_picture === null
+                          ? DefaultProfile
+                          : `http://localhost:4000/${user.profile_picture}`
                       }
                       className="profile-picture  "
                       alt="profile_pic"
                     ></img>
-                    {verified ? (
-                      <div className="verified-badge">
-                        <FaUserCheck></FaUserCheck> Verified
-                      </div>
-                    ) : (
-                      <div className="unverified-badge">Unverified</div>
-                    )}
+                    <div
+                      style={{top:0}}
+                      onClick={handleShowClientEditProfile}
+                      className="editprofile-badge"
+                    >
+                      <span className="editprofiletext">Edit Profile</span>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2">
                   <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                    Shafique Pillar
+                    {user.first_name} {user.last_name}
                   </span>
                   <br />
                   <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                    @sqpillar
+                    @{user.username}
                   </span>
                 </div>
                 <hr className="w-100"></hr>
@@ -155,12 +161,12 @@ const ProfileInfo = () => {
               <div style={{ textAlign: "left" }}>
                 <span>
                   <FaLocationArrow></FaLocationArrow> Country: &nbsp;
-                  <strong>Pakistan</strong>
+                  <strong>{user.country}</strong>
                 </span>
                 <br></br>
                 <span>
                   <FaIndustry></FaIndustry> Industry: &nbsp;
-                  <strong>Programming & Tech</strong>
+                  <strong>{user.industry_name}</strong>
                 </span>
                 <br></br>
               </div>
@@ -183,8 +189,7 @@ const ProfileInfo = () => {
                       About Me:
                     </span>
                     <br></br>
-                    I'm a good buyer, i give you money you give me work we happy
-                    and you happy
+                    {user.bio}
                   </p>
                   <hr className="w-100"></hr>
                   <p style={{ textAlign: "left" }}>
@@ -193,7 +198,9 @@ const ProfileInfo = () => {
                     </span>
                     <br></br>
                     <div style={{ fontSize: "30px" }}>
-                      <FaLinkedin className="social-icon"></FaLinkedin>
+                      <a href={user.linkedin_link}>
+                        <FaLinkedin className="social-icon"></FaLinkedin>
+                      </a>
                     </div>
                   </p>
                 </div>

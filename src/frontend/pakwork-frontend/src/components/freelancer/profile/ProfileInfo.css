@@ -84,9 +84,6 @@
   width: 90px;
   background-color: rgb(1, 95, 1);
 }
-.editprofile-badge:hover > .editprofiletext {
-  text-decoration: underline;
-}
 
 .editprofiletext {
   font-size: 0.86em;

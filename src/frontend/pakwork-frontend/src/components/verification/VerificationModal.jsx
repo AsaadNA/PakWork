@@ -70,7 +70,7 @@ const VerificationModal = () => {
         setResubmissionFeedBack(response.data.feedback);
       }
     } catch(err) {
-      console.log(err);
+      //console.log(err);
     }
   }
 

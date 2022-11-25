@@ -1,6 +1,6 @@
-import React, { useContext, useState , useEffect} from "react";
+import React, { useContext, useState, useEffect } from "react";
 import axios from "../../../Api/Api";
- 
+
 import {
   Modal,
   Form,
@@ -61,63 +61,53 @@ const EditModal = () => {
 
       setBio(response.data[0].bio);
       setYearsOfExperience(response.data[0].year_experience);
-     
+
       //Setting industry from combobox
-      let idx = Industries.find((industry,index) => {
-        if(response.data[0].industry_name === industry.value) {
+      let idx = Industries.find((industry, index) => {
+        if (response.data[0].industry_name === industry.value) {
           setIndustry(Industries[index]);
         }
       });
 
       setGithubLink(response.data[0].github_link);
       setlinkedInLink(response.data[0].linkedin_link);
-
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
     getProfileData();
-  } , []);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      let response = await axios.put("/profile/",{
-        bio: Bio,
-        industry_name: Industry.value,
-        year_experience: YearsOfExperience,
-        github_link: GithubLink,
-        linkedin_link: linkedInLink
-      }, {
-        headers: {
-          "x-access-token": localStorage.getItem("userToken").toString(),
+      let response = await axios.put(
+        "/profile/",
+        {
+          bio: Bio,
+          industry_name: Industry.value,
+          year_experience: YearsOfExperience,
+          github_link: GithubLink,
+          linkedin_link: linkedInLink,
+        },
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("userToken").toString(),
+          },
         }
-      });
+      );
 
-      if(response.status === 200) {
+      if (response.status === 200) {
         setLoading(false);
-        /*toast.success("Updated Profile Information..", {
-          position: "top-right",
-          delay: 1000,
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: false,
-          progress: undefined,
-          theme: "light",
-        });*/
-
         window.location.reload();
       }
-    } catch(err) {
+    } catch (err) {
       console.log(err);
     }
-
   };
   return (
     <>

@@ -1,44 +1,44 @@
 .profile-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 160px;
-  width: 160px;
-  box-sizing: border-box;
-}
-.profile-picture-container {
-  height: 100%;
-  width: 100%;
-  border-radius: 49.9%;
-}
-.profile-picture {
-  border-radius: 50%;
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  display: block;
-  object-position: center;
-}
-
-.verified-badge {
-  height: 28px;
-  width: 90px;
-  background-color: #1c9cea;
-  color: white;
-  font-weight: bold;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  border-bottom-right-radius: 10px;
-}
-.unverified-badge {
-  height: 28px;
-  width: 90px;
-  background-color: #eaa91c;
-  color: white;
-  font-weight: bold;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  border-bottom-right-radius: 10px;
-}
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 160px;
+    width: 160px;
+    box-sizing: border-box;
+  }
+  .profile-picture-container {
+    height: 100%;
+    width: 100%;
+    border-radius: 49.9%;
+  }
+  .profile-picture {
+    border-radius: 50%;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    object-position: center;
+  }
+  
+  .editprofileBadge {
+    height: 28px;
+    width: 85px;
+    background-color: green;
+    color: white;
+    font-weight: bold;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-bottom-right-radius: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .editprofileBadge:hover {
+    cursor: pointer;
+    width: 90px;
+    background-color: rgb(1, 95, 1);
+  }
+  
+  .editprofileText {
+    font-size: 0.86em;
+  }
