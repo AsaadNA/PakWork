@@ -20,10 +20,7 @@ const Freelancer = () => {
   const [phoneNumber, setphoneNumber] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
-  const [country, setCountry] = useState("");
-  const [countryState, setcountryState] = useState("");
-  const [region, setRegion] = useState("");
-  const [gender, setGender] = useState("");
+  const [dateOfBirth, setdateOfBirth] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -68,7 +65,10 @@ const Freelancer = () => {
       label: `👩 Female`,
     },
   ];
-
+  const [country, setCountry] = useState(countries[0]);
+  const [countryState, setcountryState] = useState("");
+  const [region, setRegion] = useState(regions[5]);
+  const [gender, setGender] = useState(genders[0]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     setformSubmitted(true);
@@ -221,7 +221,7 @@ const Freelancer = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">
-                  <Form.Group as={Col} md={12} controlId="formGridGender">
+                  <Form.Group as={Col} md={6} controlId="formGridGender">
                     <Form.Label>Gender</Form.Label>
                     <Select
                       options={genders}
@@ -231,6 +231,23 @@ const Freelancer = () => {
                       name="gender"
                       onChange={(value) => setGender(value)}
                     />
+                  </Form.Group>
+                  <Form.Group as={Col} md={6} controlId="formGridDateOfBirth">
+                    <Form.Label>Date Of Birth</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="dateOfBirth"
+                      value={dateOfBirth}
+                      onChange={(e) => setdateOfBirth(e.target.value)}
+                      isInvalid={dateOfBirth.length < 3 && formSubmitted}
+                      required
+                    ></Form.Control>
+                    <Form.Text>
+                      For Identification, use your offical date
+                    </Form.Text>
+                    <Form.Control.Feedback type="invalid">
+                      Please Enter Correct Date
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">
@@ -349,8 +366,8 @@ const Freelancer = () => {
                       Passwords must be greater than 6 letters
                     </Form.Control.Feedback>
                     <Form.Text>
-                      Pakwork recommends having more than 10 characters, for
-                      better security
+                      Pakwork only allows passwords having more than 6
+                      characters, for better security
                     </Form.Text>
                   </Form.Group>
                   <Form.Group

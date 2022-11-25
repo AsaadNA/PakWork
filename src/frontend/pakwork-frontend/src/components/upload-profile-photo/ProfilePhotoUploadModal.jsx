@@ -9,11 +9,11 @@ import {
   Alert,
 } from "react-bootstrap";
 import PakworkLogo from "../../assets/pakwork_logo.svg";
-import VerificationPoster from "../../assets/verification_1.svg";
-import { ShowVerificationModalContext } from "../../contexts/ModalContext";
+import ProfilePoster from "../../assets/login_poster.svg";
+import { ShowProfilePictureUploadModalContext } from "../../contexts/ModalContext";
 import axios from "../../Api/Api";
 
-const VerificationModal = () => {
+const ProfilePhotoUploadModal = () => {
   const [files, setFiles] = useState(null);
   const [allowUpload, setAllowUpload] = useState(false);
   const [loading, setloading] = useState(false);
@@ -21,9 +21,8 @@ const VerificationModal = () => {
   const [AlertMessage, setAlertMessage] = useState("");
   const [AlertType, setAlertType] = useState("");
 
-  const { showVerification, handleCloseVerification } = useContext(
-    ShowVerificationModalContext
-  );
+  const { showProfilePictureUpload, handleCloseProfilePictureUpload } =
+    useContext(ShowProfilePictureUploadModalContext);
 
   const handleUpload = async (e) => {
     setloading(true);
@@ -36,7 +35,7 @@ const VerificationModal = () => {
     }
 
     try {
-      let response = await axios.post("/upload/verification", formData, {
+      let response = await axios.post("/upload/profile-pic", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "x-access-token": localStorage.getItem("userToken").toString(),
@@ -66,8 +65,8 @@ const VerificationModal = () => {
   return (
     <>
       <Modal
-        show={showVerification}
-        onHide={handleCloseVerification}
+        show={showProfilePictureUpload}
+        onHide={handleCloseProfilePictureUpload}
         size={"lg"}
       >
         <Modal.Header closeButton>
@@ -85,31 +84,21 @@ const VerificationModal = () => {
                 {AlertMessage}
               </Alert>
               <Col md={6} className="login-image-container">
-                <img src={VerificationPoster} alt={VerificationPoster}></img>
+                <img src={ProfilePoster} alt={ProfilePoster}></img>
               </Col>
               <Col md={6}>
-                <h3 style={{ color: "#264a99", fontWeight: "bold" }}>
-                  Verify Your Identify
-                </h3>
+                <h3 style={{ fontWeight: "bold" }}>Upload Profile Photo</h3>
+                <p>Please Upload 1 Picture for your profile</p>
                 <p>
-                  Please Upload Atleast 1 Picture of, one of the following given
-                  options:
-                </p>
-                <ul>
-                  <li>National Identity Card</li>
-                  <li>Driving License</li>
-                  <li>Passport</li>
-                </ul>
-                <p>
-                  <strong>Please Note:</strong> Submitted Documents must be
-                  associated with you only. Other associate's documents found to
-                  be used will result in cancellation of account's verification.
+                  <strong>Please Note:</strong> Submitted Photo must be
+                  associated with you only. Other associate's Photo found to be
+                  used will result in cancellation of account's verification.
                 </p>
                 <Form method="POST" onSubmit={handleUpload}>
                   <input
                     type="file"
                     accept="image/*"
-                    multiple
+                    multiple={false}
                     className="btn btn-success mb-2 w-100"
                     onChange={(e) => {
                       setFiles(e.target.files);
@@ -126,12 +115,6 @@ const VerificationModal = () => {
                     Upload 🚀
                   </Button>
                 </Form>
-                <p
-                  className="text-dark-50 text-center mt-1"
-                  style={{ fontSize: "14px" }}
-                >
-                  *Maximum 5 Images are allowed to upload*
-                </p>
               </Col>
             </Row>
           </Container>
@@ -141,4 +124,4 @@ const VerificationModal = () => {
   );
 };
 
-export default VerificationModal;
+export default ProfilePhotoUploadModal;

@@ -20,10 +20,8 @@ const RegularClient = () => {
   const [phoneNumber, setphoneNumber] = useState("");
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
-  const [country, setCountry] = useState("");
-  const [countryState, setcountryState] = useState("");
-  const [region, setRegion] = useState("");
-  const [gender, setGender] = useState("");
+
+  const [dateOfBirth, setdateOfBirth] = useState("");
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -68,7 +66,10 @@ const RegularClient = () => {
       label: `👩 Female`,
     },
   ];
-
+  const [country, setCountry] = useState(countries[0]);
+  const [countryState, setcountryState] = useState("");
+  const [region, setRegion] = useState(regions[5]);
+  const [gender, setGender] = useState(genders[0]);
   const handleSubmit = async (event) => {
     event.preventDefault();
     setformSubmitted(true);
@@ -78,7 +79,7 @@ const RegularClient = () => {
       lastName.length > 3 &&
       userName.length > 5 &&
       email.length > 5 &&
-      password.length > 6 &&
+      password.length <= 6 &&
       gender &&
       phoneNumber.length > 9 &&
       region &&
@@ -139,17 +140,20 @@ const RegularClient = () => {
         }, 6000);
       } catch (error) {
         console.log(error);
-        toast.error(error.response.data.error, {
-          position: "top-right",
-          delay: 2000,
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
+        toast.error(
+          error.response ? error.response.data.error : error.message,
+          {
+            position: "top-right",
+            delay: 2000,
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          }
+        );
       }
       setLoading(false);
     } else {
@@ -221,7 +225,7 @@ const RegularClient = () => {
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">
-                  <Form.Group as={Col} md={12} controlId="formGridGender">
+                  <Form.Group as={Col} md={6} controlId="formGridGender">
                     <Form.Label>Gender</Form.Label>
                     <Select
                       options={genders}
@@ -231,6 +235,23 @@ const RegularClient = () => {
                       name="gender"
                       onChange={(value) => setGender(value)}
                     />
+                  </Form.Group>
+                  <Form.Group as={Col} md={6} controlId="formGridDateOfBirth">
+                    <Form.Label>Date Of Birth</Form.Label>
+                    <Form.Control
+                      type="date"
+                      name="dateOfBirth"
+                      value={dateOfBirth}
+                      onChange={(e) => setdateOfBirth(e.target.value)}
+                      isInvalid={dateOfBirth.length < 3 && formSubmitted}
+                      required
+                    ></Form.Control>
+                    <Form.Text>
+                      For Identification, use your offical date
+                    </Form.Text>
+                    <Form.Control.Feedback type="invalid">
+                      Please Enter Correct Date
+                    </Form.Control.Feedback>
                   </Form.Group>
                 </Row>
                 <Row className="mt-3">

@@ -4,10 +4,7 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import logo from "../../assets/pakwork_logo.svg";
-import {
-  ShowLoginModalContext,
-  ShowVerificationModalContext,
-} from "../../contexts/ModalContext";
+import { ShowLoginModalContext } from "../../contexts/ModalContext";
 import { Link } from "react-scroll";
 import { Link as RouterLink, NavLink, useNavigate } from "react-router-dom";
 
@@ -17,7 +14,7 @@ import { FaUser } from "react-icons/fa";
 
 const NavBar = () => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
-  const { handleShowVerification } = useContext(ShowVerificationModalContext);
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -158,14 +155,6 @@ const NavBar = () => {
                   <FaUser style={{ marginBottom: "4px" }}></FaUser>
                   &nbsp;Profile
                 </NavLink>
-              </Nav.Link>
-              <Nav.Link>
-                <Button
-                  className="solid-green-btn"
-                  onClick={handleShowVerification}
-                >
-                  Get Verified! ✔️
-                </Button>
               </Nav.Link>
               <Nav.Link
                 className="text-dark-50"

@@ -1,5 +1,5 @@
 SET SQL_SAFE_UPDATES = 0;
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
 
 select f.username , v.image from freelancer f INNER JOIN verification_images v on f.freelancer_id = v.freelancer_id;
 

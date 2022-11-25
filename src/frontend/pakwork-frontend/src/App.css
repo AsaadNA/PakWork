@@ -151,7 +151,16 @@ a {
   outline: none !important;
   border: 0 !important;
 }
-
+.uploadIcon {
+  position: absolute;
+  right: 30%;
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  padding: 1%;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
+}
 @media (max-width: 767.98px) {
   .search-bar {
     width: 100%;
