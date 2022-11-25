@@ -84,7 +84,7 @@ const ProfileInfo = () => {
                     onClick={handleShowProfilePictureUpload}
                   ></FaImage>
                   <img
-                    src={DefaultProfile}
+                    src={(user.profile_picture === "" || user.profile_picture === null) ? DefaultProfile : `http://localhost:4000/${user.profile_picture}`}
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
