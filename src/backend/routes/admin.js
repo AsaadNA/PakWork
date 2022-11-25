@@ -4,9 +4,10 @@ const db = require("../configs/database");
 router.put("/accept/:freelancerID", (req, res) => {
   const { freelancerID } = req.params;
   db.query(
-    `UPDATE freelancer SET resubmit_verification=0,is_active=1 where freelancer_id="${freelancerID}";`,
+    `UPDATE freelancer SET resubmit_feedback=null, resubmit_verification=0,is_active=1 where freelancer_id="${freelancerID}";`,
     (err, result) => {
       if (err) {
+        console.log(err.message);
         res.status(500).send({
           error: err.message,
         });
@@ -19,8 +20,9 @@ router.put("/accept/:freelancerID", (req, res) => {
 
 router.put("/reject/:freelancerID", (req, res) => {
   const { freelancerID } = req.params;
+  const {feedback} = req.body;
   db.query(
-    `UPDATE freelancer SET resubmit_verification=1,is_active=0 where freelancer_id="${freelancerID}";`,
+    `UPDATE freelancer SET resubmit_feedback="${feedback}",resubmit_verification=1,is_active=0 where freelancer_id="${freelancerID}";`,
     (err, result) => {
       if (err) {
         res.status(500).send({
@@ -49,7 +51,7 @@ router.get("/", (req, res) => {
     res.render("login");
   } else {
     db.query(
-      `select f.freelancer_id, f.first_name,f.last_name,f.username,f.email,f.gender,f.phone_number,f.region,f.country,f.state,f.registration_date , group_concat(v.image) as images from freelancer f inner join verification_images v on f.freelancer_id = v.freelancer_id where f.is_verified=1 and f.is_active=false group by f.freelancer_id;`,
+      `select f.freelancer_id, f.first_name,f.last_name,f.username,f.email,f.gender,f.phone_number,f.region,f.country,f.state,f.registration_date, f.dob , group_concat(v.image) as images from freelancer f inner join verification_images v on f.freelancer_id = v.freelancer_id where f.is_verified=1 and f.is_active=false group by f.freelancer_id;`,
       (err, result) => {
         if (err) {
           res.render("dashboard", {

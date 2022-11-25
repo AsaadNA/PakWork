@@ -7,8 +7,11 @@ const returnLoginPayloadResponse =
   require("../common/helper").returnLoginPayloadResponse;
 const generateEmailVerification =
   require("../common/helper").generateEmailVerification;
+  const regenEmailVerification = require("../common/helper").regenEmailVerification;
 
 const emailVerificationSchema = require("../models/emailVerification");
+const emailVerification = require("../models/emailVerification");
+const transporter = require("../configs/mailer");
 
 const router = express.Router();
 
@@ -40,15 +43,66 @@ router.post("/login/admin", (req, res) => {
   );
 });
 
-///////////////////////////////
+router.post("/forgot/" , (req,res) => {
+  const {email} = req.body;
+  
+  //Find the user email and retrieve type
+  //Generate a new password (Text);
+  //Generate a new Hash;
+  //Send the text to the email
+
+  db.query(
+    `select user_type, password, freelancer_id as id from freelancer where email="${email}" UNION 
+    select user_type, password, company_client_id as id from company_client where email="${email}" UNION
+    select user_type, password, client_id as id from client where email="${email}";`,(e,r) => {
+      if(e) {
+        res.status(500).send({error: e.message});
+      } else if(r.length > 0) {
+        let generatedPassword = randtoken.uid(15);
+        bcrypt.hash(generatedPassword,10,(err,hash) => {
+          console.log(generatedPassword);
+          db.query(`UPDATE ${r[0]['user_type']} SET password="${hash}" where email="${email}";`,(e,r) => {
+            if(e) {
+              res.status(500).send({error: e.message});
+            } else if(r) {
+              let mailOptions = {
+                from: process.env.EMAILING_SYSTEM_EMAIL,
+                to: email,
+                subject: "New Password Generated",
+                text: `New Password Generate ${generatedPassword}`
+              };
+
+              transporter.sendMail(mailOptions , (err,info) => {
+                if(err) {
+                  res.status(400).send({
+                    error: err.message
+                  })
+                } else if(info) {
+                  res.status(200).send({message: "New Password Sent to Email :)"});
+                } else {
+                  res.status(400).send({
+                    error: "Could not generate a new password"
+                  });
+                }
+              })
+            } else {
+              res.status(400).send({error: "Could not generate a new password"});
+            }
+          })
+        })
+      } else {
+        res.status(400).send({error: "Could not find email"});  
+      }
+    });
+})
 
 //Freelancer, Client, Comapny Client Login
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
   db.query(
-    `select user_type, password, freelancer_id as id from freelancer where email="${email}" UNION 
-    select user_type, password, company_client_id as id from company_client where email="${email}" UNION
-    select user_type, password, client_id as id from client where email="${email}";`,
+    `select user_type, password, is_verified, freelancer_id as id from freelancer where email="${email}" UNION 
+    select user_type, password, is_verified,company_client_id as id from company_client where email="${email}" UNION
+    select user_type, password, is_verified,client_id as id from client where email="${email}";`,
     (e, r) => {
       if (e) {
         res.status(500).send({ error: e.message });
@@ -56,21 +110,33 @@ router.post("/login", (req, res) => {
         //Since email found compare Hashed Password
         bcrypt.compare(password, r[0]["password"], (err, result) => {
           if (result) {
-            if (r[0].user_type === "freelancer") {
-              returnLoginPayloadResponse(
-                res,
-                `SELECT * from freelancer where freelancer_id="${r[0].id}"`
-              );
-            } else if (r[0].user_type === "company_client") {
-              returnLoginPayloadResponse(
-                res,
-                `SELECT * from company_client where company_client_id="${r[0].id}"`
-              );
-            } else if (r[0].user_type === "client") {
-              returnLoginPayloadResponse(
-                res,
-                `SELECT * from client where client_id="${r[0].id}"`
-              );
+            if(r[0]["is_verified"] === 1) { //if is verified ... proceed with login
+              if (r[0].user_type === "freelancer") {
+                returnLoginPayloadResponse(
+                  res,
+                  `SELECT * from freelancer where freelancer_id="${r[0].id}"`
+                );
+              } else if (r[0].user_type === "company_client") {
+                returnLoginPayloadResponse(
+                  res,
+                  `SELECT * from company_client where company_client_id="${r[0].id}"`
+                );
+              } else if (r[0].user_type === "client") {
+                returnLoginPayloadResponse(
+                  res,
+                  `SELECT * from client where client_id="${r[0].id}"`
+                );
+              }
+            } else { //else send an error or generate a new verification link
+              let searchResult = emailVerificationSchema.find({email} , (err,data) => {
+                if(err) {
+                  res.status(500).send({error:err.message});
+                } else if(data.length > 0) {
+                  res.status(400).send({error: "Verification link already sent"});
+                } else {
+                  regenEmailVerification(res,{email,userType:r[0]['user_type']});
+                }
+              });
             }
           } else {
             res.status(400).send({ error: "Invalid Password" });
@@ -183,10 +249,11 @@ router.post("/register/:userType", (req, res) => {
                           region,
                           country,
                           state,
+                          dob,
                         } = req.body;
                         let query = "";
                         if (userType === "freelancer") {
-                          query = `INSERT INTO freelancer(freelancer_id,first_name,last_name,username,email,password,gender,phone_number,region,country,state) VALUES ("${generatedID}","${first_name}","${last_name}","${username}","${email}","${hash}","${gender}","${phone_number}","${region}","${country}","${state}");`;
+                          query = `INSERT INTO freelancer(freelancer_id,first_name,last_name,username,email,password,gender,phone_number,region,country,state,dob) VALUES ("${generatedID}","${first_name}","${last_name}","${username}","${email}","${hash}","${gender}","${phone_number}","${region}","${country}","${state}","${dob}");`;
                         } else {
                           query = `INSERT INTO client(client_id,first_name,last_name,username,email,password,gender,phone_number,region,country,state) VALUES ("${generatedID}","${first_name}","${last_name}","${username}","${email}","${hash}","${gender}","${phone_number}","${region}","${country}","${state}");`;
                         }

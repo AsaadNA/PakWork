@@ -96,6 +96,7 @@ const Freelancer = () => {
         region: region.value,
         country: country.label,
         state: countryState,
+        dob: dateOfBirth,
       });
       toast.success("Sending your application..", {
         position: "top-right",
@@ -120,6 +121,7 @@ const Freelancer = () => {
           region: region.value,
           country: country.label,
           state: countryState,
+          dob: dateOfBirth,
         });
 
         toast.success("Your Application has been submitted", {

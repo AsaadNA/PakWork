@@ -24,7 +24,6 @@ import {
 
 const ProfileInfo = () => {
   const [user, setUser] = useState({});
-  const [verified, setVerified] = useState(false);
   const [CompletedProfile, setCompletedProfile] = useState(false);
   const { handleShowVerification } = useContext(ShowVerificationModalContext);
   const { handleShowFreelancerEditProfile } = useContext(
@@ -37,22 +36,30 @@ const ProfileInfo = () => {
   const getProfileData = async () => {
     try {
       let userToken = localStorage.getItem("userToken");
-      let freelancerID = JSON.parse(localStorage.getItem("user")).freelancer_id;
       let response = await axios.get(`/profile`, {
         headers: {
           "x-access-token": userToken,
         },
       });
-      console.log(response.data);
-      if (
-        (response.data[0].bio === null && response.data[0].level === null) ||
-        response.data[0].isVerified === false
-      ) {
+
+      //Check if profile is incomplete
+      const entries = Object.entries(response.data[0]);
+      const nonEmptyOrNull = entries.filter(
+        ([key, val]) =>
+          (val === "" || val === null) &&
+          key !== "github_link" &&
+          key !== "linkedin_link" && 
+          key !== "profile_picture"
+      );
+
+      if (nonEmptyOrNull.length > 0) {
         setCompletedProfile(false);
       } else {
         setCompletedProfile(true);
       }
+
       setUser(response.data[0]);
+      //console.log(response.data[0]);
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +71,7 @@ const ProfileInfo = () => {
 
   return (
     <>
-      {!CompletedProfile ? (
+      {(!CompletedProfile || !user.is_active) ? (
         <Card
           style={{ width: "100%", maxWidth: "350px", background: "#f7f7f7" }}
         >
@@ -77,19 +84,22 @@ const ProfileInfo = () => {
                     onClick={handleShowProfilePictureUpload}
                   ></FaImage>
                   <img
-                    src={DefaultProfile}
+                    src={(user.profile_picture === "" || user.profile_picture === null) ? DefaultProfile : `http://localhost:4000/${user.profile_picture}`}
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
                 </div>
+                {
+                  (CompletedProfile ? (<div onClick={handleShowFreelancerEditProfile} style={{top:0}} className="editprofile-badge"><span className="editprofiletext">Edit Profile</span></div>) : null)
+                }
               </div>
               <div className="mt-2">
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  Muhammad Ahsan
+                  {user.first_name} {user.last_name}
                 </span>
                 <br />
                 <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                  @ahsantahseen
+                  @{user.username}
                 </span>
               </div>
               <hr className="w-100"></hr>
@@ -103,21 +113,33 @@ const ProfileInfo = () => {
                 Click the Button Below, Fill in additional details to compelete
                 your profile.
               </p>
-              {user.bio === null && (
+              {
+                CompletedProfile ? null : (
+                  <Button
+                className="mb-3 w-100"
+                variant="danger"
+                onClick={handleShowFreelancerEditProfile}
+              >
+                Complete Your Profile!
+              </Button>
+                )
+              }
+             
+              {user.is_active ? null : user.resubmit_verification ? (
                 <Button
-                  className="mb-3 w-100"
-                  variant="danger"
-                  onClick={handleShowFreelancerEditProfile}
+                  className="solid-green-btn w-100"
+                  onClick={handleShowVerification}
                 >
-                  Complete Your Profile!
+                  Resbumission Needed !
+                </Button>
+              ) : (
+                <Button
+                  className="solid-green-btn w-100"
+                  onClick={handleShowVerification}
+                >
+                  Get Verified! ✔️
                 </Button>
               )}
-              <Button
-                className="solid-green-btn w-100"
-                onClick={handleShowVerification}
-              >
-                Get Verified! ✔️
-              </Button>
             </div>
           </Card.Body>
         </Card>
@@ -126,7 +148,7 @@ const ProfileInfo = () => {
           <Card
             style={{ width: "100%", maxWidth: "350px", background: "#f7f7f7" }}
           >
-            <Card.Body>
+            <Card.Body>   
               <div className="d-flex justify-content-center align-items-center flex-column">
                 <div className="profile-box">
                   <div className="profile-picture-container">
@@ -135,29 +157,28 @@ const ProfileInfo = () => {
                       onClick={handleShowProfilePictureUpload}
                     ></FaImage>
                     <img
-                      src={
-                        "https://fiverr-res.cloudinary.com/image/upload/t_profile_original,q_auto,f_auto/v1/attachments/profile/photo/d7de608727a04b03fd8ce4d5c664e622-1665365749459/d3bd39f9-9925-4e49-905f-0d6b64392c72.png"
-                      }
+                      src={(user.profile_picture === "" || user.profile_picture === null) ? DefaultProfile : `http://localhost:4000/${user.profile_picture}`}
                       className="profile-picture  "
                       alt="profile_pic"
                     ></img>
-                    <div className="level1-badge">Level 1</div>
-                    {verified ? (
+                    <div className="level1-badge">{user.level}</div>
+                    {user.is_active ? (
                       <div className="verified-badge">
                         <FaUserCheck></FaUserCheck> Verified
                       </div>
                     ) : (
                       <div className="unverified-badge">Unverified</div>
                     )}
+                    <div onClick={handleShowFreelancerEditProfile} className="editprofile-badge"><span className="editprofiletext">Edit Profile</span></div>
                   </div>
                 </div>
                 <div className="mt-2">
                   <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                    Muhammad Ahsan
+                  {user.first_name} {user.last_name}
                   </span>
                   <br />
                   <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                    @ahsantahseen
+                    @{user.username}
                   </span>
                 </div>
                 <hr className="w-100"></hr>
@@ -165,16 +186,16 @@ const ProfileInfo = () => {
               <div style={{ textAlign: "left" }}>
                 <span>
                   <FaLocationArrow></FaLocationArrow> Country: &nbsp;
-                  <strong>Pakistan</strong>
+                  <strong>{user.country}</strong>
                 </span>
                 <br></br>
                 <span>
                   <FaIndustry></FaIndustry> Industry: &nbsp;
-                  <strong>Web Development</strong>
+                  <strong>{user.industry_name}</strong>
                 </span>
                 <br></br>
                 <FaClock></FaClock> Experience: &nbsp;
-                <strong>2 Years</strong>
+                <strong>{user.year_experience} Years</strong>
               </div>
             </Card.Body>
           </Card>
@@ -195,10 +216,7 @@ const ProfileInfo = () => {
                       About Me:
                     </span>
                     <br></br>
-                    I'm a professional full stack developer with 2 years of
-                    experience in html css javascript nodejs reactjs sql with
-                    excellent git version control skills along with professional
-                    graphics designing skills.
+                    {user.bio}
                   </p>
                   <hr className="w-100"></hr>
                   <p style={{ textAlign: "left" }}>
@@ -207,9 +225,13 @@ const ProfileInfo = () => {
                     </span>
                     <br></br>
                     <div style={{ fontSize: "30px" }}>
+                    <a href={user.linkedin_link}>
                       <FaLinkedin></FaLinkedin>
+                    </a>
                       &nbsp;
+                      <a href={user.github_link}>
                       <FaGithub></FaGithub>
+                    </a>
                     </div>
                   </p>
                 </div>

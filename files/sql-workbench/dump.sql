@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `pakwork` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `pakwork`;
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: pakwork
@@ -50,7 +48,7 @@ CREATE TABLE `client` (
   `username` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
-  `password` varchar(45) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
   `phone_number` varchar(40) DEFAULT NULL,
   `region` varchar(45) DEFAULT NULL,
   `country` varchar(45) DEFAULT NULL,
@@ -76,7 +74,7 @@ DROP TABLE IF EXISTS `company_client`;
 CREATE TABLE `company_client` (
   `company_client_id` varchar(45) NOT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `password` varchar(45) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
   `company_name` varchar(45) DEFAULT NULL,
   `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
   `phone_number` varchar(40) DEFAULT NULL,
@@ -105,7 +103,7 @@ CREATE TABLE `freelancer` (
   `last_name` varchar(45) DEFAULT NULL,
   `username` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
-  `password` varchar(45) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
   `gender` varchar(10) DEFAULT NULL,
   `phone_number` varchar(40) DEFAULT NULL,
   `region` varchar(45) DEFAULT NULL,
@@ -116,6 +114,8 @@ CREATE TABLE `freelancer` (
   `user_type` varchar(45) DEFAULT 'freelancer',
   `state` varchar(45) DEFAULT NULL,
   `resubmit_verification` tinyint(1) DEFAULT '0',
+  `resubmit_feedback` varchar(500) DEFAULT ' ',
+  `dob` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`freelancer_id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`),
@@ -276,7 +276,7 @@ DROP TABLE IF EXISTS `profile`;
 CREATE TABLE `profile` (
   `profile_id` varchar(45) NOT NULL,
   `bio` varchar(500) DEFAULT NULL,
-  `level` varchar(45) DEFAULT NULL,
+  `level` varchar(45) DEFAULT 'Level 1',
   `degree` varchar(50) DEFAULT NULL,
   `degree_period` varchar(45) DEFAULT NULL,
   `company` varchar(45) DEFAULT NULL,
@@ -312,14 +312,6 @@ CREATE TABLE `verification_images` (
   CONSTRAINT `verification_images_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping events for database 'pakwork'
---
-
---
--- Dumping routines for database 'pakwork'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -330,4 +322,4 @@ CREATE TABLE `verification_images` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-11-06  7:27:41
+-- Dump completed on 2022-11-25 18:56:29

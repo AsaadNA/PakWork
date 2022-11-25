@@ -14,6 +14,7 @@ import PakworkLogo from "../../assets/pakwork_logo.svg";
 import axios from "../../Api/Api";
 import { useNavigate } from "react-router-dom";
 import { decodeToken } from "react-jwt";
+import "./LoginModal.css";
 
 const LoginModal = () => {
   const { showLogin, handleCloseLogin } = useContext(ShowLoginModalContext);
@@ -25,13 +26,33 @@ const LoginModal = () => {
   const [AlertType, setAlertType] = useState("");
 
   const navigate = useNavigate();
+  
+  const handleForgotPassword = async () => {
+    if(email === "" || email === null) {
+      setshowAlert(true);
+      setAlertMessage("Input Email to send a new password")
+      setAlertType("danger");
+    } else {
+      setloading(true);
+      try {
+        let response = await axios.post("/auth/forgot" , {email});
+        setshowAlert(true);
+        setAlertMessage(response.data.message);
+        setAlertType("success");
+        setloading(false);
+      } catch(error) {
+        console.log(error);
+        setshowAlert(true);
+        setAlertMessage(error.response.data.error || error.message);
+        setAlertType("danger");
+        setloading(false);
+      }
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      email: email,
-      passsword: password,
-    });
+    setloading(true); //loading true
     try {
       let response = await axios.post(
         "/auth/login",
@@ -46,11 +67,11 @@ const LoginModal = () => {
       setshowAlert(true);
       setAlertMessage(response.data.message);
       setAlertType("success");
-      setloading(false);
       let token = response.headers["x-access-token"];
       localStorage.setItem("userToken", token);
       localStorage.setItem("user", JSON.stringify(decodeToken(token).data));
       navigate("/dashboard/profile");
+      setloading(false); //loading false for button
     } catch (error) {
       console.log(error);
       setshowAlert(true);
@@ -117,7 +138,8 @@ const LoginModal = () => {
                     Sign In
                   </Button>
                   <p
-                    className="text-muted mt-2 text-center"
+                    onClick={handleForgotPassword}
+                    className="text-muted mt-3 text-center forgotpassword"
                     style={{
                       textDecoration: "underline",
                     }}

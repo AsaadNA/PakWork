@@ -28,12 +28,9 @@ const ProfilePhotoUploadModal = () => {
     setloading(true);
     const formData = new FormData();
     e.preventDefault();
-    //console.log(files);
     for (let i = 0; i < files.length; i++) {
-      // console.log(files[i]);
-      formData.append(`images`, files[i]);
+      formData.append(`image`, files[i]);
     }
-
     try {
       let response = await axios.post("/upload/profile-pic", formData, {
         headers: {
@@ -42,11 +39,10 @@ const ProfilePhotoUploadModal = () => {
         },
       });
       setshowAlert(true);
-      setAlertMessage(response.data);
+      setAlertMessage(response.data.message);
       setAlertType("success");
       setloading(false);
       setAllowUpload(false);
-      console.log(response);
     } catch (error) {
       console.log(error);
       setshowAlert(true);
@@ -112,7 +108,7 @@ const ProfilePhotoUploadModal = () => {
                     variant="success"
                     disabled={!allowUpload}
                   >
-                    Upload 🚀
+                    Upload Profile Picture🚀
                   </Button>
                 </Form>
               </Col>

@@ -1,4 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState , useEffect} from "react";
+import axios from "../../../Api/Api";
+ 
 import {
   Modal,
   Form,
@@ -43,26 +45,79 @@ const EditModal = () => {
   const [linkedInLink, setlinkedInLink] = useState("");
   const [GithubLink, setGithubLink] = useState("");
   const [loading, setLoading] = useState(false);
-  const [formSubmitted, setformSubmitted] = useState(false);
 
   const { showEditProfie, handleCloseFreelancerEditProfile } = useContext(
     ShowEditFreelancerProfileModalContext
   );
-  const handleSubmit = (e) => {
+
+  const getProfileData = async () => {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      let response = await axios.get(`/profile`, {
+        headers: {
+          "x-access-token": userToken,
+        },
+      });
+
+      setBio(response.data[0].bio);
+      setYearsOfExperience(response.data[0].year_experience);
+     
+      //Setting industry from combobox
+      let idx = Industries.find((industry,index) => {
+        if(response.data[0].industry_name === industry.value) {
+          setIndustry(Industries[index]);
+        }
+      });
+
+      setGithubLink(response.data[0].github_link);
+      setlinkedInLink(response.data[0].linkedin_link);
+
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getProfileData();
+  } , []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setformSubmitted(true);
     setLoading(true);
-    toast.success("Processing Data..", {
-      position: "top-right",
-      delay: 1000,
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+
+    try {
+      let response = await axios.put("/profile/",{
+        bio: Bio,
+        industry_name: Industry.value,
+        year_experience: YearsOfExperience,
+        github_link: GithubLink,
+        linkedin_link: linkedInLink
+      }, {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken").toString(),
+        }
+      });
+
+      if(response.status === 200) {
+        setLoading(false);
+        /*toast.success("Updated Profile Information..", {
+          position: "top-right",
+          delay: 1000,
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "light",
+        });*/
+
+        window.location.reload();
+      }
+    } catch(err) {
+      console.log(err);
+    }
+
   };
   return (
     <>
@@ -100,7 +155,6 @@ const EditModal = () => {
                     rows={3}
                     placeholder="Hi I'm Ahsan I do lots of stuff.."
                     value={Bio}
-                    isInvalid={Bio.length < 30 && formSubmitted}
                     minLength={30}
                     maxLength={250}
                     onChange={(e) => {
@@ -151,7 +205,6 @@ const EditModal = () => {
                     type="number"
                     min={1}
                     max={25}
-                    isInvalid={formSubmitted && YearsOfExperience > 25}
                     step={1}
                     name="YearsOfExperience"
                     required
@@ -179,12 +232,6 @@ const EditModal = () => {
                     name="linkedInLink"
                     placeholder="https://www.linkedin.com/in/pakwork"
                     required
-                    isInvalid={
-                      formSubmitted &&
-                      !linkedInLink.match(
-                        "[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)"
-                      )
-                    }
                     value={linkedInLink}
                     onChange={(e) => setlinkedInLink(e.target.value)}
                   ></Form.Control>
@@ -210,12 +257,6 @@ const EditModal = () => {
                     onChange={(e) => {
                       setGithubLink(e.target.value);
                     }}
-                    isInvalid={
-                      formSubmitted &&
-                      !GithubLink.match(
-                        "[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)"
-                      )
-                    }
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Please enter a valid link

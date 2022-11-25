@@ -21,7 +21,7 @@
 }
 .level1-badge {
   height: 28px;
-  width: 90px;
+  width: 85px;
   background-color: purple;
   color: white;
   font-weight: bold;
@@ -33,7 +33,7 @@
 
 .level2-badge {
   height: 28px;
-  width: 90px;
+  width: 85px;
   background-color: brown;
   color: white;
   font-weight: bold;
@@ -45,7 +45,7 @@
 
 .verified-badge {
   height: 28px;
-  width: 90px;
+  width: 85px;
   background-color: #1c9cea;
   color: white;
   font-weight: bold;
@@ -56,7 +56,7 @@
 }
 .unverified-badge {
   height: 28px;
-  width: 90px;
+  width: 85px;
   background-color: #eaa91c;
   color: white;
   font-weight: bold;
@@ -64,4 +64,25 @@
   top: 35px;
   left: 0px;
   border-bottom-right-radius: 10px;
+}
+
+.editprofile-badge {
+  height: 28px;
+  width: 85px;
+  background-color: green;
+  color: white;
+  font-weight: bold;
+  position: absolute;
+  top: 70px;
+  left: 0px;
+  border-bottom-right-radius: 10px;
+}
+
+.editprofile-badge:hover {
+  border: 1px solid black;
+  cursor: pointer;
+}
+
+.editprofiletext {
+  font-size: 0.86em;
 }
