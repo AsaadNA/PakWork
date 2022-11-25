@@ -99,17 +99,25 @@ router.post(
           error: "Kindly Upload Verification Images",
         });
       } else if (req.files) {
-        async.forEachOfSeries(req.files, (file, idx, cb) => {
-          let imageID = randtoken.uid(10);
-          db.query(
-            `INSERT INTO verification_images(image_id,image,freelancer_id) VALUES ("${imageID}","/images/verifications/${file.filename}","${userID}");`,
-            (e, r) => {
-              cb();
-            }
-          );
-        });
+        db.query(`SELECT image from verification_images where freelancer_id="${userID}";` , (e,r) => {
+          if(e) {
+            res.status(400).send({error:e.message});
+          } else if(r.length <= 0) {
+            async.forEachOfSeries(req.files, (file, idx, cb) => {
+              let imageID = randtoken.uid(10);
+              db.query(
+                `INSERT INTO verification_images(image_id,image,freelancer_id) VALUES ("${imageID}","/images/verifications/${file.filename}","${userID}");`,
+                (e, r) => {
+                  cb();
+                }
+              );
+            });
+            res.status(200).send("Uploaded Verification Images");
+          } else {
+            res.status(400).send({error: "Verification images already uploaded ! Wait For Feedback From Administrator"});
+          }
+        })
       }
-      res.status(200).send("Uploaded Verification Images");
     } else {
       res.status(400).send({
         error: "Invalid User",

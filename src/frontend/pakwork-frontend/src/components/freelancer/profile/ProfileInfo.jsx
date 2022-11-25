@@ -37,22 +37,29 @@ const ProfileInfo = () => {
   const getProfileData = async () => {
     try {
       let userToken = localStorage.getItem("userToken");
-      let freelancerID = JSON.parse(localStorage.getItem("user")).freelancer_id;
       let response = await axios.get(`/profile`, {
         headers: {
           "x-access-token": userToken,
         },
       });
-      console.log(response.data);
-      if (
-        (response.data[0].bio === null ||  response.data[0].level === null) ||
-        response.data[0].isVerified === false
-      ) {
+
+      //Check if profile is incomplete
+      const entries = Object.entries(response.data[0]);
+      const nonEmptyOrNull = entries.filter(
+        ([key, val]) =>
+          (val === "" || val === null) &&
+          key !== "github_link" &&
+          key !== "linkedin_link"
+      );
+
+      if (nonEmptyOrNull.length > 0) {
         setCompletedProfile(false);
       } else {
         setCompletedProfile(true);
       }
+
       setUser(response.data[0]);
+      console.log(response.data[0]);
     } catch (error) {
       console.log(error);
     }
@@ -85,11 +92,11 @@ const ProfileInfo = () => {
               </div>
               <div className="mt-2">
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  Muhammad Ahsan
+                  {user.first_name} {user.last_name}
                 </span>
                 <br />
                 <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                  @ahsantahseen
+                  @{user.username}
                 </span>
               </div>
               <hr className="w-100"></hr>
@@ -103,19 +110,28 @@ const ProfileInfo = () => {
                 Click the Button Below, Fill in additional details to compelete
                 your profile.
               </p>
-                <Button
-                  className="mb-3 w-100"
-                  variant="danger"
-                  onClick={handleShowFreelancerEditProfile}
-                >
-                  Complete Your Profile!
-                </Button>
               <Button
-                className="solid-green-btn w-100"
-                onClick={handleShowVerification}
+                className="mb-3 w-100"
+                variant="danger"
+                onClick={handleShowFreelancerEditProfile}
               >
-                Get Verified! ✔️
+                Complete Your Profile!
               </Button>
+              {user.is_active ? null : user.resubmit_verification ? (
+                <Button
+                  className="solid-green-btn w-100"
+                  onClick={handleShowVerification}
+                >
+                  Resbumission Needed !
+                </Button>
+              ) : (
+                <Button
+                  className="solid-green-btn w-100"
+                  onClick={handleShowVerification}
+                >
+                  Get Verified! ✔️
+                </Button>
+              )}
             </div>
           </Card.Body>
         </Card>
@@ -128,10 +144,10 @@ const ProfileInfo = () => {
               <div className="d-flex justify-content-center align-items-center flex-column">
                 <div className="profile-box">
                   <div className="profile-picture-container">
-                      <FaImage
-                        className="uploadIcon"
-                        onClick={handleShowProfilePictureUpload}
-                      ></FaImage>
+                    <FaImage
+                      className="uploadIcon"
+                      onClick={handleShowProfilePictureUpload}
+                    ></FaImage>
                     <img
                       src={
                         "https://fiverr-res.cloudinary.com/image/upload/t_profile_original,q_auto,f_auto/v1/attachments/profile/photo/d7de608727a04b03fd8ce4d5c664e622-1665365749459/d3bd39f9-9925-4e49-905f-0d6b64392c72.png"

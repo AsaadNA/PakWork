@@ -106,16 +106,21 @@
         }
 
         function onReject(data) {
-            fetch("/api/v1/admin/reject/" + data.title, {
-                method: "PUT",
-                headers: { 'Content-Type': 'application/json' },
-            }).then(res => {
+            let feedback = prompt("Enter Feedback");
+            if(feedback !== null) {
+                fetch("/api/v1/admin/reject/" + data.title, {
+                    method: "PUT",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({feedback})
+                }).then(res => {
                 if (res.status === 200) {
                     window.location.reload();
                 } else if (res.status === 400) {
                     window.location.reload();
                 }
-            });
+                });
+            }
+           
         }
 
         $(document).ready(function () {

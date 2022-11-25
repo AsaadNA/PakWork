@@ -20,6 +20,7 @@ const VerificationModal = () => {
   const [showAlert, setshowAlert] = useState(false);
   const [AlertMessage, setAlertMessage] = useState("");
   const [AlertType, setAlertType] = useState("");
+  const [resubmissionFeedback, setResubmissionFeedBack] = useState(null);
 
   const { showVerification, handleCloseVerification } = useContext(
     ShowVerificationModalContext
@@ -29,9 +30,7 @@ const VerificationModal = () => {
     setloading(true);
     const formData = new FormData();
     e.preventDefault();
-    //console.log(files);
     for (let i = 0; i < files.length; i++) {
-      // console.log(files[i]);
       formData.append(`images`, files[i]);
     }
 
@@ -46,17 +45,39 @@ const VerificationModal = () => {
       setAlertMessage(response.data);
       setAlertType("success");
       setloading(false);
-      setAllowUpload(false);
-      console.log(response);
     } catch (error) {
-      console.log(error);
+      if (error.response.status === 500) {
+        setAlertMessage("Invalid File Type or More than 5 Images Uploaded");
+      } else {
+        setAlertMessage(error.response.data.error);
+      }
       setshowAlert(true);
-      setAlertMessage("Invalid File Type or Upload Limit Reached");
       setAlertType("danger");
       setloading(false);
     }
   };
+  
+  //Get Resubmission Feedback
+  const getResubmitFeedback = async () => {
+    try {
+      let response = await axios.get("/profile/getverificationfeedback" , {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken").toString(),
+        },
+      });
+
+      if(response.status === 200) {
+        setResubmissionFeedBack(response.data.feedback);
+      }
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
+
+    getResubmitFeedback(); //Getting resubmission Feedback
+
     setshowAlert(false);
     setAlertMessage("");
     setAlertType("success");
@@ -105,6 +126,13 @@ const VerificationModal = () => {
                   associated with you only. Other associate's documents found to
                   be used will result in cancellation of account's verification.
                 </p>
+                {resubmissionFeedback === null ||
+                resubmissionFeedback === "" ? null : (
+                  <p>
+                    <strong>Resubmission Feedback:</strong>{" "}
+                    {resubmissionFeedback}
+                  </p>
+                )}
                 <Form method="POST" onSubmit={handleUpload}>
                   <input
                     type="file"

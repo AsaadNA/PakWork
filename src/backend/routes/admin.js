@@ -4,9 +4,10 @@ const db = require("../configs/database");
 router.put("/accept/:freelancerID", (req, res) => {
   const { freelancerID } = req.params;
   db.query(
-    `UPDATE freelancer SET resubmit_verification=0,is_active=1 where freelancer_id="${freelancerID}";`,
+    `UPDATE freelancer SET resubmit_feedback=null, resubmit_verification=0,is_active=1 where freelancer_id="${freelancerID}";`,
     (err, result) => {
       if (err) {
+        console.log(err.message);
         res.status(500).send({
           error: err.message,
         });
@@ -19,8 +20,9 @@ router.put("/accept/:freelancerID", (req, res) => {
 
 router.put("/reject/:freelancerID", (req, res) => {
   const { freelancerID } = req.params;
+  const {feedback} = req.body;
   db.query(
-    `UPDATE freelancer SET resubmit_verification=1,is_active=0 where freelancer_id="${freelancerID}";`,
+    `UPDATE freelancer SET resubmit_feedback="${feedback}",resubmit_verification=1,is_active=0 where freelancer_id="${freelancerID}";`,
     (err, result) => {
       if (err) {
         res.status(500).send({
