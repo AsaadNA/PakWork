@@ -1,18 +1,10 @@
-import React, { useContext, useState , useEffect } from "react";
-import {
-  Modal,
-  Form,
-  Container,
-  Row,
-  Col,
-  Button,
-  Alert,
-} from "react-bootstrap";
+import React, { useContext, useState, useEffect } from "react";
+import { Modal, Form, Container, Row, Col, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { ShowEditClientProfileModalContext } from "../../../contexts/ModalContext";
-import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaLinkedin } from "react-icons/fa";
 import axios from "../../../Api/Api";
 
 const EditModal = () => {
@@ -43,7 +35,6 @@ const EditModal = () => {
   const [linkedInLink, setlinkedInLink] = useState("");
   const [loading, setLoading] = useState(false);
   const [formSubmitted, setformSubmitted] = useState(false);
-
   const { showEditProfie, handleCloseClientEditProfile } = useContext(
     ShowEditClientProfileModalContext
   );
@@ -57,49 +48,93 @@ const EditModal = () => {
         },
       });
 
-      setBio(response.data[0].bio);
-     
+      setBio(response.data[0].bio != null ? response.data[0].bio : "");
+
       //Setting industry from combobox
-      let idx = Industries.find((industry,index) => {
-        if(response.data[0].industry_name === industry.value) {
-          setIndustry(Industries[index]);
+      let idx = Industries.find((industry, index) => {
+        if (response.data[0].industry_name === industry.value) {
+          setIndustry(Industries[index] != null ? Industries[index] : "");
         }
       });
 
-      setlinkedInLink(response.data[0].linkedin_link);
-
-    } catch(err) {
+      setlinkedInLink(
+        response.data[0].linkedin_link != null
+          ? response.data[0].linkedin_link
+          : ""
+      );
+    } catch (err) {
       console.log(err);
     }
-  }
+  };
 
   useEffect(() => {
     getProfileData();
-  } , []);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    console.log(Bio.length >= 30, linkedInLink.length >= 21);
+    if (Bio.length >= 30 && linkedInLink.length >= 21) {
+      setLoading(true);
+      setformSubmitted(true);
+      try {
+        let response = await axios.put(
+          "/profile/",
+          {
+            bio: Bio,
+            industry_name: Industry.value,
+            linkedin_link: linkedInLink,
+          },
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("userToken").toString(),
+            },
+          }
+        );
 
-    try {
-      let response = await axios.put("/profile/",{
-        bio: Bio,
-        industry_name: Industry.value,
-        linkedin_link: linkedInLink
-      }, {
-        headers: {
-          "x-access-token": localStorage.getItem("userToken").toString(),
+        if (response.status === 200) {
+          setLoading(false);
+          setformSubmitted(false);
+          toast.success("Your Profile has been submitted", {
+            position: "top-right",
+            delay: 1000,
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          window.location.reload();
         }
-      });
-
-      if(response.status === 200) {
-        setLoading(false);
-        window.location.reload();
+      } catch (err) {
+        console.log(err);
+        toast.error(err, {
+          position: "top-right",
+          delay: 1000,
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
-    } catch(err) {
-      console.log(err);
+    } else {
+      toast.error("Incomplete Submission", {
+        position: "top-right",
+        delay: 1000,
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
-
   };
 
   return (
@@ -188,12 +223,7 @@ const EditModal = () => {
                     name="linkedInLink"
                     placeholder="https://www.linkedin.com/in/pakwork"
                     required
-                    isInvalid={
-                      formSubmitted &&
-                      !linkedInLink.match(
-                        "[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)"
-                      )
-                    }
+                    isInvalid={formSubmitted && linkedInLink.length < 21}
                     value={linkedInLink}
                     onChange={(e) => setlinkedInLink(e.target.value)}
                   ></Form.Control>
