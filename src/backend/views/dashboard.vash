@@ -53,6 +53,7 @@
                                 <th>Country</th>
                                 <th>State</th>
                                 <th>Registration Date</th>
+                                <th>DOB</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -75,6 +76,7 @@
                                     <td>@freelancer.country</td>
                                     <td>@freelancer.state</td>
                                     <td>@freelancer.registration_date</td>
+                                    <td>@freelancer.dob</td>
                                     <td class="d-flex">
                                         <button type="button" onclick="onApprove({title:'@freelancer.freelancer_id'})" class="btn btn-success mr-1" style="width:100px">Accept</button>                       
                                         <button type="button" onclick="onReject({title:'@freelancer.freelancer_id'})" class="btn btn-danger mr-1" style="margin-left:3px;width:100px">Reject</button>

@@ -249,10 +249,11 @@ router.post("/register/:userType", (req, res) => {
                           region,
                           country,
                           state,
+                          dob,
                         } = req.body;
                         let query = "";
                         if (userType === "freelancer") {
-                          query = `INSERT INTO freelancer(freelancer_id,first_name,last_name,username,email,password,gender,phone_number,region,country,state) VALUES ("${generatedID}","${first_name}","${last_name}","${username}","${email}","${hash}","${gender}","${phone_number}","${region}","${country}","${state}");`;
+                          query = `INSERT INTO freelancer(freelancer_id,first_name,last_name,username,email,password,gender,phone_number,region,country,state,dob) VALUES ("${generatedID}","${first_name}","${last_name}","${username}","${email}","${hash}","${gender}","${phone_number}","${region}","${country}","${state}","${dob}");`;
                         } else {
                           query = `INSERT INTO client(client_id,first_name,last_name,username,email,password,gender,phone_number,region,country,state) VALUES ("${generatedID}","${first_name}","${last_name}","${username}","${email}","${hash}","${gender}","${phone_number}","${region}","${country}","${state}");`;
                         }
