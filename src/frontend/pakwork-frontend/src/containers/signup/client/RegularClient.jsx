@@ -79,7 +79,7 @@ const RegularClient = () => {
       lastName.length > 3 &&
       userName.length > 5 &&
       email.length > 5 &&
-      password.length <= 6 &&
+      password.length >= 6 &&
       gender &&
       phoneNumber.length > 9 &&
       region &&

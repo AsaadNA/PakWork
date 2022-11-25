@@ -76,13 +76,26 @@
   top: 70px;
   left: 0px;
   border-bottom-right-radius: 10px;
+  transition: all 0.3s ease;
 }
 
 .editprofile-badge:hover {
-  border: 1px solid black;
   cursor: pointer;
+  width: 90px;
+  background-color: rgb(1, 95, 1);
+}
+.editprofile-badge:hover > .editprofiletext {
+  text-decoration: underline;
 }
 
 .editprofiletext {
   font-size: 0.86em;
+}
+
+.social-icon {
+  transition: all 0.3s ease-in;
+  color: rgba(0, 0, 0, 0.5);
+}
+.social-icon:hover {
+  color: #000;
 }

@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import NavBar from "../../../components/navbar/NavBar";
-import ProfileInfo from "../../../components/freelancer/profile/ProfileInfo";
+import ProfileInfo from "../../../components/organization/profile/ProfileInfo";
 import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import VerificationModal from "../../../components/verification/VerificationModal";
 import {
-  ShowEditClientProfileModalContext,
+  ShowEditOrganizationProfileModalContext,
   ShowProfilePictureUploadModalContext,
   ShowVerificationModalContext,
 } from "../../../contexts/ModalContext";
-import EditModal from "../../../components/client/profile/EditModal";
+import EditModal from "../../../components/organization/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
 
 const OrganizationProfile = () => {
@@ -20,8 +20,8 @@ const OrganizationProfile = () => {
 
   const handleCloseVerification = () => setshowVerification(false);
   const handleShowVerification = () => setshowVerification(true);
-  const handleCloseRegularBuyerEditProfile = () => setshowEditProfile(false);
-  const handleShowRegularBuyerEditProfile = () => setshowEditProfile(true);
+  const handleCloseOrganizationEditProfile = () => setshowEditProfile(false);
+  const handleShowOrganizationEditProfile = () => setshowEditProfile(true);
   const handleShowProfilePictureUpload = () =>
     setshowProfilePictureUpload(true);
   const handleCloseProfilePictureUpload = () =>
@@ -42,11 +42,11 @@ const OrganizationProfile = () => {
           handleShowVerification,
         }}
       >
-        <ShowEditClientProfileModalContext.Provider
+        <ShowEditOrganizationProfileModalContext.Provider
           value={{
             showEditProfie,
-            handleCloseRegularBuyerEditProfile,
-            handleShowRegularBuyerEditProfile,
+            handleCloseOrganizationEditProfile,
+            handleShowOrganizationEditProfile,
           }}
         >
           <div>
@@ -66,7 +66,7 @@ const OrganizationProfile = () => {
               </Row>
             </Container>
           </div>
-        </ShowEditClientProfileModalContext.Provider>
+        </ShowEditOrganizationProfileModalContext.Provider>
       </ShowVerificationModalContext.Provider>
     </ShowProfilePictureUploadModalContext.Provider>
   );

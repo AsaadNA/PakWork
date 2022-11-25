@@ -12,22 +12,23 @@ import {
   FaQuoteLeft,
   FaQuoteRight,
   FaUserCheck,
+  FaUser,
+  FaGlobe,
 } from "react-icons/fa";
 import axios from "../../../Api/Api";
 import "./ProfileInfo.css";
 import DefaultProfile from "../../../assets/profile_pic_default.png";
 import {
-  ShowVerificationModalContext,
-  ShowEditFreelancerProfileModalContext,
+  ShowEditOrganizationProfileModalContext,
   ShowProfilePictureUploadModalContext,
 } from "../../../contexts/ModalContext";
 
 const ProfileInfo = () => {
   const [user, setUser] = useState({});
+  const [verified, setVerified] = useState(false);
   const [CompletedProfile, setCompletedProfile] = useState(false);
-  const { handleShowVerification } = useContext(ShowVerificationModalContext);
-  const { handleShowFreelancerEditProfile } = useContext(
-    ShowEditFreelancerProfileModalContext
+  const { handleShowOrganizationEditProfile } = useContext(
+    ShowEditOrganizationProfileModalContext
   );
   const { handleShowProfilePictureUpload } = useContext(
     ShowProfilePictureUploadModalContext
@@ -41,25 +42,16 @@ const ProfileInfo = () => {
           "x-access-token": userToken,
         },
       });
-
-      //Check if profile is incomplete
-      const entries = Object.entries(response.data[0]);
-      const nonEmptyOrNull = entries.filter(
-        ([key, val]) =>
-          (val === "" || val === null) &&
-          key !== "github_link" &&
-          key !== "linkedin_link" &&
-          key !== "profile_picture"
-      );
-
-      if (nonEmptyOrNull.length > 0) {
+      console.log(response.data);
+      if (
+        (response.data[0].bio === null && response.data[0].level === null) ||
+        response.data[0].isVerified === false
+      ) {
         setCompletedProfile(false);
       } else {
         setCompletedProfile(true);
       }
-
       setUser(response.data[0]);
-      //console.log(response.data[0]);
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +63,7 @@ const ProfileInfo = () => {
 
   return (
     <>
-      {!CompletedProfile || !user.is_active ? (
+      {!CompletedProfile ? (
         <Card
           style={{ width: "100%", maxWidth: "350px", background: "#f7f7f7" }}
         >
@@ -84,33 +76,19 @@ const ProfileInfo = () => {
                     onClick={handleShowProfilePictureUpload}
                   ></FaImage>
                   <img
-                    src={
-                      user.profile_picture === "" ||
-                      user.profile_picture === null
-                        ? DefaultProfile
-                        : `http://localhost:4000/${user.profile_picture}`
-                    }
+                    src={DefaultProfile}
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
                 </div>
-                {CompletedProfile ? (
-                  <div
-                    onClick={handleShowFreelancerEditProfile}
-                    style={{ top: 0 }}
-                    className="editprofile-badge"
-                  >
-                    <span className="editprofiletext">Edit Profile</span>
-                  </div>
-                ) : null}
               </div>
               <div className="mt-2">
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  {user.first_name} {user.last_name}
+                  Shafique Pillar
                 </span>
                 <br />
                 <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                  @{user.username}
+                  @sqpillar
                 </span>
               </div>
               <hr className="w-100"></hr>
@@ -124,29 +102,13 @@ const ProfileInfo = () => {
                 Click the Button Below, Fill in additional details to compelete
                 your profile.
               </p>
-              {CompletedProfile ? null : (
+              {user.bio === null && (
                 <Button
                   className="mb-3 w-100"
                   variant="danger"
-                  onClick={handleShowFreelancerEditProfile}
+                  onClick={handleShowOrganizationEditProfile}
                 >
                   Complete Your Profile!
-                </Button>
-              )}
-
-              {user.is_active ? null : user.resubmit_verification ? (
-                <Button
-                  className="solid-green-btn w-100"
-                  onClick={handleShowVerification}
-                >
-                  Resbumission Needed !
-                </Button>
-              ) : (
-                <Button
-                  className="solid-green-btn w-100"
-                  onClick={handleShowVerification}
-                >
-                  Get Verified! ✔️
                 </Button>
               )}
             </div>
@@ -167,37 +129,20 @@ const ProfileInfo = () => {
                     ></FaImage>
                     <img
                       src={
-                        user.profile_picture === "" ||
-                        user.profile_picture === null
-                          ? DefaultProfile
-                          : `http://localhost:4000/${user.profile_picture}`
+                        "https://funneltechie.com/hosted/images/f3/76fb8aa2f94b968b581e9a36f62cd4/Logo-for_Youtube-Profile.jpg"
                       }
                       className="profile-picture  "
                       alt="profile_pic"
                     ></img>
-                    <div className="level1-badge">{user.level}</div>
-                    {user.is_active ? (
-                      <div className="verified-badge">
-                        <FaUserCheck></FaUserCheck> Verified
-                      </div>
-                    ) : (
-                      <div className="unverified-badge">Unverified</div>
-                    )}
-                    <div
-                      onClick={handleShowFreelancerEditProfile}
-                      className="editprofile-badge"
-                    >
-                      <span className="editprofiletext">Edit Profile</span>
-                    </div>
                   </div>
                 </div>
                 <div className="mt-2">
                   <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                    {user.first_name} {user.last_name}
+                    Funnel Techie
                   </span>
                   <br />
                   <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                    @{user.username}
+                    @funneltechie
                   </span>
                 </div>
                 <hr className="w-100"></hr>
@@ -205,16 +150,24 @@ const ProfileInfo = () => {
               <div style={{ textAlign: "left" }}>
                 <span>
                   <FaLocationArrow></FaLocationArrow> Country: &nbsp;
-                  <strong>{user.country}</strong>
+                  <strong>Pakistan</strong>
                 </span>
                 <br></br>
                 <span>
                   <FaIndustry></FaIndustry> Industry: &nbsp;
-                  <strong>{user.industry_name}</strong>
+                  <strong>Programming & Tech</strong>
                 </span>
                 <br></br>
-                <FaClock></FaClock> Experience: &nbsp;
-                <strong>{user.year_experience} Years</strong>
+                <span>
+                  <FaClock></FaClock> Hiring Experience: &nbsp;
+                  <strong>2 Years</strong>
+                </span>
+                <br></br>
+                <span>
+                  <FaUser></FaUser> No. of Employees: &nbsp;
+                  <strong>18</strong>
+                </span>
+                <br></br>
               </div>
             </Card.Body>
           </Card>
@@ -232,26 +185,24 @@ const ProfileInfo = () => {
                 <div>
                   <p style={{ textAlign: "left" }}>
                     <span style={{ fontSize: "16px", fontWeight: "bold" }}>
-                      About Me:
+                      About Us:
                     </span>
                     <br></br>
-                    {user.bio}
+                    We provide email marketing solutions and are looking for crm
+                    plugin developers
                   </p>
                   <hr className="w-100"></hr>
                   <p style={{ textAlign: "left" }}>
                     <span style={{ fontSize: "16px", fontWeight: "bold" }}>
-                      Linked Accounts:
+                      Linked Accounts & Website:
                     </span>
                     <br></br>
                     <div style={{ fontSize: "30px" }}>
-                      <a href={user.linkedin_link}>
-                        <FaLinkedin className="social-icon"></FaLinkedin>
-                      </a>
+                      <FaLinkedin className="social-icon"></FaLinkedin>
                       &nbsp;
-                      <a href={user.github_link}>
-                        <FaGithub className="social-icon"></FaGithub>
-                      </a>
+                      <FaGlobe className="social-icon"></FaGlobe>
                     </div>
+                    <br />
                   </p>
                 </div>
               </div>

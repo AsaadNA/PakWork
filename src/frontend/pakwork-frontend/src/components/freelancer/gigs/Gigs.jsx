@@ -12,7 +12,7 @@ const Gigs = () => {
       </Button>
       <Row className="d-flex mt-4 justify-content-center-md align-items-center flex-column-md">
         <Col md={4}>
-          <Card style={{ width: "100%", maxWidth: "320px" }}>
+          <Card style={{ width: "100%", maxWidth: "320px", height: "305px" }}>
             <Card.Img src="https://fiverr-res.cloudinary.com/images/t_medium7,q_auto,f_auto,q_auto,f_auto/gigs/252110108/original/68202f99bd3150cc08bf0236d69de69548ad119e/html-css-javascript-nodejs-development.png"></Card.Img>
             <Card.Body style={{ textAlign: "left", fontWeight: "bold" }}>
               Custom Web Development Services
@@ -28,7 +28,7 @@ const Gigs = () => {
           </Card>
         </Col>
         <Col md={4}>
-          <Card style={{ width: "100%", maxWidth: "320px" }}>
+          <Card style={{ width: "100%", maxWidth: "320px", height: "305px" }}>
             <Card.Img src="https://fiverr-res.cloudinary.com/images/t_medium7,q_auto,f_auto,q_auto,f_auto/gigs/252118663/original/cc2c5903a188d44ba114591382444a6ba6894757/convert-excel-calculator-to-web.png"></Card.Img>
             <Card.Body style={{ textAlign: "left", fontWeight: "bold" }}>
               Convert Ms Excel, Google Sheets to HTML Calculator
@@ -44,7 +44,7 @@ const Gigs = () => {
           </Card>
         </Col>
         <Col md={4}>
-          <Card style={{ width: "100%", maxWidth: "320px" }}>
+          <Card style={{ width: "100%", maxWidth: "320px", height: "305px" }}>
             <Card.Img src="https://fiverr-res.cloudinary.com/images/t_medium7,q_auto,f_auto,q_auto,f_auto/gigs/240893461/original/84827500804d6b10be52803b9e9c6d11347c60e3/do-android-development-using-java.png"></Card.Img>
             <Card.Body style={{ textAlign: "left", fontWeight: "bold" }}>
               Android App Development Services, Custom Apps

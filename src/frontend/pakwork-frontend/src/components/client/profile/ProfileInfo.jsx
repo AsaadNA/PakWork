@@ -17,7 +17,6 @@ import axios from "../../../Api/Api";
 import "./ProfileInfo.css";
 import DefaultProfile from "../../../assets/profile_pic_default.png";
 import {
-  ShowVerificationModalContext,
   ShowEditClientProfileModalContext,
   ShowProfilePictureUploadModalContext,
 } from "../../../contexts/ModalContext";
@@ -26,7 +25,6 @@ const ProfileInfo = () => {
   const [user, setUser] = useState({});
   const [verified, setVerified] = useState(false);
   const [CompletedProfile, setCompletedProfile] = useState(false);
-  const { handleShowVerification } = useContext(ShowVerificationModalContext);
   const { handleShowClientEditProfile } = useContext(
     ShowEditClientProfileModalContext
   );
@@ -37,7 +35,6 @@ const ProfileInfo = () => {
   const getProfileData = async () => {
     try {
       let userToken = localStorage.getItem("userToken");
-      let freelancerID = JSON.parse(localStorage.getItem("user")).freelancer_id;
       let response = await axios.get(`/profile`, {
         headers: {
           "x-access-token": userToken,
@@ -64,7 +61,7 @@ const ProfileInfo = () => {
 
   return (
     <>
-      {CompletedProfile ? (
+      {!CompletedProfile ? (
         <Card
           style={{ width: "100%", maxWidth: "350px", background: "#f7f7f7" }}
         >
@@ -81,13 +78,6 @@ const ProfileInfo = () => {
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
-                  {verified ? (
-                    <div className="verified-badge">
-                      <FaUserCheck></FaUserCheck> Verified
-                    </div>
-                  ) : (
-                    <div className="unverified-badge">Unverified</div>
-                  )}
                 </div>
               </div>
               <div className="mt-2">
@@ -117,14 +107,6 @@ const ProfileInfo = () => {
                   onClick={handleShowClientEditProfile}
                 >
                   Complete Your Profile!
-                </Button>
-              )}
-              {verified ? null : (
-                <Button
-                  className="solid-green-btn w-100"
-                  onClick={handleShowVerification}
-                >
-                  Get Verified! ✔️
                 </Button>
               )}
             </div>
@@ -211,7 +193,7 @@ const ProfileInfo = () => {
                     </span>
                     <br></br>
                     <div style={{ fontSize: "30px" }}>
-                      <FaLinkedin></FaLinkedin>
+                      <FaLinkedin className="social-icon"></FaLinkedin>
                     </div>
                   </p>
                 </div>
