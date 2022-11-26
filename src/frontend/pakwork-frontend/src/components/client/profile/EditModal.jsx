@@ -105,7 +105,9 @@ const EditModal = () => {
             progress: undefined,
             theme: "light",
           });
-          window.location.reload();
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
         }
       } catch (err) {
         console.log(err);

@@ -45,7 +45,7 @@ const EditModal = () => {
   const [linkedInLink, setlinkedInLink] = useState("");
   const [GithubLink, setGithubLink] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const [formSubmitted, setformSubmitted] = useState(false);
   const { showEditProfie, handleCloseFreelancerEditProfile } = useContext(
     ShowEditFreelancerProfileModalContext
   );
@@ -59,18 +59,28 @@ const EditModal = () => {
         },
       });
 
-      setBio(response.data[0].bio);
-      setYearsOfExperience(response.data[0].year_experience);
+      setBio(response.data[0].bio != null ? response.data[0].bio : "");
+      setYearsOfExperience(
+        response.data[0].year_experience != null
+          ? response.data[0].year_experience
+          : 0
+      );
 
       //Setting industry from combobox
       let idx = Industries.find((industry, index) => {
         if (response.data[0].industry_name === industry.value) {
-          setIndustry(Industries[index]);
+          setIndustry(Industries[index] != null ? Industries[index] : "");
         }
       });
 
-      setGithubLink(response.data[0].github_link);
-      setlinkedInLink(response.data[0].linkedin_link);
+      setGithubLink(
+        response.data[0].github_link != null ? response.data[0].github_link : ""
+      );
+      setlinkedInLink(
+        response.data[0].linkedin_link != null
+          ? response.data[0].linkedin_link
+          : ""
+      );
     } catch (err) {
       console.log(err);
     }
@@ -83,30 +93,74 @@ const EditModal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
-    try {
-      let response = await axios.put(
-        "/profile/",
-        {
-          bio: Bio,
-          industry_name: Industry.value,
-          year_experience: YearsOfExperience,
-          github_link: GithubLink,
-          linkedin_link: linkedInLink,
-        },
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("userToken").toString(),
+    setformSubmitted(true);
+    if (
+      Bio.length >= 30 &&
+      linkedInLink.length >= 21 &&
+      GithubLink.length >= 16 &&
+      YearsOfExperience <= 25
+    ) {
+      try {
+        let response = await axios.put(
+          "/profile/",
+          {
+            bio: Bio,
+            industry_name: Industry.value,
+            year_experience: YearsOfExperience,
+            github_link: GithubLink,
+            linkedin_link: linkedInLink,
           },
-        }
-      );
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("userToken").toString(),
+            },
+          }
+        );
 
-      if (response.status === 200) {
-        setLoading(false);
-        window.location.reload();
+        if (response.status === 200) {
+          setLoading(false);
+          setformSubmitted(false);
+          toast.success("Your Profile has been submitted", {
+            position: "top-right",
+            delay: 1000,
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
+        }
+      } catch (err) {
+        console.log(err);
+        toast.error(err, {
+          position: "top-right",
+          delay: 1000,
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
-    } catch (err) {
-      console.log(err);
+    } else {
+      toast.error("Incomplete Submission", {
+        position: "top-right",
+        delay: 1000,
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
   };
   return (
@@ -150,6 +204,7 @@ const EditModal = () => {
                     onChange={(e) => {
                       setBio(e.target.value);
                     }}
+                    isInvalid={Bio.length < 30 && formSubmitted}
                   ></Form.Control>
                   <Form.Text>
                     Be Descriptive as you can, limit is 250 characters.
@@ -202,6 +257,7 @@ const EditModal = () => {
                     onChange={(e) => {
                       setYearsOfExperience(e.target.value);
                     }}
+                    isInvalid={formSubmitted && YearsOfExperience > 25}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Let's be honest here, 25 Years or less please!
@@ -223,6 +279,7 @@ const EditModal = () => {
                     placeholder="https://www.linkedin.com/in/pakwork"
                     required
                     value={linkedInLink}
+                    isInvalid={formSubmitted && linkedInLink.length < 21}
                     onChange={(e) => setlinkedInLink(e.target.value)}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
@@ -244,6 +301,7 @@ const EditModal = () => {
                     placeholder="https://github.com/pakwork"
                     required
                     value={GithubLink}
+                    isInvalid={formSubmitted && GithubLink.length < 21}
                     onChange={(e) => {
                       setGithubLink(e.target.value);
                     }}

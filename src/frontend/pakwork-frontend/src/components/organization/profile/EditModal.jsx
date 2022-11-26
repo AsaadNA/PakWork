@@ -1,4 +1,4 @@
-import React, { useContext, useState , useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Modal,
   Form,
@@ -72,7 +72,7 @@ const EditModal = () => {
         response.data[0].year_experience != null
           ? response.data[0].year_experience
           : 0
-      )
+      );
 
       setCompanyWebsite(
         response.data[0].company_website != null
@@ -92,40 +92,80 @@ const EditModal = () => {
 
   useEffect(() => {
     getProfileData();
-  } , [])
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setformSubmitted(true);
     setLoading(true);
-    
-    try {
-      let response = await axios.put(
-        "/profile/",
-        {
-          bio: Bio,
-          industry_name: Industry.value,
-          year_experience: YearsOfExperience,
-          linkedin_link: linkedInLink,
-          company_website: CompanyWebsite
-        },
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("userToken").toString(),
+    if (
+      Bio.length >= 30 &&
+      linkedInLink.length >= 21 &&
+      CompanyWebsite.length >= 10 &&
+      YearsOfExperience <= 25
+    ) {
+      try {
+        let response = await axios.put(
+          "/profile/",
+          {
+            bio: Bio,
+            industry_name: Industry.value,
+            year_experience: YearsOfExperience,
+            linkedin_link: linkedInLink,
+            company_website: CompanyWebsite,
           },
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("userToken").toString(),
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          setLoading(false);
+          setformSubmitted(false);
+          toast.success("Your Profile has been submitted", {
+            position: "top-right",
+            delay: 1000,
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 4000);
         }
-      );
-
-      if(response.status === 200) {
-        setLoading(false);
-        setformSubmitted(false);
-        window.location.reload();
+      } catch (err) {
+        console.log(err);
+        toast.error(err, {
+          position: "top-right",
+          delay: 1000,
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
-
-    } catch(err) {
-      console.log(err);
+    } else {
+      toast.error("Incomplete Submission", {
+        position: "top-right",
+        delay: 1000,
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
     }
-
   };
   return (
     <>
@@ -151,16 +191,6 @@ const EditModal = () => {
               }}
             >
               <Row className="mb-3">
-                <Form.Group
-                  as={Col}
-                  md={12}
-                  controlId="formGridName"
-                  className="mb-2"
-                >
-                  <Form.Control.Feedback type="invalid">
-                    Please enter name more than 3 characters
-                  </Form.Control.Feedback>
-                </Form.Group>
                 <Form.Group as={Col} md={12} controlId="formGridBio">
                   <Form.Label for="bio" style={{ fontWeight: "bold" }}>
                     ✨ Write something about your company, how would you
@@ -175,6 +205,7 @@ const EditModal = () => {
                     value={Bio}
                     minLength={30}
                     maxLength={250}
+                    isInvalid={formSubmitted && Bio.length < 30}
                     onChange={(e) => {
                       setBio(e.target.value);
                     }}
@@ -227,6 +258,7 @@ const EditModal = () => {
                     name="YearsOfExperience"
                     required
                     value={YearsOfExperience}
+                    isInvalid={formSubmitted && YearsOfExperience > 25}
                     onChange={(e) => {
                       setYearsOfExperience(e.target.value);
                     }}
@@ -245,7 +277,8 @@ const EditModal = () => {
                     for="lCompanyWebsiteLink"
                     style={{ fontWeight: "bold" }}
                   >
-                    <FaGlobe></FaGlobe> Link to your company's website
+                    <FaGlobe></FaGlobe> Link to your company's website, This
+                    information is quite useful for sharing in terms of trust
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -253,6 +286,7 @@ const EditModal = () => {
                     placeholder="https://www.pakwork.com"
                     required
                     value={CompanyWebsite}
+                    isInvalid={formSubmitted && CompanyWebsite.length < 18}
                     onChange={(e) => setCompanyWebsite(e.target.value)}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
@@ -266,8 +300,9 @@ const EditModal = () => {
                   controlId="linkedInLink"
                 >
                   <Form.Label for="linkedInLink" style={{ fontWeight: "bold" }}>
-                    <FaLinkedin></FaLinkedin> Link to your company's linkedIn
-                    profile
+                    <FaLinkedin></FaLinkedin> Link to your company's linkedIn,
+                    This information is quite useful for sharing in terms of
+                    your company's professionalism
                   </Form.Label>
                   <Form.Control
                     type="text"
@@ -275,6 +310,7 @@ const EditModal = () => {
                     placeholder="https://www.linkedin.com/in/pakwork"
                     required
                     value={linkedInLink}
+                    isInvalid={formSubmitted && linkedInLink.length < 21}
                     onChange={(e) => setlinkedInLink(e.target.value)}
                   ></Form.Control>
                   <Form.Control.Feedback type="invalid">
