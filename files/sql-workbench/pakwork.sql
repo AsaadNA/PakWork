@@ -12,3 +12,6 @@ select p.profile_picture,p.level,f.first_name,f.last_name,f.username,f.country,p
 
 /* Get The Profile Info From Client & Profile Table for a specific client */
 select c.first_name,c.last_name,c.username,c.country,p.profile_picture,p.industry_name,p.bio,p.linkedin_link from profile p inner join client c on c.client_id = p.profile_id where p.profile_id="";
+
+/* Get The Profile Info From Company Client & Profile Table for a specific company client */
+select c.company_name,c.country,p.industry_name,p.year_experience,p.bio,p.linkedin_link,p.company_website from profile p inner join company_client c on c.company_client_id = p.profile_id;

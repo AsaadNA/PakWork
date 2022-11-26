@@ -28,8 +28,7 @@ router.get("/", authMiddleware, (req, res) => {
   } else if (userType === "client") {
     query = `select c.first_name,c.last_name,c.username,c.country,p.profile_picture,p.industry_name,p.bio,p.linkedin_link from profile p inner join client c on c.client_id = p.profile_id where p.profile_id="${userID}";`;
   } else if (userType === "company_client") {
-    //TODO: Change this
-    query = `select bio,company,company_website,profile_picture,industry_name,employeed_range,linkedin_link,registration_date from profile where profile_id="${userID}" and user_type="company_client"`;
+    query = `select c.company_name,c.country,p.profile_picture,p.industry_name,p.year_experience,p.bio,p.linkedin_link,p.company_website from profile p inner join company_client c on c.company_client_id = p.profile_id where profile_id="${userID}";`;
   } else {
     res.status(400).send({
       error: "Invalid Profile",
@@ -75,16 +74,14 @@ router.put("/", authMiddleware, (req, res) => {
     const { bio, industry_name, linkedin_link } = req.body;
     query = `UPDATE profile SET bio="${bio}",industry_name="${industry_name}",linkedin_link="${linkedin_link}" WHERE profile_id="${userID}";`;
   } else if (userType === "company_client") {
-    //TODO: CHANGE THIS
     const {
       bio,
-      company,
-      company_website,
       industry_name,
-      employeed_range,
+      year_experience,
       linkedin_link,
+      company_website,
     } = req.body;
-    query = `UPDATE profile SET bio="${bio}",company="${company}",company_website="${company_website}",industry_name="${industry_name}",employeed_range="${employeed_range}",linkedin_link="${linkedin_link}" WHERE profile_id="${userID}";`;
+    query = `UPDATE profile SET year_experience=${year_experience}, bio="${bio}",company_website="${company_website}",industry_name="${industry_name}",linkedin_link="${linkedin_link}" WHERE profile_id="${userID}";`;
   } else {
     res.status(400).send({
       error: "Invalid Profile",
@@ -93,6 +90,7 @@ router.put("/", authMiddleware, (req, res) => {
 
   db.query(query, (e, r) => {
     if (e) {
+      console.log(e.message);
       res.status(500).send({
         error: e.message,
       });

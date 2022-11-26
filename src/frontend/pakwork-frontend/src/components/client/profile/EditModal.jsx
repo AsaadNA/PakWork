@@ -73,7 +73,6 @@ const EditModal = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(Bio.length >= 30, linkedInLink.length >= 21);
     if (Bio.length >= 30 && linkedInLink.length >= 21) {
       setLoading(true);
       setformSubmitted(true);

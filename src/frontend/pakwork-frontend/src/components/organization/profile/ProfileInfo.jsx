@@ -1,18 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import {
-  FaCheck,
-  FaCheckDouble,
   FaClock,
-  FaGithub,
   FaImage,
   FaIndustry,
   FaLinkedin,
   FaLocationArrow,
-  FaQuoteLeft,
-  FaQuoteRight,
-  FaUserCheck,
-  FaUser,
   FaGlobe,
 } from "react-icons/fa";
 import axios from "../../../Api/Api";
@@ -25,8 +18,7 @@ import {
 
 const ProfileInfo = () => {
   const [user, setUser] = useState({});
-  const [verified, setVerified] = useState(false);
-  const [CompletedProfile, setCompletedProfile] = useState(false);
+  const [CompletedProfile, setCompletedProfile] = useState(true);
   const { handleShowOrganizationEditProfile } = useContext(
     ShowEditOrganizationProfileModalContext
   );
@@ -42,11 +34,18 @@ const ProfileInfo = () => {
           "x-access-token": userToken,
         },
       });
-      console.log(response.data);
-      if (
-        (response.data[0].bio === null && response.data[0].level === null) ||
-        response.data[0].isVerified === false
-      ) {
+
+      //Check if profile is incomplete
+      const entries = Object.entries(response.data[0]);
+      const nonEmptyOrNull = entries.filter(
+        ([key, val]) =>
+          (val === "" || val === null) &&
+          key !== "linkedin_link" &&
+          key !== "profile_picture" &&
+          key !== "company_website"
+      );
+
+      if (nonEmptyOrNull.length > 0) {
         setCompletedProfile(false);
       } else {
         setCompletedProfile(true);
@@ -76,7 +75,12 @@ const ProfileInfo = () => {
                     onClick={handleShowProfilePictureUpload}
                   ></FaImage>
                   <img
-                    src={DefaultProfile}
+                    src={
+                      user.profile_picture === "" ||
+                      user.profile_picture === null
+                        ? DefaultProfile
+                        : `http://localhost:4000/${user.profile_picture}`
+                    }
                     className="profile-picture"
                     alt="profile_pic"
                   ></img>
@@ -84,12 +88,9 @@ const ProfileInfo = () => {
               </div>
               <div className="mt-2">
                 <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                  Shafique Pillar
+                  {user.company_name}
                 </span>
                 <br />
-                <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                  @sqpillar
-                </span>
               </div>
               <hr className="w-100"></hr>
             </div>
@@ -102,7 +103,7 @@ const ProfileInfo = () => {
                 Click the Button Below, Fill in additional details to compelete
                 your profile.
               </p>
-              {user.bio === null && (
+              {CompletedProfile ? null : (
                 <Button
                   className="mb-3 w-100"
                   variant="danger"
@@ -129,20 +130,26 @@ const ProfileInfo = () => {
                     ></FaImage>
                     <img
                       src={
-                        "https://funneltechie.com/hosted/images/f3/76fb8aa2f94b968b581e9a36f62cd4/Logo-for_Youtube-Profile.jpg"
-                      }
+                      user.profile_picture === "" ||
+                      user.profile_picture === null
+                        ? DefaultProfile
+                        : `http://localhost:4000/${user.profile_picture}`
+                    }
                       className="profile-picture  "
                       alt="profile_pic"
                     ></img>
+                    <div
+                      style={{top:0}}
+                      onClick={handleShowOrganizationEditProfile}
+                      className="editprofile-badge"
+                    >
+                      <span className="editprofiletext">Edit Profile</span>
+                    </div>
                   </div>
                 </div>
                 <div className="mt-2">
                   <span style={{ fontSize: "20px", fontWeight: "bold" }}>
-                    Funnel Techie
-                  </span>
-                  <br />
-                  <span className="text-dark-50" style={{ fontSize: "16px" }}>
-                    @funneltechie
+                    {user.company_name}
                   </span>
                 </div>
                 <hr className="w-100"></hr>
@@ -150,22 +157,17 @@ const ProfileInfo = () => {
               <div style={{ textAlign: "left" }}>
                 <span>
                   <FaLocationArrow></FaLocationArrow> Country: &nbsp;
-                  <strong>Pakistan</strong>
+                  <strong>{user.country}</strong>
                 </span>
                 <br></br>
                 <span>
                   <FaIndustry></FaIndustry> Industry: &nbsp;
-                  <strong>Programming & Tech</strong>
+                  <strong>{user.industry_name}</strong>
                 </span>
                 <br></br>
                 <span>
                   <FaClock></FaClock> Hiring Experience: &nbsp;
-                  <strong>2 Years</strong>
-                </span>
-                <br></br>
-                <span>
-                  <FaUser></FaUser> No. of Employees: &nbsp;
-                  <strong>18</strong>
+                  <strong>{user.year_experience} Years</strong>
                 </span>
                 <br></br>
               </div>
@@ -188,8 +190,7 @@ const ProfileInfo = () => {
                       About Us:
                     </span>
                     <br></br>
-                    We provide email marketing solutions and are looking for crm
-                    plugin developers
+                    {user.bio}
                   </p>
                   <hr className="w-100"></hr>
                   <p style={{ textAlign: "left" }}>
@@ -198,11 +199,14 @@ const ProfileInfo = () => {
                     </span>
                     <br></br>
                     <div style={{ fontSize: "30px" }}>
-                      <FaLinkedin className="social-icon"></FaLinkedin>
+                      <a href={user.linkedin_link}>
+                        <FaLinkedin className="social-icon"></FaLinkedin>
+                      </a>
                       &nbsp;
-                      <FaGlobe className="social-icon"></FaGlobe>
+                      <a href={user.company_website}>
+                        <FaGlobe className="social-icon"></FaGlobe>
+                      </a>
                     </div>
-                    <br />
                   </p>
                 </div>
               </div>

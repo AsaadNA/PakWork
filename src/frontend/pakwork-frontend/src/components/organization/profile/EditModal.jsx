@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState , useEffect } from "react";
 import {
   Modal,
   Form,
@@ -13,6 +13,7 @@ import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo_plus.svg";
 import { ShowEditOrganizationProfileModalContext } from "../../../contexts/ModalContext";
 import { FaGlobe, FaLinkedin } from "react-icons/fa";
+import axios from "../../../Api/Api";
 
 const EditModal = () => {
   const Industries = [
@@ -37,7 +38,6 @@ const EditModal = () => {
       label: `🖊️ Creative Writer`,
     },
   ];
-  const [CompanyName, setCompanyName] = useState("");
   const [CompanyWebsite, setCompanyWebsite] = useState("");
   const [Bio, setBio] = useState("");
   const [Industry, setIndustry] = useState(Industries[0]);
@@ -49,21 +49,83 @@ const EditModal = () => {
   const { showEditProfie, handleCloseOrganizationEditProfile } = useContext(
     ShowEditOrganizationProfileModalContext
   );
-  const handleSubmit = (e) => {
+
+  const getProfileData = async () => {
+    try {
+      let userToken = localStorage.getItem("userToken");
+      let response = await axios.get(`/profile`, {
+        headers: {
+          "x-access-token": userToken,
+        },
+      });
+
+      setBio(response.data[0].bio != null ? response.data[0].bio : "");
+
+      //Setting industry from combobox
+      let idx = Industries.find((industry, index) => {
+        if (response.data[0].industry_name === industry.value) {
+          setIndustry(Industries[index] != null ? Industries[index] : "");
+        }
+      });
+
+      setYearsOfExperience(
+        response.data[0].year_experience != null
+          ? response.data[0].year_experience
+          : 0
+      )
+
+      setCompanyWebsite(
+        response.data[0].company_website != null
+          ? response.data[0].company_website
+          : ""
+      );
+
+      setlinkedInLink(
+        response.data[0].linkedin_link != null
+          ? response.data[0].linkedin_link
+          : ""
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getProfileData();
+  } , [])
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setformSubmitted(true);
     setLoading(true);
-    toast.success("Processing Data..", {
-      position: "top-right",
-      delay: 1000,
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+    
+    try {
+      let response = await axios.put(
+        "/profile/",
+        {
+          bio: Bio,
+          industry_name: Industry.value,
+          year_experience: YearsOfExperience,
+          linkedin_link: linkedInLink,
+          company_website: CompanyWebsite
+        },
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("userToken").toString(),
+          },
+        }
+      );
+
+      if(response.status === 200) {
+        setLoading(false);
+        setformSubmitted(false);
+        window.location.reload();
+      }
+
+    } catch(err) {
+      console.log(err);
+    }
+
   };
   return (
     <>
@@ -95,19 +157,6 @@ const EditModal = () => {
                   controlId="formGridName"
                   className="mb-2"
                 >
-                  <Form.Label for="name" style={{ fontWeight: "bold" }}>
-                    ✨ Write the name of your company?
-                  </Form.Label>
-                  <Form.Control
-                    type="text"
-                    required
-                    value={CompanyName}
-                    onChange={(e) => {
-                      setCompanyName(e.target.value);
-                    }}
-                    placeholder="Pakwork"
-                    isInvalid={formSubmitted && CompanyName.length > 3}
-                  ></Form.Control>
                   <Form.Control.Feedback type="invalid">
                     Please enter name more than 3 characters
                   </Form.Control.Feedback>
@@ -124,7 +173,6 @@ const EditModal = () => {
                     rows={3}
                     placeholder="Hi, We are Pakwork and we do lots of stuff.."
                     value={Bio}
-                    isInvalid={Bio.length < 30 && formSubmitted}
                     minLength={30}
                     maxLength={250}
                     onChange={(e) => {
@@ -175,7 +223,6 @@ const EditModal = () => {
                     type="number"
                     min={1}
                     max={25}
-                    isInvalid={formSubmitted && YearsOfExperience > 25}
                     step={1}
                     name="YearsOfExperience"
                     required
@@ -205,12 +252,6 @@ const EditModal = () => {
                     name="websiteLink"
                     placeholder="https://www.pakwork.com"
                     required
-                    isInvalid={
-                      formSubmitted &&
-                      !CompanyWebsite.match(
-                        "[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)"
-                      )
-                    }
                     value={CompanyWebsite}
                     onChange={(e) => setCompanyWebsite(e.target.value)}
                   ></Form.Control>
@@ -233,12 +274,6 @@ const EditModal = () => {
                     name="linkedInLink"
                     placeholder="https://www.linkedin.com/in/pakwork"
                     required
-                    isInvalid={
-                      formSubmitted &&
-                      !linkedInLink.match(
-                        "[(http(s)?)://(www.)?a-zA-Z0-9@:%._+~#=]{2,256}.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)"
-                      )
-                    }
                     value={linkedInLink}
                     onChange={(e) => setlinkedInLink(e.target.value)}
                   ></Form.Control>
