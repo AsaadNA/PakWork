@@ -11,6 +11,7 @@ import {
 } from "../../../contexts/ModalContext";
 import EditModal from "../../../components/client/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
+import Reviews from "../../../components/reviews/Reviews";
 
 const ClientProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
@@ -62,7 +63,9 @@ const ClientProfile = () => {
                 >
                   <ProfileInfo></ProfileInfo>
                 </Col>
-                <Col md={8}></Col>
+                <Col md={8}>
+                  <Reviews></Reviews>
+                </Col>
               </Row>
             </Container>
           </div>

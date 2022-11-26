@@ -4,7 +4,7 @@ import ProfileInfo from "../../../components/freelancer/profile/ProfileInfo";
 import Gigs from "../../../components/freelancer/gigs/Gigs";
 import { Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
-import Reviews from "../../../components/freelancer/reviews/Reviews";
+import Reviews from "../../../components/reviews/Reviews";
 import VerificationModal from "../../../components/verification/VerificationModal";
 import {
   ShowEditFreelancerProfileModalContext,
