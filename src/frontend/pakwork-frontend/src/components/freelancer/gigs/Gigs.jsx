@@ -5,7 +5,6 @@ import { FaEdit, FaPlus } from "react-icons/fa";
 const Gigs = () => {
   return (
     <>
-      {" "}
       <Button type="button" variant="success" className="d-flex mb-2">
         Create New Gig
         <FaPlus className="mt-1" style={{ marginLeft: "5px" }}></FaPlus>
@@ -60,6 +59,7 @@ const Gigs = () => {
           </Card>
         </Col>
       </Row>
+      <hr></hr>
     </>
   );
 };

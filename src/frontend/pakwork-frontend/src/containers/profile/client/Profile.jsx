@@ -12,6 +12,7 @@ import {
 import EditModal from "../../../components/client/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
 import Reviews from "../../../components/reviews/Reviews";
+import CurrentOrders from "../../../components/current-orders/CurrentOrders";
 
 const ClientProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
@@ -64,6 +65,7 @@ const ClientProfile = () => {
                   <ProfileInfo></ProfileInfo>
                 </Col>
                 <Col md={8}>
+                  <CurrentOrders></CurrentOrders>
                   <Reviews></Reviews>
                 </Col>
               </Row>
