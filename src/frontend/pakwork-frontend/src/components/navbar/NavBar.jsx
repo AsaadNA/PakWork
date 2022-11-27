@@ -42,6 +42,7 @@ const NavBar = () => {
                   smooth={true}
                   offset={50}
                   duration={500}
+                  className="navlink"
                 >
                   How it works?
                 </Link>
@@ -55,6 +56,7 @@ const NavBar = () => {
                   spy={true}
                   smooth={true}
                   duration={500}
+                  className="navlink"
                 >
                   Browser Categories
                 </Link>
@@ -68,12 +70,13 @@ const NavBar = () => {
                   smooth={true}
                   offset={50}
                   duration={500}
+                  className="navlink"
                 >
                   Pakwork For Organizations
                 </Link>
               </Nav.Link>
               <Nav.Link
-                className="text-dark-50"
+                className="text-dark-50 navlink-btn"
                 style={{ fontWeight: "bold" }}
                 onClick={handleShowLogin}
               >
@@ -113,7 +116,9 @@ const NavBar = () => {
                 <NavLink
                   to="/dashboard/orders"
                   className={(navData) =>
-                    navData.isActive ? "text-dark" : "text-dark-50"
+                    navData.isActive
+                      ? "navlink text-dark"
+                      : "navlink text-dark-50"
                   }
                   style={{ textDecoration: "none" }}
                 >
@@ -124,7 +129,9 @@ const NavBar = () => {
                 <NavLink
                   to="/dashboard/buyer-requests"
                   className={(navData) =>
-                    navData.isActive ? "text-dark" : "text-dark-50"
+                    navData.isActive
+                      ? "navlink text-dark"
+                      : "navlink text-dark-50"
                   }
                   style={{ textDecoration: "none" }}
                 >
@@ -135,7 +142,9 @@ const NavBar = () => {
                 <NavLink
                   to="/dashboard/biddings"
                   className={(navData) =>
-                    navData.isActive ? "text-dark" : "text-dark-50"
+                    navData.isActive
+                      ? "navlink text-dark"
+                      : "navlink text-dark-50"
                   }
                   style={{ textDecoration: "none" }}
                 >
@@ -148,7 +157,9 @@ const NavBar = () => {
                 <NavLink
                   to="/dashboard/profile"
                   className={(navData) =>
-                    navData.isActive ? "text-dark" : "text-dark-50"
+                    navData.isActive
+                      ? "navlink-btn text-dark"
+                      : "navlink-btn text-dark-50"
                   }
                   style={{ textDecoration: "none" }}
                 >
