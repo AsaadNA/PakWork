@@ -9,6 +9,7 @@ import OrganizationalClient from "./containers/signup/organization/Organizationa
 import AnimatedLayout from "./components/animated-layout/AnimatedLayout";
 import ProtectedRoute from "./Auth/ProtectRoute";
 import ProfileSelector from "./containers/profile/ProfileSelector";
+import IsLoggedIn from "./Auth/IsLoggedIn";
 
 function App() {
   return (
@@ -17,22 +18,30 @@ function App() {
         <Fragment>
           <Routes>
             <Route element={<AnimatedLayout></AnimatedLayout>}>
-              <Route path="/" exact element={<Home></Home>}></Route>
-              <Route
-                path="/signup/freelancer"
-                exact
-                element={<Freelancer></Freelancer>}
-              ></Route>
-              <Route
-                path="/signup/client"
-                exact
-                element={<RegularClient></RegularClient>}
-              ></Route>
-              <Route
-                path="/signup/organization"
-                exact
-                element={<OrganizationalClient></OrganizationalClient>}
-              ></Route>
+              <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                <Route path="/" exact element={<Home></Home>}></Route>
+              </Route>
+              <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                <Route
+                  path="/signup/freelancer"
+                  exact
+                  element={<Freelancer></Freelancer>}
+                ></Route>
+              </Route>
+              <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                <Route
+                  path="/signup/client"
+                  exact
+                  element={<RegularClient></RegularClient>}
+                ></Route>
+              </Route>
+              <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                <Route
+                  path="/signup/organization"
+                  exact
+                  element={<OrganizationalClient></OrganizationalClient>}
+                ></Route>
+              </Route>
               <Route
                 path="/dashboard/profile"
                 exact
