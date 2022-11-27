@@ -44,7 +44,7 @@ const returnLoginPayloadResponse = (res, query) => {
   });
 };
 
-const regenEmailVerification = (res,data) => {
+const regenEmailVerification = (res, data) => {
   let { email, userType } = data;
   let generatedUID = randtoken.uid(30);
   let generatedLink = `http://localhost:4000/api/v1/auth/verify/${generatedUID}`;
@@ -59,7 +59,47 @@ const regenEmailVerification = (res,data) => {
     from: process.env.EMAILING_SYSTEM_EMAIL,
     to: email,
     subject: "Kindly verify email",
-    text: `Generated Verification link : ${generatedLink} , validity is for 5 min`,
+    html: `<div style="display:flex;justify-content:center;align-items: center;flex-direction: column">
+    <table
+        style="width: 43vw;background-color: #fff;height: 80vh;text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+        <thead>
+            <tr>
+                <th><img src="https://i.ibb.co/XSfJj9C/template-header-verify.png" alt="template_header_verify.png" width="100%"></th>
+            </tr>
+        </thead>
+        <tbody style="vertical-align: baseline;">
+            <tr>
+                <td>
+                    <p
+                        style="padding:0px 30px;font-size: 2.5vh;font-weight: bold;line-height: 25px;color: rgba(0, 0, 0, 0.8);">
+                        Hello,
+                        This email is being sent
+                        to you in order for
+                        you to verify
+                        your email address on
+                        pakwork. Please verify your
+                        email address by clicking on the link below.
+                        <br>
+                        <br>
+                        <a style="padding:2% 5%;border:none;height:40px;background-color: #006736;color:#fff;font-size: 2vh;font-weight: bold;border-radius: 30px;cursor: pointer;"
+                                href="${generatedLink}" target="_blank">Verify
+                                Email</a>
+                        <br>
+                        <br>
+                        Thanks
+                        <br>
+                        Pakwork Team
+                    </p>
+                    <br>
+                    <p style="font-size: 1.8vh;font-weight: bold;color: rgba(0, 0, 0, 0.6);">*Please note that the
+                        verification link expires in 5
+                        minutes*</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>`,
+    // text: `Generated Verification link : ${generatedLink} , validity is for 5 min`,
   };
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
@@ -85,7 +125,7 @@ const regenEmailVerification = (res,data) => {
       });
     }
   });
-}
+};
 
 const generateEmailVerification = (res, data) => {
   let { email, userType } = data;
@@ -102,7 +142,47 @@ const generateEmailVerification = (res, data) => {
     from: process.env.EMAILING_SYSTEM_EMAIL,
     to: email,
     subject: "Kindly verify email",
-    text: `Generated Verification link : ${generatedLink} , validity is for 5 min`,
+    html: `<div style="display:flex;justify-content:center;align-items: center;flex-direction: column">
+    <table
+        style="width: 43vw;background-color: #fff;height: 80vh;text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+        <thead>
+            <tr>
+                <th><img src="https://i.ibb.co/XSfJj9C/template-header-verify.png" alt="./template_header_verify.png" width="100%"></th>
+            </tr>
+        </thead>
+        <tbody style="vertical-align: baseline;">
+            <tr>
+                <td>
+                    <p
+                        style="padding:0px 30px;font-size: 2.5vh;font-weight: bold;line-height: 25px;color: rgba(0, 0, 0, 0.8);">
+                        Hello,
+                        This email is being sent
+                        to you in order for
+                        you to verify
+                        your email address on
+                        pakwork. Please verify your
+                        email address by clicking on the link below.
+                        <br>
+                        <br>
+                        <a style="padding:2% 5%;border:none;height:40px;background-color: #006736;color:#fff;font-size: 2vh;font-weight: bold;border-radius: 30px;cursor: pointer;"
+                                href="${generatedLink}" target="_blank">Verify
+                                Email</a>
+                        <br>
+                        <br>
+                        Thanks
+                        <br>
+                        Pakwork Team
+                    </p>
+                    <br>
+                    <p style="font-size: 1.8vh;font-weight: bold;color: rgba(0, 0, 0, 0.6);">*Please note that the
+                        verification link expires in 5
+                        minutes*</p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    </div>`,
+    // text: `Generated Verification link : ${generatedLink} , validity is for 5 min`,
   };
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
@@ -133,5 +213,5 @@ const generateEmailVerification = (res, data) => {
 module.exports = {
   returnLoginPayloadResponse,
   generateEmailVerification,
-  regenEmailVerification
+  regenEmailVerification,
 };

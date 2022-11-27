@@ -7,7 +7,8 @@ const returnLoginPayloadResponse =
   require("../common/helper").returnLoginPayloadResponse;
 const generateEmailVerification =
   require("../common/helper").generateEmailVerification;
-  const regenEmailVerification = require("../common/helper").regenEmailVerification;
+const regenEmailVerification =
+  require("../common/helper").regenEmailVerification;
 
 const emailVerificationSchema = require("../models/emailVerification");
 const emailVerification = require("../models/emailVerification");
@@ -43,9 +44,9 @@ router.post("/login/admin", (req, res) => {
   );
 });
 
-router.post("/forgot/" , (req,res) => {
-  const {email} = req.body;
-  
+router.post("/forgot/", (req, res) => {
+  const { email } = req.body;
+
   //Find the user email and retrieve type
   //Generate a new password (Text);
   //Generate a new Hash;
@@ -54,47 +55,91 @@ router.post("/forgot/" , (req,res) => {
   db.query(
     `select user_type, password, freelancer_id as id from freelancer where email="${email}" UNION 
     select user_type, password, company_client_id as id from company_client where email="${email}" UNION
-    select user_type, password, client_id as id from client where email="${email}";`,(e,r) => {
-      if(e) {
-        res.status(500).send({error: e.message});
-      } else if(r.length > 0) {
+    select user_type, password, client_id as id from client where email="${email}";`,
+    (e, r) => {
+      if (e) {
+        res.status(500).send({ error: e.message });
+      } else if (r.length > 0) {
         let generatedPassword = randtoken.uid(15);
-        bcrypt.hash(generatedPassword,10,(err,hash) => {
+        bcrypt.hash(generatedPassword, 10, (err, hash) => {
           console.log(generatedPassword);
-          db.query(`UPDATE ${r[0]['user_type']} SET password="${hash}" where email="${email}";`,(e,r) => {
-            if(e) {
-              res.status(500).send({error: e.message});
-            } else if(r) {
-              let mailOptions = {
-                from: process.env.EMAILING_SYSTEM_EMAIL,
-                to: email,
-                subject: "New Password Generated",
-                text: `New Password Generate ${generatedPassword}`
-              };
+          db.query(
+            `UPDATE ${r[0]["user_type"]} SET password="${hash}" where email="${email}";`,
+            (e, r) => {
+              if (e) {
+                res.status(500).send({ error: e.message });
+              } else if (r) {
+                let mailOptions = {
+                  from: process.env.EMAILING_SYSTEM_EMAIL,
+                  to: email,
+                  subject: "New Password Generated",
+                  html: `<div style="display:flex;justify-content:center;align-items: center;flex-direction: column;">
+        <table
+            style="width: 43vw;background-color: #fff;height: 80vh;text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">
+            <thead>
+                <tr>
+                    <th><img src="https://i.ibb.co/kSPxhr0/template-header-reset-password.png"
+                            alt="template-header-reset-password.png"></th>
+                </tr>
+            </thead>
+            <tbody style="vertical-align: baseline;">
+                <tr>
+                    <td>
+                        <p
+                            style="padding:0px 30px;font-size: 2.5vh;font-weight: bold;line-height: 25px;color: rgba(0, 0, 0, 0.8);">
+                            Hello,
+                            This email is being sent
+                            to you in order for
+                            you to use
+                            your new password on
+                            pakwork. Please use this password on your account.
+                            <br>
+                            <br>
+                            <span
+                                style="padding:2.5% 15%;border:none;height:40px;background-color: #e4e2e2;color: rgba(0,0,0,0.7);font-size: 2.2vh;font-weight: bold;border-radius: 5px;cursor: pointer;">${generatedPassword}
+                            </span>
+                            <br>
+                            <br>
+                            Thanks
+                            <br>
+                            Pakwork Team
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>`,
+                };
 
-              transporter.sendMail(mailOptions , (err,info) => {
-                if(err) {
-                  res.status(400).send({
-                    error: err.message
-                  })
-                } else if(info) {
-                  res.status(200).send({message: "New Password Sent to Email :)"});
-                } else {
-                  res.status(400).send({
-                    error: "Could not generate a new password"
-                  });
-                }
-              })
-            } else {
-              res.status(400).send({error: "Could not generate a new password"});
+                transporter.sendMail(mailOptions, (err, info) => {
+                  if (err) {
+                    res.status(400).send({
+                      error: err.message,
+                    });
+                  } else if (info) {
+                    res
+                      .status(200)
+                      .send({ message: "New Password Sent to Email :)" });
+                  } else {
+                    res.status(400).send({
+                      error: "Could not generate a new password",
+                    });
+                  }
+                });
+              } else {
+                res
+                  .status(400)
+                  .send({ error: "Could not generate a new password" });
+              }
             }
-          })
-        })
+          );
+        });
       } else {
-        res.status(400).send({error: "Could not find email"});  
+        res.status(400).send({ error: "Could not find email" });
       }
-    });
-})
+    }
+  );
+});
 
 //Freelancer, Client, Comapny Client Login
 router.post("/login", (req, res) => {
@@ -110,7 +155,8 @@ router.post("/login", (req, res) => {
         //Since email found compare Hashed Password
         bcrypt.compare(password, r[0]["password"], (err, result) => {
           if (result) {
-            if(r[0]["is_verified"] === 1) { //if is verified ... proceed with login
+            if (r[0]["is_verified"] === 1) {
+              //if is verified ... proceed with login
               if (r[0].user_type === "freelancer") {
                 returnLoginPayloadResponse(
                   res,
@@ -127,16 +173,25 @@ router.post("/login", (req, res) => {
                   `SELECT * from client where client_id="${r[0].id}"`
                 );
               }
-            } else { //else send an error or generate a new verification link
-              let searchResult = emailVerificationSchema.find({email} , (err,data) => {
-                if(err) {
-                  res.status(500).send({error:err.message});
-                } else if(data.length > 0) {
-                  res.status(400).send({error: "Verification link already sent"});
-                } else {
-                  regenEmailVerification(res,{email,userType:r[0]['user_type']});
+            } else {
+              //else send an error or generate a new verification link
+              let searchResult = emailVerificationSchema.find(
+                { email },
+                (err, data) => {
+                  if (err) {
+                    res.status(500).send({ error: err.message });
+                  } else if (data.length > 0) {
+                    res
+                      .status(400)
+                      .send({ error: "Verification link already sent" });
+                  } else {
+                    regenEmailVerification(res, {
+                      email,
+                      userType: r[0]["user_type"],
+                    });
+                  }
                 }
-              });
+              );
             }
           } else {
             res.status(400).send({ error: "Invalid Password" });
@@ -183,13 +238,9 @@ router.get("/verify/:uid", (req, res) => {
                 error: err.message,
               });
             } else if (data) {
-              res.status(200).send({
-                message: "User has been verified",
-              });
+              res.status(200).render("verified");
             } else {
-              res.status(400).send({
-                error: "Verification link does not exist",
-              });
+              res.status(400).render("expired");
             }
           });
         } else {
@@ -199,9 +250,7 @@ router.get("/verify/:uid", (req, res) => {
         }
       });
     } else {
-      res.status(400).send({
-        error: "Verification link does not exist",
-      });
+      res.status(400).render("expired");
     }
   });
 });

@@ -106,6 +106,7 @@ const EditModal = () => {
             theme: "light",
           });
           setTimeout(() => {
+            setLoading(false);
             window.location.reload();
           }, 4000);
         }
@@ -122,6 +123,7 @@ const EditModal = () => {
           progress: undefined,
           theme: "light",
         });
+        setLoading(false);
       }
     } else {
       toast.error("Incomplete Submission", {
@@ -135,6 +137,7 @@ const EditModal = () => {
         progress: undefined,
         theme: "light",
       });
+      setLoading(false);
     }
   };
 
