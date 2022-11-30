@@ -264,7 +264,7 @@ const OrganizationalClient = () => {
                       <Button
                         type="submit"
                         variant={"success"}
-                        className="w-75 mt-4"
+                        className="w-75 mt-4 red-btn"
                         disabled={loading}
                       >
                         {`Register Me! 🚀`}
