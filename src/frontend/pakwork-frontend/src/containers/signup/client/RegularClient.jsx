@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "react-phone-input-2/lib/style.css";
 import PakworkLogo from "../../../assets/pakwork_logo_light.svg";
 import { useNavigate } from "react-router-dom";
+import Spinner from "react-bootstrap/Spinner";
 
 const RegularClient = () => {
   const [formSubmitted, setformSubmitted] = useState(false);
@@ -123,7 +124,7 @@ const RegularClient = () => {
           state: countryState,
         });
 
-        toast.success("Your Application has been submitted", {
+        toast.success("Email Verification Sent . Kindly Verify & Login", {
           position: "top-right",
           delay: 1000,
           autoClose: 3000,
@@ -379,13 +380,24 @@ const RegularClient = () => {
                     md={12}
                     className="d-flex justify-content-center"
                   >
-                    <Button
-                      type="submit"
-                      className="w-75 mt-4 blue-btn"
-                      disabled={loading}
-                    >
-                      {`Register Me! 🚀`}
-                    </Button>
+                    {loading === false ? (
+                      <Button
+                        type="submit"
+                        variant={"success"}
+                        className="w-75 mt-4"
+                        disabled={loading}
+                      >
+                        {`Register Me! 🚀`}
+                      </Button>
+                    ) : (
+                      <Spinner
+                        className="mt-3"
+                        animation="border"
+                        role="status"
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    )}
                   </Form.Group>
                 </Row>
               </Form>

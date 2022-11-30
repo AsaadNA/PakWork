@@ -30,7 +30,7 @@ const storageOptionsProfilePic = multer.diskStorage({
     cb(null, "resources/images/profiles");
   },
   filename(req, file, cb) {
-    cb(null, `${req.res.locals["userID"]}-${file.originalname}`);
+    cb(null, `${req.res.locals["userID"]}`);
   },
 });
 

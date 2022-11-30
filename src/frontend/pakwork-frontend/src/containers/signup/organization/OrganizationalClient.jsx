@@ -5,6 +5,7 @@ import Select from "react-select";
 import PhoneInput from "react-phone-input-2";
 import countryList from "react-select-country-list";
 import axios from "../../../Api/Api";
+import Spinner from "react-bootstrap/Spinner";
 
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.css";
@@ -95,7 +96,7 @@ const OrganizationalClient = () => {
           country: country.label,
         });
 
-        toast.success("Your Application has been submitted", {
+        toast.success("Email Verification Sent . Kindly Verify & Login", {
           position: "top-right",
           delay: 1000,
           autoClose: 3000,
@@ -259,13 +260,24 @@ const OrganizationalClient = () => {
                     md={12}
                     className="d-flex justify-content-center"
                   >
-                    <Button
-                      type="submit"
-                      className="w-75 mt-4 red-btn"
-                      disabled={loading}
-                    >
-                      {`Register Organization 💼`}
-                    </Button>
+                    {loading === false ? (
+                      <Button
+                        type="submit"
+                        variant={"success"}
+                        className="w-75 mt-4"
+                        disabled={loading}
+                      >
+                        {`Register Me! 🚀`}
+                      </Button>
+                    ) : (
+                      <Spinner
+                        className="mt-3"
+                        animation="border"
+                        role="status"
+                      >
+                        <span className="visually-hidden">Loading...</span>
+                      </Spinner>
+                    )}
                   </Form.Group>
                 </Row>
               </Form>
