@@ -25,6 +25,15 @@ const storageOptionsVerification = multer.diskStorage({
   },
 });
 
+const storageOptionsGigs = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, "resources/images/gigs");
+  },
+  filename(req, file, cb) {
+    cb(null, `${req.res.locals["userID"]}-${file.originalname}`);
+  },
+});
+
 const storageOptionsProfilePic = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, "resources/images/profiles");
@@ -47,6 +56,7 @@ module.exports = {
   storageOptionsVerification,
   storageOptionsCVs,
   storageOptionsProfilePic,
+  storageOptionsGigs,
   pdfFilter,
   imageFilter,
 };

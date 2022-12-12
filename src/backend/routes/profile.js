@@ -5,7 +5,6 @@ const authMiddleware = require("../middlewares/auth");
 
 router.get("/getverificationfeedback", authMiddleware, (req, res) => {
   const { userID } = res.locals;
-  console.log(userID);
   db.query(
     `SELECT resubmit_feedback from FREELANCER where freelancer_id="${userID}";`,
     (e, r) => {
@@ -53,7 +52,6 @@ router.get("/", authMiddleware, (req, res) => {
 
 router.put("/", authMiddleware, (req, res) => {
   const { userID, userType } = res.locals;
-  console.log("PUT PROFILE", req.body);
   let query = "";
   if (userType === "freelancer") {
     const {

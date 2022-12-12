@@ -15,3 +15,6 @@ select c.first_name,c.last_name,c.username,c.country,p.profile_picture,p.industr
 
 /* Get The Profile Info From Company Client & Profile Table for a specific company client */
 select c.company_name,c.country,p.industry_name,p.year_experience,p.bio,p.linkedin_link,p.company_website from profile p inner join company_client c on c.company_client_id = p.profile_id;
+
+/* Get all the gigs for specific freelancer with gig images */
+select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.freelancer_id, g.starting_rate, group_concat(gi.image) as images from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id where g.freelancer_id= "eedIJfECuHmzbsT7DHAFCdJEZAMEoowtiFqqXRTJWnHz8" group by gi.gig_id;

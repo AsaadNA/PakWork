@@ -62,7 +62,6 @@ router.post("/forgot/", (req, res) => {
       } else if (r.length > 0) {
         let generatedPassword = randtoken.uid(15);
         bcrypt.hash(generatedPassword, 10, (err, hash) => {
-          console.log(generatedPassword);
           db.query(
             `UPDATE ${r[0]["user_type"]} SET password="${hash}" where email="${email}";`,
             (e, r) => {

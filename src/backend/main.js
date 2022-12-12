@@ -10,6 +10,7 @@ const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
 const uploadRoutes = require("./routes/upload");
 const adminRoutes = require("./routes/admin");
+const gigsRoutes = require("./routes/gigs");
 
 dotenv.config();
 
@@ -40,10 +41,10 @@ app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/profile/", profileRoutes);
 app.use("/api/v1/upload/", uploadRoutes);
 app.use("/api/v1/admin/", adminRoutes);
+app.use("/api/v1/gigs/" , gigsRoutes);
 
 app.get("*", (req, res) => {
-  //
-  res.send("Wrong address buddy");
+  res.send("Wrong endpoint buddy");
 });
 
 app.listen(process.env.MAIN_SERVER_PORT, (err) => {

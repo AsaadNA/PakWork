@@ -75,6 +75,18 @@ const RegularClient = () => {
     event.preventDefault();
     setformSubmitted(true);
     setLoading(true);
+    console.log({
+      firstName: firstName,
+      lastName: lastName,
+      username: userName,
+      email: email,
+      password: password,
+      gender: gender.value,
+      phone_number: phoneNumber,
+      region: region.value,
+      country: country.label,
+      state: countryState,
+    });
     if (
       firstName.length > 3 &&
       lastName.length > 3 &&
