@@ -10,3 +10,5 @@ export const ShowProfilePictureUploadModalContext = createContext({});
 export const ShowEditFreelancerProfileModalContext = createContext({});
 export const ShowEditClientProfileModalContext = createContext({});
 export const ShowEditOrganizationProfileModalContext = createContext({});
+
+export const ShowGigModalContext = createContext({});

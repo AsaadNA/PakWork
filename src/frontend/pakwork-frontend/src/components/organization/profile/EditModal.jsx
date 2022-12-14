@@ -1,43 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
-import {
-  Modal,
-  Form,
-  Container,
-  Row,
-  Col,
-  Button,
-  Alert,
-} from "react-bootstrap";
+import { Modal, Form, Container, Row, Col, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo_plus.svg";
 import { ShowEditOrganizationProfileModalContext } from "../../../contexts/ModalContext";
 import { FaGlobe, FaLinkedin } from "react-icons/fa";
+import { Industries } from "../../../Extras/CategoryLists";
 import axios from "../../../Api/Api";
 
 const EditModal = () => {
-  const Industries = [
-    {
-      value: "Programming & Tech",
-      label: `💻 Programming & Tech`,
-    },
-    {
-      value: "Virtual Assistance",
-      label: `👨🏽‍💼 Virtual Assistance`,
-    },
-    {
-      value: "Digital Marketing",
-      label: `📈 Digital Marketing`,
-    },
-    {
-      value: "Arts & Graphic Designing",
-      label: `🎨 Arts & Graphic Designing`,
-    },
-    {
-      value: "Creative Writer",
-      label: `🖊️ Creative Writer`,
-    },
-  ];
   const [CompanyWebsite, setCompanyWebsite] = useState("");
   const [Bio, setBio] = useState("");
   const [Industry, setIndustry] = useState(Industries[0]);

@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "react-phone-input-2/lib/style.css";
 import PakworkPlusLogo from "../../../assets/pakwork_logo_plus_light.svg";
+import { regions } from "../../../Extras/CategoryLists";
 import { useNavigate } from "react-router-dom";
 
 const OrganizationalClient = () => {
@@ -23,36 +24,6 @@ const OrganizationalClient = () => {
   const [password, setpassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const regions = [
-    {
-      value: "europe",
-      label: "Europe",
-    },
-    {
-      value: "oceania",
-      label: "Oceania",
-    },
-    {
-      value: "north-america",
-      label: "North America",
-    },
-    {
-      value: "middle-east",
-      label: "Middle East",
-    },
-    {
-      value: "south-america",
-      label: "South America",
-    },
-    {
-      value: "asia",
-      label: "Asia",
-    },
-    {
-      value: "africa",
-      label: "Africa",
-    },
-  ];
   const countries = useMemo(() => countryList().getData(), []);
   const navigate = useNavigate();
   const handleSubmit = async (event) => {

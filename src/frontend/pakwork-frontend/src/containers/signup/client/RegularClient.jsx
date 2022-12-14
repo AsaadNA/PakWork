@@ -11,6 +11,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "react-phone-input-2/lib/style.css";
 import PakworkLogo from "../../../assets/pakwork_logo_light.svg";
 import { useNavigate } from "react-router-dom";
+import { regions, genders } from "../../../Extras/CategoryLists";
 import Spinner from "react-bootstrap/Spinner";
 
 const RegularClient = () => {
@@ -26,47 +27,9 @@ const RegularClient = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const regions = [
-    {
-      value: "europe",
-      label: "Europe",
-    },
-    {
-      value: "oceania",
-      label: "Oceania",
-    },
-    {
-      value: "north-america",
-      label: "North America",
-    },
-    {
-      value: "middle-east",
-      label: "Middle East",
-    },
-    {
-      value: "south-america",
-      label: "South America",
-    },
-    {
-      value: "asia",
-      label: "Asia",
-    },
-    {
-      value: "africa",
-      label: "Africa",
-    },
-  ];
+
   const countries = useMemo(() => countryList().getData(), []);
-  const genders = [
-    {
-      value: "male",
-      label: `👨 Male`,
-    },
-    {
-      value: "female",
-      label: `👩 Female`,
-    },
-  ];
+
   const [country, setCountry] = useState(countries[0]);
   const [countryState, setcountryState] = useState("");
   const [region, setRegion] = useState(regions[5]);

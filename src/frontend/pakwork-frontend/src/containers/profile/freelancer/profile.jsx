@@ -10,15 +10,18 @@ import {
   ShowEditFreelancerProfileModalContext,
   ShowProfilePictureUploadModalContext,
   ShowVerificationModalContext,
+  ShowGigModalContext,
 } from "../../../contexts/ModalContext";
 import EditModal from "../../../components/freelancer/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
+import GigModal from "../../../components/freelancer/gigs/GigModal";
 
 const FreelancerProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
   const [showEditProfie, setshowEditProfile] = useState(false);
   const [showProfilePictureUpload, setshowProfilePictureUpload] =
     useState(false);
+  const [showGigModal, setShowGigModal] = useState(false);
 
   const handleCloseVerification = () => setshowVerification(false);
   const handleShowVerification = () => setshowVerification(true);
@@ -28,6 +31,8 @@ const FreelancerProfile = () => {
     setshowProfilePictureUpload(true);
   const handleCloseProfilePictureUpload = () =>
     setshowProfilePictureUpload(false);
+  const handleShowGigModal = () => setShowGigModal(true);
+  const handleCloseGigModal = () => setShowGigModal(false);
 
   return (
     <ShowProfilePictureUploadModalContext.Provider
@@ -51,26 +56,35 @@ const FreelancerProfile = () => {
             handleShowFreelancerEditProfile,
           }}
         >
-          <div>
-            <NavBar></NavBar>
-            <Container className="mt-3">
-              <EditModal></EditModal>
-              <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
-              <VerificationModal></VerificationModal>
-              <Row>
-                <Col
-                  className="d-flex justify-content-start align-items-start flex-column"
-                  md={4}
-                >
-                  <ProfileInfo></ProfileInfo>
-                </Col>
-                <Col md={8}>
-                  <Gigs></Gigs>
-                  <Reviews></Reviews>
-                </Col>
-              </Row>
-            </Container>
-          </div>
+          <ShowGigModalContext.Provider
+            value={{
+              showGigModal,
+              handleCloseGigModal,
+              handleShowGigModal,
+            }}
+          >
+            <div>
+              <NavBar></NavBar>
+              <Container className="mt-3">
+                <EditModal></EditModal>
+                <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
+                <VerificationModal></VerificationModal>
+                <GigModal></GigModal>
+                <Row>
+                  <Col
+                    className="d-flex justify-content-start align-items-start flex-column"
+                    md={4}
+                  >
+                    <ProfileInfo></ProfileInfo>
+                  </Col>
+                  <Col md={8}>
+                    <Gigs></Gigs>
+                    <Reviews></Reviews>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+          </ShowGigModalContext.Provider>
         </ShowEditFreelancerProfileModalContext.Provider>
       </ShowVerificationModalContext.Provider>
     </ShowProfilePictureUploadModalContext.Provider>

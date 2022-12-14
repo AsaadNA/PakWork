@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import { FaEdit, FaPlus } from "react-icons/fa";
+import { ShowGigModalContext } from "../../../contexts/ModalContext";
 
 const Gigs = () => {
+  const { handleShowGigModal } = useContext(ShowGigModalContext);
   return (
     <>
-      <Button type="button" variant="success" className="d-flex mb-2">
+      <Button
+        type="button"
+        variant="success"
+        className="d-flex mb-2"
+        onClick={handleShowGigModal}
+      >
         Create New Gig
         <FaPlus className="mt-1" style={{ marginLeft: "5px" }}></FaPlus>
       </Button>

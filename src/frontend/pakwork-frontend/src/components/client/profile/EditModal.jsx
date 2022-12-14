@@ -5,31 +5,10 @@ import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { ShowEditClientProfileModalContext } from "../../../contexts/ModalContext";
 import { FaLinkedin } from "react-icons/fa";
+import { Industries } from "../../../Extras/CategoryLists";
 import axios from "../../../Api/Api";
 
 const EditModal = () => {
-  const Industries = [
-    {
-      value: "Programming & Tech",
-      label: `💻 Programming & Tech`,
-    },
-    {
-      value: "Virtual Assistance",
-      label: `👨🏽‍💼 Virtual Assistance`,
-    },
-    {
-      value: "Digital Marketing",
-      label: `📈 Digital Marketing`,
-    },
-    {
-      value: "Arts & Graphic Designing",
-      label: `🎨 Arts & Graphic Designing`,
-    },
-    {
-      value: "Creative Writer",
-      label: `🖊️ Creative Writer`,
-    },
-  ];
   const [Bio, setBio] = useState("");
   const [Industry, setIndustry] = useState(Industries[0]);
   const [linkedInLink, setlinkedInLink] = useState("");
