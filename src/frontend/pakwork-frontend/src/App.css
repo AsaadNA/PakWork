@@ -276,7 +276,11 @@ a {
   .login-image-container {
     display: none;
   }
+  .tip-box {
+    margin-top: 2% !important;
+  }
 }
+
 @media (min-width: 1024px) {
   .home-section {
     padding-left: 7em !important;

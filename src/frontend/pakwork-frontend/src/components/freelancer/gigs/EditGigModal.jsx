@@ -3,13 +3,13 @@ import { Modal, Form, Container, Row, Col, Button } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
-import { ShowGigModalContext } from "../../../contexts/ModalContext";
+import { GigModalContext } from "../../../contexts/ModalContext";
 import axios from "../../../Api/Api";
 import { GigCategories } from "../../../Extras/CategoryLists";
 import CurrencyInput from "react-currency-input-field";
-import Dropzone from "../../dropzone/Dropzone";
+import { useDropzone } from "react-dropzone";
 
-const GigModal = () => {
+const EditGigModal = () => {
   const priceLimit = 20000;
 
   const [title, setTitle] = useState("");
@@ -24,7 +24,72 @@ const GigModal = () => {
   const [ErrorMessagePrice, setErrorMessagePrice] = useState("");
   const [PriceFeedbackClass, setPriceFeedbackClass] = useState("");
 
-  const { showGigModal, handleCloseGigModal } = useContext(ShowGigModalContext);
+  const { ShowEditGigModal, handleCloseEditGigModal, EditGigID } =
+    useContext(GigModalContext);
+
+  const thumbsContainer = {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 16,
+  };
+
+  const thumb = {
+    display: "inline-flex",
+    borderRadius: 2,
+    border: "1px solid #eaeaea",
+    marginBottom: 8,
+    marginRight: 8,
+    width: 100,
+    height: 100,
+    padding: 4,
+    boxSizing: "border-box",
+  };
+
+  const thumbInner = {
+    display: "flex",
+    minWidth: 0,
+    overflow: "hidden",
+  };
+
+  const img = {
+    display: "block",
+    width: "auto",
+    height: "100%",
+  };
+
+  const [files, setFiles] = useState([]);
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: {
+      "image/*": [],
+    },
+    onDrop: (acceptedFiles) => {
+      setFiles(
+        acceptedFiles.map((file) =>
+          Object.assign(file, {
+            preview: URL.createObjectURL(file),
+          })
+        )
+      );
+    },
+    maxFiles: 5,
+  });
+
+  const thumbs = files.map((file) => (
+    <div style={thumb} key={file.name}>
+      <div style={thumbInner}>
+        <img
+          alt="dropzone-thumb"
+          src={file.preview}
+          style={img}
+          // Revoke data uri after image is loaded
+          onLoad={() => {
+            URL.revokeObjectURL(file.preview);
+          }}
+        />
+      </div>
+    </div>
+  ));
 
   const onHandlePriceChange = (price) => {
     if (!price) {
@@ -51,9 +116,18 @@ const GigModal = () => {
     setStartingPrice(price);
   };
 
+  useEffect(() => {
+    // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
+    return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
+  }, []);
+
   return (
     <>
-      <Modal show={showGigModal} onHide={handleCloseGigModal} size={"xl"}>
+      <Modal
+        show={ShowEditGigModal}
+        onHide={handleCloseEditGigModal}
+        size={"xl"}
+      >
         <Modal.Header closeButton>
           <img
             src={PakworkLogo}
@@ -63,6 +137,7 @@ const GigModal = () => {
           ></img>
         </Modal.Header>
         <Modal.Body>
+          <p>Editing Gig # - {EditGigID}</p>
           <ToastContainer></ToastContainer>
           <Container>
             <h2 class="line-divider ">
@@ -74,7 +149,7 @@ const GigModal = () => {
                   as="textarea"
                   name="title"
                   required
-                  rows={5}
+                  rows={6}
                   placeholder="I will do something, I'm really good at..."
                   value={title}
                   minLength={5}
@@ -166,7 +241,7 @@ const GigModal = () => {
                   as="textarea"
                   name="description"
                   required
-                  rows={5}
+                  rows={7}
                   placeholder="Are you looking for services? Well then welcome to my gig. I will provide you development services related to..."
                   value={description}
                   minLength={50}
@@ -201,7 +276,15 @@ const GigModal = () => {
                 md={8}
                 className="d-flex justify-content-center align-items-center"
               >
-                <Dropzone></Dropzone>
+                <section className="container">
+                  <div {...getRootProps({ className: "dropzone" })}>
+                    <input {...getInputProps()} />
+                    <p>
+                      Drag 'n' drop some files here, or click to select files
+                    </p>
+                  </div>
+                  <aside style={thumbsContainer}>{thumbs}</aside>
+                </section>
               </Form.Group>
               <Col md={3} className="tip-box">
                 <p style={{ fontWeight: "bold" }}>
@@ -238,4 +321,4 @@ const GigModal = () => {
   );
 };
 
-export default GigModal;
+export default EditGigModal;

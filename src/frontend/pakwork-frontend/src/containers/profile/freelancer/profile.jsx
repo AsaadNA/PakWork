@@ -10,18 +10,21 @@ import {
   ShowEditFreelancerProfileModalContext,
   ShowProfilePictureUploadModalContext,
   ShowVerificationModalContext,
-  ShowGigModalContext,
+  GigModalContext,
 } from "../../../contexts/ModalContext";
 import EditModal from "../../../components/freelancer/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
-import GigModal from "../../../components/freelancer/gigs/GigModal";
+import CreateGigModal from "../../../components/freelancer/gigs/CreateGigModal";
+import EditGigModal from "../../../components/freelancer/gigs/EditGigModal";
 
 const FreelancerProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
   const [showEditProfie, setshowEditProfile] = useState(false);
   const [showProfilePictureUpload, setshowProfilePictureUpload] =
     useState(false);
-  const [showGigModal, setShowGigModal] = useState(false);
+  const [ShowCreateGigModal, setShowCreateGigModal] = useState(false);
+  const [ShowEditGigModal, setShowEditGigModal] = useState(false);
+  const [EditGigID, setEditGigID] = useState("");
 
   const handleCloseVerification = () => setshowVerification(false);
   const handleShowVerification = () => setshowVerification(true);
@@ -31,8 +34,16 @@ const FreelancerProfile = () => {
     setshowProfilePictureUpload(true);
   const handleCloseProfilePictureUpload = () =>
     setshowProfilePictureUpload(false);
-  const handleShowGigModal = () => setShowGigModal(true);
-  const handleCloseGigModal = () => setShowGigModal(false);
+  const handleShowCreateGigModal = () => setShowCreateGigModal(true);
+  const handleCloseCreateGigModal = () => setShowCreateGigModal(false);
+  const handleShowEditGigModal = (id) => {
+    setShowEditGigModal(true);
+    setEditGigID(id);
+  };
+  const handleCloseEditGigModal = () => {
+    setShowEditGigModal(false);
+    setEditGigID("");
+  };
 
   return (
     <ShowProfilePictureUploadModalContext.Provider
@@ -56,11 +67,15 @@ const FreelancerProfile = () => {
             handleShowFreelancerEditProfile,
           }}
         >
-          <ShowGigModalContext.Provider
+          <GigModalContext.Provider
             value={{
-              showGigModal,
-              handleCloseGigModal,
-              handleShowGigModal,
+              ShowCreateGigModal,
+              handleCloseCreateGigModal,
+              handleShowCreateGigModal,
+              ShowEditGigModal,
+              handleShowEditGigModal,
+              handleCloseEditGigModal,
+              EditGigID,
             }}
           >
             <div>
@@ -69,7 +84,8 @@ const FreelancerProfile = () => {
                 <EditModal></EditModal>
                 <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
                 <VerificationModal></VerificationModal>
-                <GigModal></GigModal>
+                <CreateGigModal></CreateGigModal>
+                <EditGigModal></EditGigModal>
                 <Row>
                   <Col
                     className="d-flex justify-content-start align-items-start flex-column"
@@ -84,7 +100,7 @@ const FreelancerProfile = () => {
                 </Row>
               </Container>
             </div>
-          </ShowGigModalContext.Provider>
+          </GigModalContext.Provider>
         </ShowEditFreelancerProfileModalContext.Provider>
       </ShowVerificationModalContext.Provider>
     </ShowProfilePictureUploadModalContext.Provider>

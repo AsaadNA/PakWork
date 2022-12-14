@@ -11,4 +11,4 @@ export const ShowEditFreelancerProfileModalContext = createContext({});
 export const ShowEditClientProfileModalContext = createContext({});
 export const ShowEditOrganizationProfileModalContext = createContext({});
 
-export const ShowGigModalContext = createContext({});
+export const GigModalContext = createContext({});
