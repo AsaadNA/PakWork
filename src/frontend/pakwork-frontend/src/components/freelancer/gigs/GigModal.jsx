@@ -16,8 +16,6 @@ const GigModal = () => {
   const [description, setDescription] = useState("");
   const [GigCategory, setGigCategory] = useState("");
   const [StartingPrice, setStartingPrice] = useState("5");
-  const [files, setFiles] = useState(null);
-  const [allowUpload, setAllowUpload] = useState(false);
 
   const [formSubmitted, setformSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
