@@ -1,5 +1,8 @@
 import React, { Fragment } from "react";
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.css";
+// you will also need the css that comes with bootstrap-daterangepicker
+import "bootstrap-daterangepicker/daterangepicker.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./containers/home/Home";
 import Freelancer from "./containers/signup/freelancer/Freelancer";

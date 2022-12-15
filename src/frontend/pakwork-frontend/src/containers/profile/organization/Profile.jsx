@@ -12,12 +12,19 @@ import {
 import EditModal from "../../../components/organization/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
 import Reviews from "../../../components/reviews/Reviews";
-import CurrentOrders from "../../../components/current-orders/CurrentOrders";
+import OrganizationJobs from "../../../components/organization/jobs/OrganizationJobs";
+import { OrganizationJobModalContext } from "../../../contexts/ModalContext";
+import CreateOrganizationJobModal from "../../../components/organization/jobs/CreateOrganizationJobModal";
+import EditOrganizationJobModal from "../../../components/organization/jobs/EditOrganizationJobModal";
 
 const OrganizationProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
   const [showEditProfie, setshowEditProfile] = useState(false);
   const [showProfilePictureUpload, setshowProfilePictureUpload] =
+    useState(false);
+  const [showCreateOrganizationJobModal, setshowCreateOrganizationJobModal] =
+    useState(false);
+  const [showEditOrganizationJobModal, setshowEditOrganizationJobModal] =
     useState(false);
 
   const handleCloseVerification = () => setshowVerification(false);
@@ -28,6 +35,14 @@ const OrganizationProfile = () => {
     setshowProfilePictureUpload(true);
   const handleCloseProfilePictureUpload = () =>
     setshowProfilePictureUpload(false);
+  const handleshowCreateOrganizationJobModal = () =>
+    setshowCreateOrganizationJobModal(true);
+  const handleCloseOrganizationCreateJobModal = () =>
+    setshowCreateOrganizationJobModal(false);
+  const handleshowEditOrganizationJobModal = () =>
+    setshowEditOrganizationJobModal(true);
+  const handleCloseOrganizationEditJobModal = () =>
+    setshowEditOrganizationJobModal(false);
 
   return (
     <ShowProfilePictureUploadModalContext.Provider
@@ -51,26 +66,39 @@ const OrganizationProfile = () => {
             handleShowOrganizationEditProfile,
           }}
         >
-          <div>
-            <NavBar></NavBar>
-            <Container className="mt-3">
-              <EditModal></EditModal>
-              <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
-              <VerificationModal></VerificationModal>
-              <Row>
-                <Col
-                  className="d-flex justify-content-start align-items-start flex-column"
-                  md={4}
-                >
-                  <ProfileInfo></ProfileInfo>
-                </Col>
-                <Col md={8}>
-                  <CurrentOrders></CurrentOrders>
-                  <Reviews></Reviews>
-                </Col>
-              </Row>
-            </Container>
-          </div>
+          <OrganizationJobModalContext.Provider
+            value={{
+              showCreateOrganizationJobModal,
+              handleshowCreateOrganizationJobModal,
+              handleCloseOrganizationCreateJobModal,
+              showEditOrganizationJobModal,
+              handleshowEditOrganizationJobModal,
+              handleCloseOrganizationEditJobModal,
+            }}
+          >
+            <div>
+              <NavBar></NavBar>
+              <Container className="mt-3">
+                <EditModal></EditModal>
+                <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
+                <VerificationModal></VerificationModal>
+                <CreateOrganizationJobModal></CreateOrganizationJobModal>
+                <EditOrganizationJobModal></EditOrganizationJobModal>
+                <Row>
+                  <Col
+                    className="d-flex justify-content-start align-items-start flex-column"
+                    md={4}
+                  >
+                    <ProfileInfo></ProfileInfo>
+                  </Col>
+                  <Col md={8}>
+                    <OrganizationJobs></OrganizationJobs>
+                    <Reviews></Reviews>
+                  </Col>
+                </Row>
+              </Container>
+            </div>
+          </OrganizationJobModalContext.Provider>
         </ShowEditOrganizationProfileModalContext.Provider>
       </ShowVerificationModalContext.Provider>
     </ShowProfilePictureUploadModalContext.Provider>

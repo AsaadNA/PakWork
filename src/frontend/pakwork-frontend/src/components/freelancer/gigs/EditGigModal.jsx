@@ -5,7 +5,7 @@ import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { GigModalContext } from "../../../contexts/ModalContext";
 import axios from "../../../Api/Api";
-import { GigCategories } from "../../../Extras/CategoryLists";
+import { GigJobCategories } from "../../../Extras/CategoryLists";
 import CurrencyInput from "react-currency-input-field";
 import { useDropzone } from "react-dropzone";
 
@@ -130,7 +130,7 @@ const EditGigModal = () => {
       formData.append("category", GigCategory.value);
       formData.append("starting_rate", StartingPrice);
 
-      if(files.length > 0) {
+      if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {
           formData.append("images", files[i]);
         }
@@ -158,10 +158,10 @@ const EditGigModal = () => {
       setTitle(title);
       setDescription(description);
 
-      let idx = GigCategories.find((gig, index) => {
+      let idx = GigJobCategories.find((gig, index) => {
         if (gigCategory === gig.value) {
           setGigCategory(
-            GigCategories[index] !== null ? GigCategories[index] : ""
+            GigJobCategories[index] !== null ? GigJobCategories[index] : ""
           );
         }
       });
@@ -247,7 +247,7 @@ const EditGigModal = () => {
                     Choose Category For Your Gig From the list
                   </Form.Label>
                   <Select
-                    options={GigCategories}
+                    options={GigJobCategories}
                     placeholder="Choose your gig's category"
                     isSearchable={true}
                     required

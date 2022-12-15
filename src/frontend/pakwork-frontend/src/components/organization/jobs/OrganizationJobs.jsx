@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
 import {
   FaUser,
@@ -7,13 +7,29 @@ import {
   FaMapPin,
   FaAngleDoubleRight,
 } from "react-icons/fa";
+import { OrganizationJobModalContext } from "../../../contexts/ModalContext";
 
-const CurrentOrders = () => {
+const OrganizationJobs = () => {
+  const {
+    handleshowCreateOrganizationJobModal,
+    handleshowEditOrganizationJobModal,
+  } = useContext(OrganizationJobModalContext);
   return (
     <>
-      <h4 style={{ textAlign: "left" }} className="p-2">
-        Active Jobs
-      </h4>
+      <div className="d-flex justify-content-between align-items-center">
+        <h4 style={{ textAlign: "left" }} className="p-2">
+          Active Jobs
+        </h4>
+        <Button
+          type="button"
+          variant="success"
+          className="d-flex mb-2 justify-content-right align-items-right"
+          onClick={handleshowCreateOrganizationJobModal}
+        >
+          Post A Job
+          <FaPlus className="mt-1" style={{ marginLeft: "5px" }}></FaPlus>
+        </Button>
+      </div>
       <Row className="d-flex mt-4 justify-content-center-md align-items-center flex-column-md">
         <Col md={12} className="mb-2">
           <Card style={{ width: "100%", height: "330px" }}>
@@ -145,4 +161,4 @@ const CurrentOrders = () => {
   );
 };
 
-export default CurrentOrders;
+export default OrganizationJobs;

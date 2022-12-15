@@ -63,7 +63,7 @@ export const genders = [
   },
 ];
 
-export const GigCategories = [
+export const GigJobCategories = [
   {
     value: "Web Development",
     label: "Web Development",
@@ -103,5 +103,9 @@ export const GigCategories = [
   {
     value: "E-commerce",
     label: "E-commerce",
+  },
+  {
+    value: "Others",
+    label: "Others",
   },
 ];
