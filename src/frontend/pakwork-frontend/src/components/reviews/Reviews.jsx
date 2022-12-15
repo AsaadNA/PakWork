@@ -29,6 +29,7 @@ const Reviews = () => {
     },
   ];
   return (
+    
     <Col md={12} className="mt-2 mb-2">
       <h4 style={{ textAlign: "left" }} className="p-2">
         Reviews

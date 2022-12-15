@@ -18,13 +18,44 @@ const { storageOptionsGigs, imageFilter } = require("../common/storageOptions");
             b. /:gigID /: Get Specific Gig
 */
 
-                             /***** WITH AUTH ****** */
+router.put("/:gigID/upload" , auth , (req,res) => {
+    res.send("Update Gig Pics");
+});
 
+router.put("/:gigID" , auth , (req,res) => {
+    
+});
 
-/*
-    Gig PUT ON Images
-    Gig PUT ON Gig Info
-*/
+router.delete("/:gigID" , auth , (req,res) => {
+    const {gigID} = req.params;
+    db.query(`DELETE from gigs_images where gig_id="${gigID}";` , (e,r) => {
+        if(e) {
+            res.status(400).send({
+                error: e.message
+            })
+        } else if(r) {
+            db.query(`DELETE from gigs where gig_id="${gigID}";` , (e,r) => {
+                if(e) {
+                    res.status(400).send({
+                        error: e.message
+                    })
+                } else if(r) {
+                    res.status(200).send({
+                        message: "Gig Deleted"
+                    });
+                } else {
+                    res.status(400).send({
+                        error: "Could not delete gig"
+                    });
+                }
+            });
+        } else {
+            res.status(400).send({
+                error: "Could not delete gig images"
+            })
+        }
+    })
+})
 
 //Multi-Form Data so images and data on the same form/modal
 router.post(
