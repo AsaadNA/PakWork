@@ -24,7 +24,8 @@ const FreelancerProfile = () => {
     useState(false);
   const [ShowCreateGigModal, setShowCreateGigModal] = useState(false);
   const [ShowEditGigModal, setShowEditGigModal] = useState(false);
-  const [EditGigID, setEditGigID] = useState("");
+  //const [EditGigID, setEditGigID] = useState("");
+  const [EditGigInfo, setEditGigInfo] = useState({});
 
   const handleCloseVerification = () => setshowVerification(false);
   const handleShowVerification = () => setshowVerification(true);
@@ -36,13 +37,15 @@ const FreelancerProfile = () => {
     setshowProfilePictureUpload(false);
   const handleShowCreateGigModal = () => setShowCreateGigModal(true);
   const handleCloseCreateGigModal = () => setShowCreateGigModal(false);
-  const handleShowEditGigModal = (id) => {
+  const handleShowEditGigModal = (gigInfo) => {
+    setEditGigInfo(gigInfo);
     setShowEditGigModal(true);
-    setEditGigID(id);
+    //setEditGigID(id);
   };
   const handleCloseEditGigModal = () => {
     setShowEditGigModal(false);
-    setEditGigID("");
+    //setEditGigID("");
+    setEditGigInfo({});
   };
 
   return (
@@ -75,7 +78,8 @@ const FreelancerProfile = () => {
               ShowEditGigModal,
               handleShowEditGigModal,
               handleCloseEditGigModal,
-              EditGigID,
+              EditGigInfo
+              //EditGigID,
             }}
           >
             <div>

@@ -127,7 +127,7 @@ const CreateGigModal = () => {
 
         formData.append("title", title);
         formData.append("details", description);
-        formData.append("category", GigCategory);
+        formData.append("category", GigCategory.value);
         formData.append("starting_rate", StartingPrice);
 
         for (let i = 0; i < files.length; i++) {
