@@ -153,7 +153,7 @@ const EditGigModal = () => {
 
   useEffect(() => {
     if (ShowEditGigModal === true) {
-      const { title, description, gigCategory } = EditGigInfo;
+      const { title, description, gigCategory , startingPrice } = EditGigInfo;
 
       setTitle(title);
       setDescription(description);
@@ -165,6 +165,8 @@ const EditGigModal = () => {
           );
         }
       });
+
+      setStartingPrice(startingPrice);
 
       // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
       return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
