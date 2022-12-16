@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { GigModalContext } from "../../../contexts/ModalContext";
-import { GigCategories } from "../../../Extras/CategoryLists";
+import { GigJobCategories } from "../../../Extras/CategoryLists";
 import CurrencyInput from "react-currency-input-field";
 import { useDropzone } from "react-dropzone";
 import axios from "../../../Api/Api";
@@ -141,10 +141,9 @@ const CreateGigModal = () => {
           },
         });
 
-        if(response.status === 200) {
+        if (response.status === 200) {
           window.location.reload();
         }
-
       } catch (err) {
         console.log(err.message);
       }
@@ -190,15 +189,15 @@ const CreateGigModal = () => {
                     rows={6}
                     placeholder="I will do something, I'm really good at..."
                     value={title}
-                    minLength={5}
-                    maxLength={25}
+                    minLength={25}
+                    maxLength={80}
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
-                    isInvalid={title.length > 25 && formSubmitted}
+                    isInvalid={title.length > 100 && formSubmitted}
                   ></Form.Control>
                   <Form.Text>
-                    Be Precise as you can, limit is 25 characters.
+                    Be Precise as you can, limit is 80 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
                     Title must be below 25 characters
@@ -217,7 +216,7 @@ const CreateGigModal = () => {
                 </Col>
               </Row>
               <h2 class="line-divider ">
-                <span class="span-line-divider ">Category and Pricing</span>
+                <span class="span-line-divider">Category and Pricing</span>
               </h2>
               <Row className="mb-1 p-2 justify-content-center">
                 <Form.Group
@@ -225,12 +224,13 @@ const CreateGigModal = () => {
                   md={4}
                   className="mt-2"
                   controlId="formGridCategory"
+                  style={{ zIndex: "2" }}
                 >
                   <Form.Label for="industry">
                     Choose Category For Your Gig From the list
                   </Form.Label>
                   <Select
-                    options={GigCategories}
+                    options={GigJobCategories}
                     placeholder="Choose your gig's category"
                     isSearchable={true}
                     required
