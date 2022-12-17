@@ -13,6 +13,7 @@ import AnimatedLayout from "./components/animated-layout/AnimatedLayout";
 import ProtectedRoute from "./Auth/ProtectRoute";
 import ProfileSelector from "./containers/profile/ProfileSelector";
 import IsLoggedIn from "./Auth/IsLoggedIn";
+import Gig from "./components/freelancer/gigs/Gig";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
                   element={<ProfileSelector></ProfileSelector>}
                 ></Route>
               </Route>
+              <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>
             </Route>
           </Routes>
         </Fragment>

@@ -223,6 +223,60 @@ a {
   border-radius: 2%;
   color: #192a56;
 }
+.breadcrumb-item + .breadcrumb-item::before {
+  content: ">" !important;
+  align-self: baseline;
+}
+.seller-mini-banner {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: row;
+}
+.seller-mini-banner img {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+}
+.seller-mini-banner .username {
+  font-weight: bold;
+  padding: 1%;
+  padding-bottom: 1%;
+}
+.seller-mini-banner .level {
+  font-weight: 500;
+  background-color: purple;
+  color: white;
+  border-radius: 5px;
+  padding: 0.4%;
+  width: 120px;
+  text-align: center;
+}
+.gig-price-container {
+  margin-top: 30%;
+  min-height: 400px;
+  width: 80%;
+  border: 1px solid #ccc;
+}
+.gig-price-container .price {
+  font-size: 50px;
+  line-height: 25px;
+  position: relative;
+  padding: 10px;
+}
+.gig-price-container .price:hover {
+  color: #006837;
+  cursor: pointer;
+}
+.gig-price-container .price::before {
+  content: "$";
+  font-size: 16px;
+  top: 10%;
+  position: absolute;
+  top: 26%;
+  left: 0%;
+}
+
 @media (max-width: 767.98px) {
   .search-bar {
     width: 100%;
