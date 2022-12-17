@@ -5,7 +5,7 @@ import { Carousel } from "react-responsive-carousel";
 import NavBar from "../../navbar/NavBar";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import Reviews from "../../reviews/Reviews";
-import { FaStar } from "react-icons/fa";
+import { FaEnvelope, FaStar } from "react-icons/fa";
 import Footer from "../../footer/Footer";
 
 const Gig = () => {
@@ -104,7 +104,7 @@ const Gig = () => {
               <br></br>
               <div className="d-flex justify-content-center align-items-end">
                 <Button variant="success" className="mx-1 w-100">
-                  Contact Seller
+                  Contact Seller 💬
                 </Button>
               </div>
             </div>
