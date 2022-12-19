@@ -255,7 +255,7 @@ a {
 .gig-price-container {
   margin-top: 30%;
   min-height: 370px;
-  width: 80%;
+  width: 100%;
   border: 1px solid #ccc;
 }
 .gig-price-container .price {
@@ -276,8 +276,15 @@ a {
   top: 26%;
   left: 0%;
 }
+.register-freelance-btn {
+  margin-left: 10px;
+}
 
 @media (max-width: 767.98px) {
+  .register-freelance-btn {
+    margin-left: 0px;
+    margin-top: 10px;
+  }
   .search-bar {
     width: 100%;
   }

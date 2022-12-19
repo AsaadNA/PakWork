@@ -10,9 +10,10 @@ import { Link as RouterLink, NavLink, useNavigate } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
-import { FaUser } from "react-icons/fa";
+import { FaSearch, FaUser } from "react-icons/fa";
+import { Form, InputGroup } from "react-bootstrap";
 
-const NavBar = () => {
+const NavBar = ({ isHome }) => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
 
   const navigate = useNavigate();
@@ -31,49 +32,84 @@ const NavBar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         {!localStorage.getItem("userToken") ? (
           <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Nav.Link
-                className="text-dark-50"
-                style={{ fontWeight: "bold " }}
-              >
-                <Link
-                  to="how-it-works"
-                  spy={true}
-                  smooth={true}
-                  offset={50}
-                  duration={500}
-                  className="navlink"
+            {isHome ? (
+              <Nav className="me-auto">
+                <Nav.Link
+                  className="text-dark-50"
+                  style={{ fontWeight: "bold " }}
                 >
-                  How it works?
-                </Link>
-              </Nav.Link>
-              <Nav.Link
-                className="text-dark-50"
-                style={{ fontWeight: "bold " }}
-              >
-                <Link
-                  to="popular-categories"
-                  spy={true}
-                  smooth={true}
-                  duration={500}
-                  className="navlink"
+                  <Link
+                    to="how-it-works"
+                    spy={true}
+                    smooth={true}
+                    offset={50}
+                    duration={500}
+                    className="navlink"
+                  >
+                    How it works?
+                  </Link>
+                </Nav.Link>
+                <Nav.Link
+                  className="text-dark-50"
+                  style={{ fontWeight: "bold " }}
                 >
-                  Browser Categories
-                </Link>
-              </Nav.Link>
-            </Nav>
+                  <Link
+                    to="popular-categories"
+                    spy={true}
+                    smooth={true}
+                    duration={500}
+                    className="navlink"
+                  >
+                    Browser Categories
+                  </Link>
+                </Nav.Link>
+              </Nav>
+            ) : (
+              <Nav className="me-auto">
+                <Form
+                  className="d-flex"
+                  onSubmit={() => {
+                    console.log("searching..");
+                  }}
+                >
+                  <InputGroup className="mt-1">
+                    <Form.Control
+                      type="text"
+                      placeholder="Search.."
+                      className="Nav-search"
+                    ></Form.Control>
+                    <Button
+                      type="submit"
+                      variant="success"
+                      // style={{ marginLeft: "2%" }}
+                    >
+                      <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
+                    </Button>
+                  </InputGroup>
+                </Form>
+              </Nav>
+            )}
             <Nav>
               <Nav.Link style={{ fontWeight: "bold", color: "#006837" }}>
-                <Link
-                  to="pakwork-promo"
-                  spy={true}
-                  smooth={true}
-                  offset={50}
-                  duration={500}
-                  className="navlink"
-                >
-                  Pakwork For Organizations
-                </Link>
+                {isHome ? (
+                  <Link
+                    to="pakwork-promo"
+                    spy={true}
+                    smooth={true}
+                    offset={50}
+                    duration={500}
+                    className="navlink"
+                  >
+                    Pakwork For Organizations
+                  </Link>
+                ) : (
+                  <RouterLink
+                    to="/signup/organization"
+                    style={{ textDecoration: "none" }}
+                  >
+                    <span className="navlink">Pakwork For Organizations</span>
+                  </RouterLink>
+                )}
               </Nav.Link>
               <Nav.Link
                 className="text-dark-50 navlink-btn"
@@ -87,7 +123,7 @@ const NavBar = () => {
                 style={{ textDecoration: "none" }}
               >
                 <Button
-                  style={{ marginLeft: "10px", fontWeight: "bold" }}
+                  style={{ fontWeight: "bold" }}
                   className="solid-green-btn"
                 >
                   Post a Job
@@ -98,8 +134,8 @@ const NavBar = () => {
                 style={{ textDecoration: "none" }}
               >
                 <Button
-                  style={{ marginLeft: "10px", fontWeight: "bold" }}
-                  className="hollow-green-btn mt-1 mt-md-0"
+                  style={{ fontWeight: "bold" }}
+                  className="hollow-green-btn register-freelance-btn mt-1 mt-md-0"
                 >
                   Sell Your Services
                 </Button>
