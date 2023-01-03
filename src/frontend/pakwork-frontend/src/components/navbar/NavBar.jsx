@@ -13,7 +13,7 @@ import "../../App.css";
 import { FaSearch, FaUser } from "react-icons/fa";
 import { Form, InputGroup } from "react-bootstrap";
 
-const NavBar = ({ isHome }) => {
+const NavBar = ({ isHome, isGigResult }) => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
 
   const navigate = useNavigate();
@@ -66,27 +66,31 @@ const NavBar = ({ isHome }) => {
               </Nav>
             ) : (
               <Nav className="me-auto">
-                <Form
-                  className="d-flex"
-                  onSubmit={() => {
-                    console.log("searching..");
-                  }}
-                >
-                  <InputGroup className="mt-1">
-                    <Form.Control
-                      type="text"
-                      placeholder="Search.."
-                      className="Nav-search"
-                    ></Form.Control>
-                    <Button
-                      type="submit"
-                      variant="success"
-                      // style={{ marginLeft: "2%" }}
-                    >
-                      <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
-                    </Button>
-                  </InputGroup>
-                </Form>
+                {!isGigResult ? (
+                  <Form
+                    className="d-flex"
+                    onSubmit={() => {
+                      console.log("searching..");
+                    }}
+                  >
+                    <InputGroup className="mt-1">
+                      <Form.Control
+                        type="text"
+                        placeholder="Search.."
+                        className="Nav-search"
+                      ></Form.Control>
+                      <Button
+                        type="submit"
+                        variant="success"
+                        // style={{ marginLeft: "2%" }}
+                      >
+                        <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
+                      </Button>
+                    </InputGroup>
+                  </Form>
+                ) : (
+                  <></>
+                )}
               </Nav>
             )}
             <Nav>
@@ -124,7 +128,7 @@ const NavBar = ({ isHome }) => {
               >
                 <Button
                   style={{ fontWeight: "bold" }}
-                  className="solid-green-btn"
+                  className="solid-green-btn register-btn"
                 >
                   Post a Job
                 </Button>
@@ -135,7 +139,7 @@ const NavBar = ({ isHome }) => {
               >
                 <Button
                   style={{ fontWeight: "bold" }}
-                  className="hollow-green-btn register-freelance-btn mt-1 mt-md-0"
+                  className="hollow-green-btn register-btn mt-1 mt-md-0"
                 >
                   Sell Your Services
                 </Button>

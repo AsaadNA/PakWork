@@ -276,12 +276,12 @@ a {
   top: 26%;
   left: 0%;
 }
-.register-freelance-btn {
+.register-btn {
   margin-left: 10px;
 }
 
 @media (max-width: 767.98px) {
-  .register-freelance-btn {
+  .register-btn {
     margin-left: 0px;
     margin-top: 10px;
   }

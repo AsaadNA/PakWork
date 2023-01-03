@@ -1,0 +1,12 @@
+.select-box {
+  width: 25%;
+}
+
+@media (max-width: 991.98px) {
+  .select-box {
+    width: 100%;
+  }
+  .select-box-with-button {
+    width: 85% !important;
+  }
+}

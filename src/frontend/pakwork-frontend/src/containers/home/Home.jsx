@@ -18,13 +18,13 @@ const Home = () => {
 
   const handleCloseLogin = () => setShowLogin(false);
   const handleShowLogin = () => setShowLogin(true);
-  
+
   return (
     <>
       <ShowLoginModalContext.Provider
         value={{ showLogin, handleCloseLogin, handleShowLogin }}
       >
-        <NavBar></NavBar>
+        <NavBar isHome={true}></NavBar>
         <Container fluid>
           <LoginModal></LoginModal>
           <Element>

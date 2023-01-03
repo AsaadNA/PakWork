@@ -14,6 +14,8 @@ import ProtectedRoute from "./Auth/ProtectRoute";
 import ProfileSelector from "./containers/profile/ProfileSelector";
 import IsLoggedIn from "./Auth/IsLoggedIn";
 import Gig from "./components/freelancer/gigs/Gig";
+import NotFound404 from "./components/notfound-404/NotFound404";
+import GigsResult from "./components/SearchResults/Gigs/GigsResult";
 
 function App() {
   return (
@@ -58,6 +60,12 @@ function App() {
                 ></Route>
               </Route>
               <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>
+              <Route
+                path="/gigs/:search"
+                exact
+                element={<GigsResult></GigsResult>}
+              ></Route>
+              <Route path="*" element={<NotFound404></NotFound404>}></Route>
             </Route>
           </Routes>
         </Fragment>

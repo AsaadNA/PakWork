@@ -78,13 +78,15 @@ const Gigs = () => {
                   fontSize: "20px",
                   color: "grey",
                 }}
-                onClick={() => handleShowEditGigModal({
-                  gigID:g.gig_id,
-                  title: g.title,
-                  description: g.details,
-                  gigCategory: g.category,
-                  startingPrice: g.starting_rate,
-                })}
+                onClick={() =>
+                  handleShowEditGigModal({
+                    gigID: g.gig_id,
+                    title: g.title,
+                    description: g.details,
+                    gigCategory: g.category,
+                    startingPrice: g.starting_rate,
+                  })
+                }
               ></FaEdit>
 
               <FaTrash
