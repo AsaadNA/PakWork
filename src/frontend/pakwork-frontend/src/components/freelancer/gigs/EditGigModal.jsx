@@ -121,39 +121,73 @@ const EditGigModal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let userToken = localStorage.getItem("userToken");
+    setformSubmitted(true);
+    if (
+      files.length < 5 &&
+      title.length >= 25 &&
+      title.length <= 80 &&
+      GigCategory.value.length > 10 &&
+      parseInt(StartingPrice) >= 5 &&
+      description.length > 50 &&
+      description.length <= 500
+    ) {
+      try {
+        setLoading(true);
+        let formData = new FormData();
 
-    try {
-      let formData = new FormData();
+        formData.append("title", title);
+        formData.append("details", description);
+        formData.append("category", GigCategory.value);
+        formData.append("starting_rate", StartingPrice);
 
-      formData.append("title", title);
-      formData.append("details", description);
-      formData.append("category", GigCategory.value);
-      formData.append("starting_rate", StartingPrice);
-
-      if (files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          formData.append("images", files[i]);
+        if (files.length > 0) {
+          for (let i = 0; i < files.length; i++) {
+            formData.append("images", files[i]);
+          }
         }
-      }
 
-      let response = await axios.put(`/gigs/${EditGigInfo.gigID}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "x-access-token": userToken,
-        },
+        let response = await axios.put(`/gigs/${EditGigInfo.gigID}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": userToken,
+          },
+        });
+
+        if (response.status === 200) {
+          setLoading(false);
+          setformSubmitted(false);
+          window.location.reload();
+        }
+      } catch (err) {
+        setLoading(false);
+        toast.error(err.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } else {
+      toast.error("Complete Your Submission", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
-
-      if (response.status === 200) {
-        window.location.reload();
-      }
-    } catch (err) {
-      console.log(err.message);
     }
   };
 
   useEffect(() => {
     if (ShowEditGigModal === true) {
-      const { title, description, gigCategory , startingPrice } = EditGigInfo;
+      const { title, description, gigCategory, startingPrice } = EditGigInfo;
 
       setTitle(title);
       setDescription(description);
@@ -214,13 +248,15 @@ const EditGigModal = () => {
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
-                    isInvalid={title.length > 25 && formSubmitted}
+                    isInvalid={
+                      (title.length < 25 || title.length > 80) && formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
-                    Be Precise as you can, limit is 25 characters.
+                    Be Precise as you can, limit is 25-80 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Title must be below 25 characters
+                    Title must be greater than 25 and less than 80 characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
@@ -306,13 +342,17 @@ const EditGigModal = () => {
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
-                    isInvalid={description.length > 500 && formSubmitted}
+                    isInvalid={
+                      (description.length < 50 || description.length > 500) &&
+                      formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
                     Be Descriptive as you can, limit is 500 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Description must be less than 500 characters
+                    Description must be more than 50 characters and less than
+                    500 characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
