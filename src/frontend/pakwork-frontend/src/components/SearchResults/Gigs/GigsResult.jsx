@@ -19,10 +19,12 @@ import {
   SortByPrice,
   SortByRating,
 } from "../../../Extras/CategoryLists";
+import LoginModal from "../../login/LoginModal";
 import "./GigsResult.css";
 
 const GigsResult = () => {
   const { search } = useParams();
+  const isUser = localStorage.getItem("user");
   const gigs = [
     {
       title: "I will do html, css, javascript, nodejs, development",
@@ -185,6 +187,9 @@ const GigsResult = () => {
   return (
     <>
       <NavBar isGigResult={true}></NavBar>
+      {/*The Reason to include this Login Modal over here is because we didn't have the component used there
+      so it was not here so we are including it here so that it can be rendered and we are only rendering it if we are logged out*/}
+      {!isUser ? <LoginModal></LoginModal> : null}
       <Container>
         <Row>
           <Col md={12}>
@@ -225,7 +230,7 @@ const GigsResult = () => {
                           placeholder={"Sort By Price"}
                           isSearchable={true}
                           required
-                          name="GigCategory"
+                          name="SortPrice"
                           className="w-100"
                         />
                       </div>
@@ -235,7 +240,7 @@ const GigsResult = () => {
                           placeholder={"Sort By Rating"}
                           isSearchable={true}
                           required
-                          name="GigCategory"
+                          name="SortRating"
                           className="w-100"
                         />
                       </div>
@@ -251,11 +256,11 @@ const GigsResult = () => {
           </Col>
         </Row>
         <Row>
-          {gigs.map((g) => {
+          {gigs.map((g, i) => {
             let images = g.images.split(",");
             return (
               <Col
-                key={g.gig_id}
+                key={g.gig_id + i}
                 className="mt-4 d-flex justify-content-center align-items-center flex-column"
                 md={3}
               >
