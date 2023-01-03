@@ -120,9 +120,20 @@ const CreateGigModal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let userToken = localStorage.getItem("userToken");
-
-    if (files.length > 0) {
+    setformSubmitted(true);
+    if (
+      files.length > 0 &&
+      files.length <= 4 &&
+      title.length >= 25 &&
+      title.length <= 80 &&
+      GigCategory.value.length > 10 &&
+      parseInt(StartingPrice) >= 5 &&
+      description.length > 50 &&
+      description.length <= 500
+    ) {
       try {
+        setLoading(true);
+
         let formData = new FormData();
 
         formData.append("title", title);
@@ -142,9 +153,12 @@ const CreateGigModal = () => {
         });
 
         if (response.status === 200) {
+          setformSubmitted(false);
+          setLoading(false);
           window.location.reload();
         }
       } catch (err) {
+        setLoading(false);
         console.log(err.message);
       }
     }
@@ -194,13 +208,15 @@ const CreateGigModal = () => {
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
-                    isInvalid={title.length > 100 && formSubmitted}
+                    isInvalid={
+                      (title.length < 25 || title.length > 80) && formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
-                    Be Precise as you can, limit is 80 characters.
+                    Be Precise as you can, limit is 25-80 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Title must be below 25 characters
+                    Title must be greater than 25 and less than 80 characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
@@ -287,13 +303,17 @@ const CreateGigModal = () => {
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
-                    isInvalid={description.length > 500 && formSubmitted}
+                    isInvalid={
+                      (description.length < 50 || description.length > 500) &&
+                      formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
                     Be Descriptive as you can, limit is 500 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Description must be less than 500 characters
+                    Description must be more than 50 characters and less than
+                    500 characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
@@ -325,6 +345,11 @@ const CreateGigModal = () => {
                     </div>
                     <aside style={thumbsContainer}>{thumbs}</aside>
                   </section>
+                  {formSubmitted && files.length > 4 ? (
+                    <Form.Control.Feedback type="invalid">
+                      Maximum Limit For Images is 4
+                    </Form.Control.Feedback>
+                  ) : null}
                 </Form.Group>
                 <Form.Group
                   as={Col}
