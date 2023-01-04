@@ -21,6 +21,7 @@ import {
 } from "../../../Extras/CategoryLists";
 import LoginModal from "../../login/LoginModal";
 import "./GigsResult.css";
+import SearchBar from "../../search-bar/SearchBar";
 
 const GigsResult = () => {
   const { search } = useParams();
@@ -202,16 +203,7 @@ const GigsResult = () => {
               >
                 <Row>
                   <Col md={4}>
-                    <InputGroup className="mt-1">
-                      <Form.Control
-                        type="text"
-                        placeholder="Search.."
-                        className="Nav-search"
-                      ></Form.Control>
-                      <Button type="submit" variant="success">
-                        <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
-                      </Button>
-                    </InputGroup>
+                    <SearchBar></SearchBar>
                   </Col>
                   <Col md={8}>
                     <InputGroup className="mt-1 d-flex justify-content-end">

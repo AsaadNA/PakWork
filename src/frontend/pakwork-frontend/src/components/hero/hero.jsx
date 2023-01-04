@@ -4,6 +4,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
 import heroImage from "../../assets/pakwork_home1.svg";
+import SearchBar from "../search-bar/SearchBar";
 
 const Hero = () => {
   return (
@@ -19,12 +20,7 @@ const Hero = () => {
           Turn your idea into a reality
         </h4>
         <div className="d-flex mt-2">
-          <input
-            className="search-bar input"
-            type={"search"}
-            placeholder={"Try 'JavaScript developer'"}
-          ></input>
-          <Button className="search-green-btn">Search</Button>
+          <SearchBar></SearchBar>
         </div>
         <div className="mt-3 searched-items">
           <span>

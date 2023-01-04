@@ -12,12 +12,13 @@ import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
 import { FaSearch, FaUser } from "react-icons/fa";
 import { Form, InputGroup } from "react-bootstrap";
+import SearchBar from "../search-bar/SearchBar";
 
 const NavBar = ({ isHome, isGigResult }) => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
 
   const navigate = useNavigate();
-
+  const user = JSON.parse(localStorage.getItem("user"));
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userToken");
@@ -66,31 +67,7 @@ const NavBar = ({ isHome, isGigResult }) => {
               </Nav>
             ) : (
               <Nav className="me-auto">
-                {!isGigResult ? (
-                  <Form
-                    className="d-flex"
-                    onSubmit={() => {
-                      console.log("searching..");
-                    }}
-                  >
-                    <InputGroup className="mt-1">
-                      <Form.Control
-                        type="text"
-                        placeholder="Search.."
-                        className="Nav-search"
-                      ></Form.Control>
-                      <Button
-                        type="submit"
-                        variant="success"
-                        // style={{ marginLeft: "2%" }}
-                      >
-                        <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
-                      </Button>
-                    </InputGroup>
-                  </Form>
-                ) : (
-                  <></>
-                )}
+                {!isGigResult ? <SearchBar></SearchBar> : <></>}
               </Nav>
             )}
             <Nav>
@@ -149,6 +126,28 @@ const NavBar = ({ isHome, isGigResult }) => {
         ) : (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
+              {user.user_type === "freelancer" ? (
+                <Nav.Link
+                  className="mx-md-2"
+                  style={{ fontWeight: "bold", textDecoration: "none" }}
+                >
+                  <NavLink
+                    to="/jobs"
+                    className={(navData) =>
+                      navData.isActive
+                        ? "navlink text-dark"
+                        : "navlink text-dark-50"
+                    }
+                    style={{ textDecoration: "none" }}
+                  >
+                    Availible Jobs
+                  </NavLink>
+                </Nav.Link>
+              ) : !isGigResult ? (
+                <SearchBar></SearchBar>
+              ) : (
+                <></>
+              )}
               <Nav.Link
                 className="mx-md-2"
                 style={{ fontWeight: "bold", textDecoration: "none" }}
