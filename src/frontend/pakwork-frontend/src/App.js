@@ -17,6 +17,7 @@ import Gig from "./components/freelancer/gigs/Gig";
 import NotFound404 from "./components/notfound-404/NotFound404";
 import GigsResult from "./components/SearchResults/Gigs/GigsResult";
 import { ShowLoginModalContext } from "./contexts/ModalContext";
+import JobsResult from "./components/SearchResults/Jobs/JobsResult";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -67,6 +68,17 @@ function App() {
                     path="/dashboard/profile"
                     exact
                     element={<ProfileSelector></ProfileSelector>}
+                  ></Route>
+                </Route>
+                <Route
+                  path="/jobs"
+                  exact
+                  element={<ProtectedRoute></ProtectedRoute>}
+                >
+                  <Route
+                    path="/jobs"
+                    exact
+                    element={<JobsResult></JobsResult>}
                   ></Route>
                 </Route>
                 <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>

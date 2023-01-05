@@ -279,7 +279,16 @@ a {
 .register-btn {
   margin-left: 10px;
 }
-
+.mini_profile_pic {
+  height: 5vh;
+  width: 5vh;
+  border-radius: 50%;
+  border: 1px solid black;
+}
+.clickable_link:hover {
+  cursor: pointer;
+  color: #006837;
+}
 @media (max-width: 767.98px) {
   .register-btn {
     margin-left: 0px;
