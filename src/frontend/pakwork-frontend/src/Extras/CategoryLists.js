@@ -65,6 +65,10 @@ export const genders = [
 
 export const GigJobCategories = [
   {
+    value: "Show All",
+    label: "Show All",
+  },
+  {
     value: "Web Development",
     label: "Web Development",
   },

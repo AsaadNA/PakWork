@@ -140,7 +140,7 @@ const NavBar = ({ isHome, isGigResult }) => {
                     }
                     style={{ textDecoration: "none" }}
                   >
-                    Availible Jobs
+                    Available Jobs
                   </NavLink>
                 </Nav.Link>
               ) : !isGigResult ? (
