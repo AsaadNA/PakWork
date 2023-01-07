@@ -8,8 +8,10 @@ import Select from "react-select";
 const JobsResult = () => {
   const [jobs, setjobs] = useState([]);
   const [FilteredJobs, setFilteredJobs] = useState([]);
+  const [sortState, setsortState] = useState("hightolow");
 
   useEffect(() => {
+    sampleData.sort((a, b) => parseInt(b.budget) - parseInt(a.budget));
     setjobs(sampleData);
     setFilteredJobs(sampleData);
   }, []);
@@ -29,26 +31,31 @@ const JobsResult = () => {
     }
   };
   const filterCategory = (category) => {
-    const tempArr = [];
-    if (category.value === "Show All") {
-      setFilteredJobs(jobs);
+    let tempArr = [];
+    if (category === "Show All") {
+      tempArr = [...jobs];
     } else {
       jobs.forEach((job) => {
-        if (job.category === category.value) {
+        if (job.category === category) {
           tempArr.push(job);
         }
       });
-      setFilteredJobs(tempArr);
     }
-  };
-  const sortPrice = (sortBy) => {
-    let tempArr = [...FilteredJobs];
-    if (sortBy.value === "hightolow") {
+    if (sortState === "hightolow") {
       tempArr.sort((a, b) => parseInt(b.budget) - parseInt(a.budget));
     } else {
       tempArr.sort((a, b) => parseInt(a.budget) - parseInt(b.budget));
     }
-    setjobs(tempArr);
+    setFilteredJobs(tempArr);
+  };
+  const sortPrice = (sortBy) => {
+    let tempArr = [...FilteredJobs];
+    setsortState(sortBy);
+    if (sortBy === "hightolow") {
+      tempArr.sort((a, b) => parseInt(b.budget) - parseInt(a.budget));
+    } else {
+      tempArr.sort((a, b) => parseInt(a.budget) - parseInt(b.budget));
+    }
     setFilteredJobs(tempArr);
   };
   const sampleData = [
@@ -113,7 +120,7 @@ const JobsResult = () => {
                     defaultValue={GigJobCategories[0]}
                     required
                     name="GigJobCategory"
-                    onChange={(value) => filterCategory(value)}
+                    onChange={({ value }) => filterCategory(value)}
                   />
                   <Select
                     styles={{
@@ -124,10 +131,11 @@ const JobsResult = () => {
                     }}
                     options={SortByPrice}
                     placeholder={"Sort By Price"}
+                    defaultValue={SortByPrice[0]}
                     isSearchable={false}
                     required
                     name="SortByPrice"
-                    onChange={(value) => sortPrice(value)}
+                    onChange={({ value }) => sortPrice(value)}
                   />
                 </InputGroup>
               </div>
