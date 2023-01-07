@@ -14,3 +14,5 @@ export const ShowEditOrganizationProfileModalContext = createContext({});
 export const GigModalContext = createContext({});
 export const ClientJobModalContext = createContext({});
 export const OrganizationJobModalContext = createContext({});
+
+export const JobDetailModalContext = createContext({});
