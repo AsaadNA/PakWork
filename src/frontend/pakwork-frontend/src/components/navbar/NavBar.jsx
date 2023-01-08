@@ -126,28 +126,6 @@ const NavBar = ({ isHome, isGigResult }) => {
         ) : (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              {user.user_type === "freelancer" ? (
-                <Nav.Link
-                  className="mx-md-2"
-                  style={{ fontWeight: "bold", textDecoration: "none" }}
-                >
-                  <NavLink
-                    to="/jobs"
-                    className={(navData) =>
-                      navData.isActive
-                        ? "navlink text-dark"
-                        : "navlink text-dark-50"
-                    }
-                    style={{ textDecoration: "none" }}
-                  >
-                    Available Jobs
-                  </NavLink>
-                </Nav.Link>
-              ) : !isGigResult ? (
-                <SearchBar></SearchBar>
-              ) : (
-                <></>
-              )}
               <Nav.Link
                 className="mx-md-2"
                 style={{ fontWeight: "bold", textDecoration: "none" }}
@@ -164,32 +142,52 @@ const NavBar = ({ isHome, isGigResult }) => {
                   Manage Orders
                 </NavLink>
               </Nav.Link>
-              <Nav.Link className="mx-md-2" style={{ fontWeight: "bold " }}>
-                <NavLink
-                  to="/dashboard/buyer-requests"
-                  className={(navData) =>
-                    navData.isActive
-                      ? "navlink text-dark"
-                      : "navlink text-dark-50"
-                  }
-                  style={{ textDecoration: "none" }}
-                >
-                  Buyer Requests
-                </NavLink>
-              </Nav.Link>
-              <Nav.Link className="mx-md-2" style={{ fontWeight: "bold" }}>
-                <NavLink
-                  to="/dashboard/biddings"
-                  className={(navData) =>
-                    navData.isActive
-                      ? "navlink text-dark"
-                      : "navlink text-dark-50"
-                  }
-                  style={{ textDecoration: "none" }}
-                >
-                  Current Biddings
-                </NavLink>
-              </Nav.Link>
+              {user.user_type === "freelancer" ? (
+                <>
+                  <Nav.Link className="mx-md-2" style={{ fontWeight: "bold " }}>
+                    <NavLink
+                      to="/dashboard/buyer-requests"
+                      className={(navData) =>
+                        navData.isActive
+                          ? "navlink text-dark"
+                          : "navlink text-dark-50"
+                      }
+                      style={{ textDecoration: "none" }}
+                    >
+                      Buyer Requests
+                    </NavLink>
+                  </Nav.Link>
+                  <Nav.Link className="mx-md-2" style={{ fontWeight: "bold" }}>
+                    <NavLink
+                      to="/dashboard/biddings"
+                      className={(navData) =>
+                        navData.isActive
+                          ? "navlink text-dark"
+                          : "navlink text-dark-50"
+                      }
+                      style={{ textDecoration: "none" }}
+                    >
+                      Current Biddings
+                    </NavLink>
+                  </Nav.Link>
+                  <Nav.Link
+                    className="mx-md-2"
+                    style={{ fontWeight: "bold", textDecoration: "none" }}
+                  >
+                    <NavLink
+                      to="/jobs"
+                      className={(navData) =>
+                        navData.isActive
+                          ? "navlink text-dark"
+                          : "navlink text-dark-50"
+                      }
+                      style={{ textDecoration: "none" }}
+                    >
+                      Available Jobs
+                    </NavLink>
+                  </Nav.Link>
+                </>
+              ) : null}
             </Nav>
             <Nav className="d-flex justify-content-center align-items-center">
               <Nav.Link className="text-dark-50" style={{ fontWeight: "bold" }}>
@@ -206,6 +204,13 @@ const NavBar = ({ isHome, isGigResult }) => {
                   &nbsp;Profile
                 </NavLink>
               </Nav.Link>
+              {user.user_type === "freelancer" ? (
+                <></>
+              ) : !isGigResult ? (
+                <SearchBar></SearchBar>
+              ) : (
+                <></>
+              )}
               <Nav.Link
                 className="text-dark-50"
                 style={{ fontWeight: "bold" }}

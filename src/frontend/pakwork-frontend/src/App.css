@@ -289,6 +289,15 @@ a {
   cursor: pointer;
   color: #006837;
 }
+.carousel .thumb img {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.carousel .slide img {
+  max-height: 400px; /* change this to whatever you want */
+  width: auto;
+}
 @media (max-width: 767.98px) {
   .register-btn {
     margin-left: 0px;

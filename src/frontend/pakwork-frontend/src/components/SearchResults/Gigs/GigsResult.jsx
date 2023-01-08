@@ -9,7 +9,7 @@ import {
   InputGroup,
   Button,
 } from "react-bootstrap";
-import { FaEye, FaSearch, FaSlash } from "react-icons/fa";
+import { FaEye, FaSearch, FaSlash, FaTypo3 } from "react-icons/fa";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import NavBar from "../../navbar/NavBar";
 import Select from "react-select";
@@ -23,7 +23,6 @@ import "./GigsResult.css";
 import axios from "../../../Api/Api";
 
 const GigsResult = () => {
-
   const isUser = localStorage.getItem("user");
 
   const { searchText } = useParams();
@@ -31,11 +30,11 @@ const GigsResult = () => {
   const [inputText, setInputText] = useState("");
   const [gigs, setGigs] = useState([]);
 
-  const [gigCategory , setGigCategory] = useState(GigJobCategories[1]); //Default Value
-  const [byPrice , setByPrice] = useState(SortByPrice[0]);
-  const [byRating , setByRating] = useState(SortByRating[0]);
+  const [gigCategory, setGigCategory] = useState(GigJobCategories[1]); //Default Value
+  const [byPrice, setByPrice] = useState(SortByPrice[0]);
+  const [byRating, setByRating] = useState(SortByRating[0]);
 
-  const searchParams = new URLSearchParams(document.location.search)
+  const searchParams = new URLSearchParams(document.location.search);
 
   //This will get the endpoint without the filters
   const getSearchResultWithoutFilter = async () => {
@@ -46,20 +45,31 @@ const GigsResult = () => {
   };
 
   //This will get the endpoint with filters
-  const getSearchResultWithFilter = async () => {  
-    let response = await axios.get(`/search/gigs/${searchText}/filter?GigCategory=${searchParams.get("GigCategory")}&SortByPrice=${searchParams.get("SortByPrice")}&SortByRating=${searchParams.get("SortByRating")}`);
+  const getSearchResultWithFilter = async () => {
+    let response = await axios.get(
+      `/search/gigs/${searchText}/filter?GigCategory=${searchParams.get(
+        "GigCategory"
+      )}&SortByPrice=${searchParams.get(
+        "SortByPrice"
+      )}&SortByRating=${searchParams.get("SortByRating")}`
+    );
     if (response.status === 200) {
       setGigs(response.data);
     }
   };
 
   useEffect(() => {
-    if(searchParams.get("GigCategory") && searchParams.get("SortByPrice") && searchParams.get("SortByRating")) {
-
-       //Setting GigCateogry from combobox taken from filter query
-       let sc = GigJobCategories.find((gigCat, index) => {
+    if (
+      searchParams.get("GigCategory") &&
+      searchParams.get("SortByPrice") &&
+      searchParams.get("SortByRating")
+    ) {
+      //Setting GigCateogry from combobox taken from filter query
+      let sc = GigJobCategories.find((gigCat, index) => {
         if (searchParams.get("GigCategory") === gigCat.value) {
-          setGigCategory(GigJobCategories[index] != null ? GigJobCategories[index] : "");
+          setGigCategory(
+            GigJobCategories[index] != null ? GigJobCategories[index] : ""
+          );
         }
       });
 
@@ -70,13 +80,13 @@ const GigsResult = () => {
         }
       });
 
-       //Setting SortByRating from combobox taken from filter query
-       let sr = SortByRating.find((gigCat, index) => {
+      //Setting SortByRating from combobox taken from filter query
+      let sr = SortByRating.find((gigCat, index) => {
         if (searchParams.get("SortByRating") === gigCat.value) {
           setByRating(SortByRating[index] != null ? SortByRating[index] : "");
         }
       });
-      
+
       getSearchResultWithFilter();
     } else {
       getSearchResultWithoutFilter();
@@ -101,7 +111,15 @@ const GigsResult = () => {
                   //We Replace this so that we can use SearchParams in useEffect to handle different endpoints for filtered data
                   //And USe it to fetch our filtered data from our specific endpoint
                   //We added this route to the main APP.js too
-                  window.location.replace(`/gigs/search/${inputText}/filter?GigCategory=${gigCategory.value}&SortByPrice=${byPrice.value}&SortByRating=${byRating.value}`);
+                  if (inputText.length > 0) {
+                    window.location.replace(
+                      `/gigs/search/${inputText}/filter?GigCategory=${gigCategory.value}&SortByPrice=${byPrice.value}&SortByRating=${byRating.value}`
+                    );
+                  } else {
+                    window.location.replace(
+                      `/gigs/search/%20/filter?GigCategory=${gigCategory.value}&SortByPrice=${byPrice.value}&SortByRating=${byRating.value}`
+                    );
+                  }
                 }}
               >
                 <Row>
@@ -181,18 +199,35 @@ const GigsResult = () => {
                   style={{
                     width: "100%",
                     maxWidth: "320px",
-                    height: "305px",
+                    height: "330px",
                   }}
                 >
                   <Card.Img
                     style={{ width: "100%", maxWidth: "100%", height: "50%" }}
                     src={`http://localhost:4000/${images[0]}`}
                   ></Card.Img>
-                  <Card.Body style={{ textAlign: "left", fontWeight: "bold" }}>
-                    {g.title}
+                  <Card.Body style={{ textAlign: "left" }}>
+                    <p
+                      className="clickable_link"
+                      style={{ fontWeight: "bold", marginBottom: "0.5rem" }}
+                      onClick={() =>
+                        window.location.replace(`/gig/${g.gig_id}`)
+                      }
+                    >
+                      {g.title}
+                    </p>
+                    <span
+                      style={{
+                        fontWeight: 550,
+                        color: "rgba(0,0,0,0.7)",
+                        fontSize: "0.9rem",
+                      }}
+                    >
+                      <FaTypo3></FaTypo3> {g.category}
+                    </span>
                   </Card.Body>
-                  <Card.Footer className="d-flex flex-row  justify-content-between align-items-center">
-                    <FaEye
+                  <Card.Footer className="d-flex flex-row  justify-content-between align-items-start">
+                    {/* <FaEye
                       className="signhover"
                       style={{
                         color: "grey",
@@ -202,8 +237,28 @@ const GigsResult = () => {
                       onClick={() =>
                         window.location.replace(`/gig/${g.gig_id}`)
                       }
-                    ></FaEye>
-
+                    ></FaEye> */}
+                    <div>
+                      <img
+                        src="http://localhost:4000//images/profiles/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j"
+                        alt="buyer_pic"
+                        className="mini_profile_pic"
+                        style={{
+                          height: "4vh",
+                          width: "4vh",
+                          marginRight: "5px",
+                        }}
+                      />
+                      <span
+                        style={{
+                          fontSize: "0.9rem",
+                          fontWeight: 600,
+                          color: "rgba(0,0,0,0.7)",
+                        }}
+                      >
+                        ahsantahseen
+                      </span>
+                    </div>
                     <p className="text-success" style={{ fontSize: "13px" }}>
                       STARTING AT{" "}
                       <strong style={{ fontSize: "17px" }}>

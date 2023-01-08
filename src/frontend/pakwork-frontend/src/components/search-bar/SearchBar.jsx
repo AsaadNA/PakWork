@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React, { useState } from "react";
 import { Form, InputGroup, Button } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 
@@ -12,27 +12,25 @@ import { FaSearch } from "react-icons/fa";
 */
 
 const SearchBar = () => {
-
-  const [inputText,setInputText] = useState("");
+  const [inputText, setInputText] = useState("");
 
   return (
     <Form
       className="d-flex"
       onSubmit={(e) => {
         e.preventDefault();
-        window.location.replace(`/gigs/search/${inputText}`);
+        if (inputText.length > 0) {
+          window.location.replace(`/gigs/search/${inputText}`);
+        }
       }}
     >
-      <InputGroup onChange={(e) => setInputText([e.target.value])} className="mt-1">
+      <InputGroup onChange={(e) => setInputText([e.target.value])}>
         <Form.Control
           type="text"
           placeholder="Search Gigs (title,tags)"
           className="Nav-search"
         ></Form.Control>
-        <Button
-          type="submit"
-          variant="success"
-        >
+        <Button type="submit" variant="success">
           <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
         </Button>
       </InputGroup>
