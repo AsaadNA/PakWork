@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
@@ -7,11 +7,27 @@ import { Container, Row, Col, Button } from "react-bootstrap";
 import Reviews from "../../reviews/Reviews";
 import { FaEnvelope, FaStar } from "react-icons/fa";
 import Footer from "../../footer/Footer";
+import axios from "../../../Api/Api";
+import DefaultProfile from "../../../assets/profile_pic_default.png";
 
 const Gig = () => {
-  //Use this to access id
+
   const { id } = useParams();
-  console.log(id);
+  const [gigData,setGigData] = useState({});
+
+  const getGigData = async () => {
+    let response = await axios.get(`/gigs/${id}`);
+    if(response.status === 200) {
+      setGigData(response.data)
+    } else {
+      setGigData({})
+    }
+  }
+  
+  useEffect(() => {
+   getGigData();
+  }, []);
+
   return (
     <>
       <Container style={{ textAlign: "left" }}>
@@ -22,13 +38,21 @@ const Gig = () => {
               style={{ fontWeight: "bold", textAlign: "start" }}
               className="pt-3"
             >
-              I will do html, css, javascript, nodejs, development
+              {gigData.title}
             </h3>
             <hr></hr>
             <div className="seller-mini-banner">
-              <img src="https://fiverr-res.cloudinary.com/t_profile_thumb,q_auto,f_auto/attachments/profile/photo/d7de608727a04b03fd8ce4d5c664e622-1665365749459/d3bd39f9-9925-4e49-905f-0d6b64392c72.png"></img>
-              <span className="username">ahsantahseen</span>|&nbsp;
-              <span className="level">Level 2 Seller</span>&nbsp;|&nbsp;
+            <img
+                    src={
+                      gigData.profile_picture === "" ||
+                      gigData.profile_picture === null
+                        ? DefaultProfile
+                        : `http://localhost:4000/${gigData.profile_picture}`
+                    }
+                    alt="profile_pic"
+                  ></img>
+              <span className="username">{gigData.username}</span>|&nbsp;
+              <span className="level">{gigData.level} Seller</span>&nbsp;|&nbsp;
               <span>
                 <FaStar
                   style={{
@@ -41,25 +65,25 @@ const Gig = () => {
               </span>
             </div>
             <hr></hr>
-            <Carousel showArrows={true} centerMode={false}>
-              <div>
-                <img src="https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/252110108/original/68202f99bd3150cc08bf0236d69de69548ad119e/html-css-javascript-nodejs-development.png" />
-              </div>
-              <div>
-                <img src="https://fiverr-res.cloudinary.com/images/t_smartwm/t_main1,q_auto,f_auto,q_auto,f_auto/attachments/delivery/asset/a1af527292d35073115fedc5daea7bcf-1670166318/SS/html-css-javascript-nodejs-development.PNG" />
-              </div>
-            </Carousel>
+            {
+              gigData.gig_images ? (
+                  <Carousel showArrows={true} centerMode={false}>
+                    {
+                      gigData.gig_images.map((g,idx)=> {
+                        return (
+                          <div key={idx}>
+                            <img src={`http://localhost:4000/${g}`}/>
+                          </div>
+                        )
+                      })
+                    }
+                  </Carousel>
+              ) : <h2>No Images</h2>
+            }
             <hr></hr>
             <h5>About This Gig</h5>
             <p>
-              Are you looking for any services related to html, css, javascript,
-              nodejs? Well don't worry because you came to the right place. I
-              will provide you services related to html, css, javascript and
-              nodejs. My services include any sort of bugs fixing related to
-              html, css, javascript. I also offer complete website or any sort
-              of custom components with html, css, javascript. I also offer
-              custom REST APIs using nodejs and bug fixing in nodejs
-              applications.
+              {gigData.details}
             </p>
             <hr></hr>
             <h5>Customer Reviews</h5>
@@ -72,7 +96,7 @@ const Gig = () => {
                   Starting Price
                 </p>
                 <h4>
-                  <span className="price">5</span>
+                  <span className="price">{gigData.starting_rate}</span>
                 </h4>
               </div>
               <br></br>
@@ -89,7 +113,7 @@ const Gig = () => {
                     Category
                   </p>
                   <p style={{ lineHeight: "0px", color: "rgba(0,0,0,0.7)" }}>
-                    Web Development
+                    {gigData.category}
                   </p>
                 </Col>
                 <Col md={6}>
@@ -97,7 +121,7 @@ const Gig = () => {
                     Seller Expertise
                   </p>
                   <p style={{ lineHeight: "0px", color: "rgba(0,0,0,0.7)" }}>
-                    Programming & Tech
+                    {gigData.industry_name}
                   </p>
                 </Col>
               </Row>

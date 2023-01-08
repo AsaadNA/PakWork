@@ -18,3 +18,14 @@ select c.company_name,c.country,p.industry_name,p.year_experience,p.bio,p.linked
 
 /* Get all the gigs for specific freelancer with gig images */
 select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.freelancer_id, g.starting_rate, group_concat(gi.image) as images from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id where g.freelancer_id= "eedIJfECuHmzbsT7DHAFCdJEZAMEoowtiFqqXRTJWnHz8" group by gi.gig_id;
+
+/* Get Specific Gig with freelancer and his profile details */
+select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.freelancer_id, g.starting_rate, group_concat(gi.image) as gig_images , f.username , p.profile_picture , p.level, p.industry_name from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id inner join freelancer f on g.freelancer_id= f.freelancer_id inner join profile p on f.freelancer_id = p.profile_id and g.gig_id= "uqR39roCWa7P";
+
+/* 
+	'%word' - return results that the value ends with the letters: "word".
+	'word%' - return results that begin with the letters: "word".
+	 %word% - return results that include the letters: "word" anywhere.
+*/
+
+select g.title,g.details,g.category,g.posting_date,g.gig_rating,g.gig_id,g.freelancer_id, g.starting_rate,group_concat(gi.image) as gig_images from gigs_images gi inner join gigs g on g.gig_id=gi.gig_id where g.title  LIKE '%I Will%' group by g.gig_id;

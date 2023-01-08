@@ -83,7 +83,12 @@ function App() {
                 </Route>
                 <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>
                 <Route
-                  path="/gigs/:search"
+                  path="/gigs/search/:searchText"
+                  exact
+                  element={<GigsResult></GigsResult>}
+                ></Route>
+                 <Route
+                  path="/gigs/search/:searchText/filter"
                   exact
                   element={<GigsResult></GigsResult>}
                 ></Route>

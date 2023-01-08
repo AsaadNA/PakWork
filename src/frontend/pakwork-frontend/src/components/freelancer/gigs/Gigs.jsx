@@ -70,6 +70,7 @@ const Gigs = () => {
                   marginBottom: "10px",
                   fontSize: "22px",
                 }}
+                onClick={() => window.location.replace(`/gig/${g.gig_id}`)}
               ></FaEye>
               <FaEdit
                 className="signhover ms-2"

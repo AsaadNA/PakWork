@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   Container,
   Row,
@@ -7,12 +8,10 @@ import {
   Form,
   InputGroup,
   Button,
-  FloatingLabel,
 } from "react-bootstrap";
 import { FaEye, FaSearch, FaSlash } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 import NavBar from "../../navbar/NavBar";
-import CurrencyInput from "react-currency-input-field";
 import Select from "react-select";
 import {
   GigJobCategories,
@@ -21,169 +20,68 @@ import {
 } from "../../../Extras/CategoryLists";
 import LoginModal from "../../login/LoginModal";
 import "./GigsResult.css";
-import SearchBar from "../../search-bar/SearchBar";
+import axios from "../../../Api/Api";
 
 const GigsResult = () => {
-  const { search } = useParams();
+
   const isUser = localStorage.getItem("user");
-  const gigs = [
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-    {
-      title: "I will do html, css, javascript, nodejs, development",
-      details:
-        "Are you looking for any services related to html, css, javascript, nodejs? Well don't worry because you came to the right place. I will provide you services related to html, css, javascript and nodejs. My services include any sort of bugs fixing related to html, css, javascript. I also offer complete website or any sort of custom components with html, css, javascript. I also offer custom REST APIs using nodejs and bug fixing in nodejs applications.",
-      category: "Web Development",
-      posting_date: "2022-12-16T17:48:44.000Z",
-      gig_rating: 0,
-      gig_id: "UJ2sgqh8K0K5",
-      freelancer_id: "hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j",
-      starting_rate: 25,
-      images:
-        "/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1a.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1b.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP1c.PNG,/images/gigs/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j-STEP2a.PNG",
-    },
-  ];
+
+  const { searchText } = useParams();
+
+  const [inputText, setInputText] = useState("");
+  const [gigs, setGigs] = useState([]);
+
+  const [gigCategory , setGigCategory] = useState(GigJobCategories[1]); //Default Value
+  const [byPrice , setByPrice] = useState(SortByPrice[0]);
+  const [byRating , setByRating] = useState(SortByRating[0]);
+
+  const searchParams = new URLSearchParams(document.location.search)
+
+  //This will get the endpoint without the filters
+  const getSearchResultWithoutFilter = async () => {
+    let response = await axios.get(`/search/gigs/${searchText}`);
+    if (response.status === 200) {
+      setGigs(response.data);
+    }
+  };
+
+  //This will get the endpoint with filters
+  const getSearchResultWithFilter = async () => {  
+    let response = await axios.get(`/search/gigs/${searchText}/filter?GigCategory=${searchParams.get("GigCategory")}&SortByPrice=${searchParams.get("SortByPrice")}&SortByRating=${searchParams.get("SortByRating")}`);
+    if (response.status === 200) {
+      setGigs(response.data);
+    }
+  };
+
+  useEffect(() => {
+    if(searchParams.get("GigCategory") && searchParams.get("SortByPrice") && searchParams.get("SortByRating")) {
+
+       //Setting GigCateogry from combobox taken from filter query
+       let sc = GigJobCategories.find((gigCat, index) => {
+        if (searchParams.get("GigCategory") === gigCat.value) {
+          setGigCategory(GigJobCategories[index] != null ? GigJobCategories[index] : "");
+        }
+      });
+
+      //Setting SortByPrice from combobox taken from filter query
+      let sp = SortByPrice.find((gigCat, index) => {
+        if (searchParams.get("SortByPrice") === gigCat.value) {
+          setByPrice(SortByPrice[index] != null ? SortByPrice[index] : "");
+        }
+      });
+
+       //Setting SortByRating from combobox taken from filter query
+       let sr = SortByRating.find((gigCat, index) => {
+        if (searchParams.get("SortByRating") === gigCat.value) {
+          setByRating(SortByRating[index] != null ? SortByRating[index] : "");
+        }
+      });
+      
+      getSearchResultWithFilter();
+    } else {
+      getSearchResultWithoutFilter();
+    }
+  }, []);
 
   return (
     <>
@@ -197,43 +95,66 @@ const GigsResult = () => {
             <hr></hr>
             <div className="w-100 px-1">
               <Form
-                onSubmit={() => {
-                  console.log("searching..");
+                onSubmit={(e) => {
+                  e.preventDefault();
+
+                  //We Replace this so that we can use SearchParams in useEffect to handle different endpoints for filtered data
+                  //And USe it to fetch our filtered data from our specific endpoint
+                  //We added this route to the main APP.js too
+                  window.location.replace(`/gigs/search/${inputText}/filter?GigCategory=${gigCategory.value}&SortByPrice=${byPrice.value}&SortByRating=${byRating.value}`);
                 }}
               >
                 <Row>
                   <Col md={4}>
-                    <SearchBar></SearchBar>
+                    <InputGroup
+                      onChange={(e) => setInputText([e.target.value])}
+                      className="mt-1"
+                    >
+                      <Form.Control
+                        type="text"
+                        placeholder="Search Gigs (title,tags)"
+                        className="Nav-search"
+                      ></Form.Control>
+                      <Button type="submit" variant="success">
+                        <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
+                      </Button>
+                    </InputGroup>
                   </Col>
                   <Col md={8}>
                     <InputGroup className="mt-1 d-flex justify-content-end">
                       <div className="select-box">
                         <Select
+                          value={gigCategory}
                           options={GigJobCategories}
                           placeholder={"Category"}
                           isSearchable={true}
                           required
                           name="GigCategory"
+                          onChange={(value) => setGigCategory(value)}
                         />
                       </div>
                       <div className="select-box px-1">
                         <Select
+                          value={byPrice}
                           options={SortByPrice}
                           placeholder={"Sort By Price"}
                           isSearchable={true}
                           required
                           name="SortPrice"
                           className="w-100"
+                          onChange={(value) => setByPrice(value)}
                         />
                       </div>
                       <div className="select-box select-box-with-button">
                         <Select
+                          value={byRating}
                           options={SortByRating}
                           placeholder={"Sort By Rating"}
                           isSearchable={true}
                           required
                           name="SortRating"
                           className="w-100"
+                          onChange={(value) => setByRating(value)}
                         />
                       </div>
                       <Button type="submit" variant="success">
@@ -249,7 +170,7 @@ const GigsResult = () => {
         </Row>
         <Row>
           {gigs.map((g, i) => {
-            let images = g.images.split(",");
+            let images = g.gig_images.split(",");
             return (
               <Col
                 key={g.gig_id + i}
@@ -278,6 +199,9 @@ const GigsResult = () => {
                         marginBottom: "10px",
                         fontSize: "22px",
                       }}
+                      onClick={() =>
+                        window.location.replace(`/gig/${g.gig_id}`)
+                      }
                     ></FaEye>
 
                     <p className="text-success" style={{ fontSize: "13px" }}>

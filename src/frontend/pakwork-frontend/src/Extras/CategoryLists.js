@@ -116,22 +116,22 @@ export const GigJobCategories = [
 
 export const SortByPrice = [
   {
-    value: "hightolow",
+    value: "desc",
     label: "High to Low",
   },
   {
-    value: "lowtohigh",
+    value: "asc",
     label: "Low to High",
   },
 ];
 
 export const SortByRating = [
   {
-    value: "highestRated",
+    value: "desc",
     label: "Highest Rated",
   },
   {
-    value: "lowestRated",
+    value: "asc",
     label: "Lowest Rated",
   },
 ];
