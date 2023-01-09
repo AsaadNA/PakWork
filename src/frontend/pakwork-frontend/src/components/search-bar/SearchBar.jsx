@@ -27,7 +27,7 @@ const SearchBar = () => {
       <InputGroup onChange={(e) => setInputText([e.target.value])}>
         <Form.Control
           type="text"
-          placeholder="Search Gigs (title,tags)"
+          placeholder="Search Gigs"
           className="Nav-search"
         ></Form.Control>
         <Button type="submit" variant="success">

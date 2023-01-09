@@ -126,6 +126,8 @@ const NavBar = ({ isHome, isGigResult }) => {
         ) : (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
+                          {/*
+
               <Nav.Link
                 className="mx-md-2"
                 style={{ fontWeight: "bold", textDecoration: "none" }}
@@ -141,7 +143,10 @@ const NavBar = ({ isHome, isGigResult }) => {
                 >
                   Manage Orders
                 </NavLink>
+
               </Nav.Link>
+                                             */}
+
               {user.user_type === "freelancer" ? (
                 <>
                   <Nav.Link className="mx-md-2" style={{ fontWeight: "bold " }}>
@@ -157,6 +162,8 @@ const NavBar = ({ isHome, isGigResult }) => {
                       Buyer Requests
                     </NavLink>
                   </Nav.Link>
+                    
+                  {/* 
                   <Nav.Link className="mx-md-2" style={{ fontWeight: "bold" }}>
                     <NavLink
                       to="/dashboard/biddings"
@@ -170,6 +177,7 @@ const NavBar = ({ isHome, isGigResult }) => {
                       Current Biddings
                     </NavLink>
                   </Nav.Link>
+                  */}
                   <Nav.Link
                     className="mx-md-2"
                     style={{ fontWeight: "bold", textDecoration: "none" }}

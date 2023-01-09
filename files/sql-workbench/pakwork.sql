@@ -28,4 +28,4 @@ select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.f
 	 %word% - return results that include the letters: "word" anywhere.
 */
 
-select g.title,g.details,g.category,g.posting_date,g.gig_rating,g.gig_id,g.freelancer_id, g.starting_rate,group_concat(gi.image) as gig_images from gigs_images gi inner join gigs g on g.gig_id=gi.gig_id where g.title  LIKE '%I Will%' group by g.gig_id;
+select g.title,g.details,g.category,g.posting_date,g.gig_rating,g.gig_id,g.freelancer_id, g.starting_rate,group_concat(gi.image) as gig_images , g.starting_rate , f.username, p.profile_picture from gigs_images gi inner join gigs g on g.gig_id=gi.gig_id inner join freelancer f on g.freelancer_id = f.freelancer_id inner join profile p on f.freelancer_id = p.profile_id where g.category="Web Development" and g.title LIKE '%C+%' group by g.gig_id order by g.starting_rate ASC , g.gig_rating DESC;

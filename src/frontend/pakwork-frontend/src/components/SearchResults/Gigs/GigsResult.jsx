@@ -41,6 +41,7 @@ const GigsResult = () => {
     let response = await axios.get(`/search/gigs/${searchText}`);
     if (response.status === 200) {
       setGigs(response.data);
+      console.log(response.data)
     }
   };
 
@@ -240,7 +241,7 @@ const GigsResult = () => {
                     ></FaEye> */}
                     <div>
                       <img
-                        src="http://localhost:4000//images/profiles/hi1oSZYmbbGcjt1Ix7VODR4UYGhMJOfxmliGaY6Kd0O8j"
+                        src={`http://localhost:4000/${g.profile_picture}`}
                         alt="buyer_pic"
                         className="mini_profile_pic"
                         style={{
@@ -256,7 +257,7 @@ const GigsResult = () => {
                           color: "rgba(0,0,0,0.7)",
                         }}
                       >
-                        ahsantahseen
+                        {g.username}
                       </span>
                     </div>
                     <p className="text-success" style={{ fontSize: "13px" }}>
