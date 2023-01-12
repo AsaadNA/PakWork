@@ -4,11 +4,11 @@ import { ToastContainer, toast } from "react-toastify";
 import Select from "react-select";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { ClientJobModalContext } from "../../../contexts/ModalContext";
-import axios from "../../../Api/Api";
 import { GigJobCategories } from "../../../Extras/CategoryLists";
 import CurrencyInput from "react-currency-input-field";
 import { useDropzone } from "react-dropzone";
 import DateRangePicker from "react-bootstrap-daterangepicker";
+import axios from "../../../Api/Api";
 
 const EditClientJobModal = () => {
   const priceLimit = 20000;
@@ -16,7 +16,7 @@ const EditClientJobModal = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [JobCategory, setJobCategory] = useState("");
-  const [JobPrice, setJobPrice] = useState("5");
+  const [JobPrice, setJobPrice] = useState("");
   const [StartingDate, setStartingDate] = useState(new Date().toLocaleString());
   const [EndingDate, setEndingDate] = useState(new Date().toLocaleString());
 
@@ -27,7 +27,7 @@ const EditClientJobModal = () => {
   const [ErrorMessagePrice, setErrorMessagePrice] = useState("");
   const [PriceFeedbackClass, setPriceFeedbackClass] = useState("");
 
-  const { showEditClientJobModal, handleCloseEditClientJobModal } = useContext(
+  const { showEditClientJobModal, handleCloseEditClientJobModal , EditJobInfo , showEditProfile} = useContext(
     ClientJobModalContext
   );
 
@@ -65,7 +65,7 @@ const EditClientJobModal = () => {
   const [files, setFiles] = useState([]);
   const { getRootProps, getInputProps } = useDropzone({
     accept: {
-      "image/*": [],
+      "application/pdf": [],
     },
     onDrop: (acceptedFiles) => {
       setFiles(
@@ -83,7 +83,7 @@ const EditClientJobModal = () => {
     <div style={thumb} key={file.name}>
       <div style={thumbInner}>
         <img
-          alt="dropzone-thumb"
+           alt={file.name}
           src={file.preview}
           style={img}
           // Revoke data uri after image is loaded
@@ -124,10 +124,79 @@ const EditClientJobModal = () => {
     setStartingDate(picker.startDate._d);
     setEndingDate(picker.endDate._d);
   };
+
+  const onHandleSubmit = async (e) => {
+    e.preventDefault();
+    setformSubmitted(true);
+
+    try {
+      setLoading(true);
+
+      let formData = new FormData();
+
+      formData.append("title" , title);
+      formData.append("description" , description);
+      formData.append("category" , JobCategory.value);
+      formData.append("starting_amount" , JobPrice);
+
+      if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+          formData.append("files", files[i]);
+        }
+      }
+
+      let response = await axios.put(`/jobs/${EditJobInfo.jobID}` , formData , {
+        headers:{
+          "Content-Type" : "multipart/form-data",
+          "x-access-token": localStorage.getItem("userToken")
+        }
+      });
+
+      if(response.status === 200) {
+        setLoading(false);
+        setformSubmitted(false);
+        window.location.reload();
+      }
+
+    } catch(err) {
+      setLoading(false);
+      setformSubmitted(false);
+      toast.error(err.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }
+
   useEffect(() => {
+
+    if(showEditClientJobModal === true) {
+      const {title,description,jobCategory,startingAmount,startDate,endDate } = EditJobInfo;
+
+      setTitle(title);
+      setDescription(description);
+      setJobPrice(startingAmount);
+
+      let idx = GigJobCategories.find((gig, index) => {
+        if (jobCategory === gig.value) {
+          setJobCategory(
+            GigJobCategories[index] !== null ? GigJobCategories[index] : ""
+          );
+        }
+      });
+
+      setEndingDate(endDate)
+    }
+    
     // Make sure to revoke the data uris to avoid memory leaks, will run on unmount
     return () => files.forEach((file) => URL.revokeObjectURL(file.preview));
-  }, []);
+  }, [showEditClientJobModal]);
 
   return (
     <>
@@ -150,6 +219,7 @@ const EditClientJobModal = () => {
             <h2 class="line-divider ">
               <span class="span-line-divider">Clear & Consice Title</span>
             </h2>
+            <Form onSubmit={(e) => {onHandleSubmit(e)}}>
             <Row className="mb-1 p-2 justify-content-center">
               <Form.Group as={Col} md={8} controlId="formGridBio">
                 <Form.Control
@@ -257,7 +327,7 @@ const EditClientJobModal = () => {
                   prefix="$"
                   name="input-name"
                   placeholder="Please enter a price"
-                  defaultValue={JobPrice}
+                  defaultValue={EditJobInfo.startingAmount}
                   maxLength={priceLimit}
                   step={1}
                   allowDecimals={false}
@@ -273,6 +343,8 @@ const EditClientJobModal = () => {
                 </p>
               </Col>
             </Row>
+           {/* 
+           
             <h2 class="line-divider ">
               <span class="span-line-divider ">Mention Job Timeline</span>
             </h2>
@@ -309,6 +381,7 @@ const EditClientJobModal = () => {
                 </p>
               </Col>
             </Row>
+           */}
             <h2 class="line-divider ">
               <span class="span-line-divider ">Attachments</span>
             </h2>
@@ -348,10 +421,11 @@ const EditClientJobModal = () => {
                   className="w-75 mt-4"
                   disabled={loading}
                 >
-                  {`Create My Job! 🚀`}
+                  {`Edit My Job! 🚀`}
                 </Button>
               </Form.Group>
             </Row>
+            </Form>
           </Container>
         </Modal.Body>
       </Modal>

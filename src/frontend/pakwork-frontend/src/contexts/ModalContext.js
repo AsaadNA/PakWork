@@ -16,3 +16,9 @@ export const ClientJobModalContext = createContext({});
 export const OrganizationJobModalContext = createContext({});
 
 export const JobDetailModalContext = createContext({});
+
+////
+
+export const RequestCreateModalContext = createContext({});
+export const RequestDetailModalContext = createContext({});
+export const RequestOfferModalContext = createContext({});

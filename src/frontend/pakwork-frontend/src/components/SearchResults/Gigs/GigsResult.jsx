@@ -41,7 +41,6 @@ const GigsResult = () => {
     let response = await axios.get(`/search/gigs/${searchText}`);
     if (response.status === 200) {
       setGigs(response.data);
-      console.log(response.data)
     }
   };
 
@@ -103,7 +102,6 @@ const GigsResult = () => {
       <Container>
         <Row>
           <Col md={12}>
-            <hr></hr>
             <div className="w-100 px-1">
               <Form
                 onSubmit={(e) => {
@@ -123,7 +121,7 @@ const GigsResult = () => {
                   }
                 }}
               >
-                <Row>
+                <Row className="mt-4">
                   <Col md={4}>
                     <InputGroup
                       onChange={(e) => setInputText([e.target.value])}
@@ -131,7 +129,7 @@ const GigsResult = () => {
                     >
                       <Form.Control
                         type="text"
-                        placeholder="Search Gigs (title,tags)"
+                        placeholder="Search Gigs"
                         className="Nav-search"
                       ></Form.Control>
                       <Button type="submit" variant="success">
@@ -184,10 +182,9 @@ const GigsResult = () => {
                 </Row>
               </Form>
             </div>
-            <hr></hr>
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-2">
           {gigs.map((g, i) => {
             let images = g.gig_images.split(",");
             return (

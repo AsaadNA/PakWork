@@ -1,31 +1,381 @@
-SET SQL_SAFE_UPDATES = 0;
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+CREATE DATABASE  IF NOT EXISTS `pakwork` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `pakwork`;
+-- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
+--
+-- Host: localhost    Database: pakwork
+-- ------------------------------------------------------
+-- Server version	8.0.31
 
-select f.username , v.image from freelancer f INNER JOIN verification_images v on f.freelancer_id = v.freelancer_id;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-/* Get all the freelancer for verification with their userInfo & all the verification images */
-select f.username , group_concat(v.image) as images from freelancer f inner join verification_images v on f.freelancer_id = v.freelancer_id where f.is_verified=1 and f.resubmit_verification=0 group by f.freelancer_id;
+--
+-- Table structure for table `administrator`
+--
 
-/* Get The Profile Info From Freelancer & Profile Table for a specific freelancer */
-select p.profile_picture,p.level,f.first_name,f.last_name,f.username,f.country,p.year_experience,p.bio,p.linkedin_link,p.github_link,f.is_verified,f.is_active from profile p inner join freelancer f on f.freelancer_id = p.profile_id where p.profile_id="1amXm27IqY11rjGxuBcMpOs9gkPyojoPQMPQUgehMh4kR";
-select p.profile_picture,p.level,f.first_name,f.last_name,f.username,f.country,p.year_experience,p.bio,p.linkedin_link,p.github_link,f.is_verified,f.is_active from profile p inner join freelancer f on f.freelancer_id = p.profile_id;
+DROP TABLE IF EXISTS `administrator`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `administrator` (
+  `admin_id` varchar(45) NOT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `password` varchar(45) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT 'admin',
+  PRIMARY KEY (`admin_id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-/* Get The Profile Info From Client & Profile Table for a specific client */
-select c.first_name,c.last_name,c.username,c.country,p.profile_picture,p.industry_name,p.bio,p.linkedin_link from profile p inner join client c on c.client_id = p.profile_id where p.profile_id="";
+--
+-- Table structure for table `client`
+--
 
-/* Get The Profile Info From Company Client & Profile Table for a specific company client */
-select c.company_name,c.country,p.industry_name,p.year_experience,p.bio,p.linkedin_link,p.company_website from profile p inner join company_client c on c.company_client_id = p.profile_id;
+DROP TABLE IF EXISTS `client`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `client` (
+  `client_id` varchar(45) NOT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
+  `phone_number` varchar(40) DEFAULT NULL,
+  `region` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `user_type` varchar(45) DEFAULT 'client',
+  `is_active` tinyint(1) DEFAULT '0',
+  `is_verified` tinyint(1) DEFAULT '0',
+  `state` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`client_id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `phone_number_UNIQUE` (`phone_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-/* Get all the gigs for specific freelancer with gig images */
-select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.freelancer_id, g.starting_rate, group_concat(gi.image) as images from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id where g.freelancer_id= "eedIJfECuHmzbsT7DHAFCdJEZAMEoowtiFqqXRTJWnHz8" group by gi.gig_id;
+--
+-- Table structure for table `company_client`
+--
 
-/* Get Specific Gig with freelancer and his profile details */
-select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.freelancer_id, g.starting_rate, group_concat(gi.image) as gig_images , f.username , p.profile_picture , p.level, p.industry_name from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id inner join freelancer f on g.freelancer_id= f.freelancer_id inner join profile p on f.freelancer_id = p.profile_id and g.gig_id= "uqR39roCWa7P";
+DROP TABLE IF EXISTS `company_client`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `company_client` (
+  `company_client_id` varchar(45) NOT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
+  `company_name` varchar(45) DEFAULT NULL,
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `phone_number` varchar(40) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT 'company_client',
+  `is_active` tinyint(1) DEFAULT '0',
+  `is_verified` tinyint(1) DEFAULT '0',
+  `country` varchar(45) DEFAULT NULL,
+  `region` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`company_client_id`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `phone_number_UNIQUE` (`phone_number`),
+  UNIQUE KEY `company_name_UNIQUE` (`company_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
-/* 
-	'%word' - return results that the value ends with the letters: "word".
-	'word%' - return results that begin with the letters: "word".
-	 %word% - return results that include the letters: "word" anywhere.
-*/
+--
+-- Table structure for table `freelancer`
+--
 
-select g.title,g.details,g.category,g.posting_date,g.gig_rating,g.gig_id,g.freelancer_id, g.starting_rate,group_concat(gi.image) as gig_images , g.starting_rate , f.username, p.profile_picture from gigs_images gi inner join gigs g on g.gig_id=gi.gig_id inner join freelancer f on g.freelancer_id = f.freelancer_id inner join profile p on f.freelancer_id = p.profile_id where g.category="Web Development" and g.title LIKE '%C+%' group by g.gig_id order by g.starting_rate ASC , g.gig_rating DESC;
+DROP TABLE IF EXISTS `freelancer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `freelancer` (
+  `freelancer_id` varchar(45) NOT NULL,
+  `first_name` varchar(45) DEFAULT NULL,
+  `last_name` varchar(45) DEFAULT NULL,
+  `username` varchar(45) DEFAULT NULL,
+  `email` varchar(45) DEFAULT NULL,
+  `password` varchar(500) DEFAULT NULL,
+  `gender` varchar(10) DEFAULT NULL,
+  `phone_number` varchar(40) DEFAULT NULL,
+  `region` varchar(45) DEFAULT NULL,
+  `country` varchar(45) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT '0',
+  `is_verified` tinyint(1) NOT NULL DEFAULT '0',
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `user_type` varchar(45) DEFAULT 'freelancer',
+  `state` varchar(45) DEFAULT NULL,
+  `resubmit_verification` tinyint(1) DEFAULT '0',
+  `resubmit_feedback` varchar(500) DEFAULT ' ',
+  `dob` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`freelancer_id`),
+  UNIQUE KEY `username_UNIQUE` (`username`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
+  UNIQUE KEY `phone_number_UNIQUE` (`phone_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gigs`
+--
+
+DROP TABLE IF EXISTS `gigs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `gigs` (
+  `gig_id` varchar(45) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `details` varchar(500) DEFAULT NULL,
+  `category` varchar(45) DEFAULT NULL,
+  `posting_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `gig_rating` double DEFAULT '0',
+  `freelancer_id` varchar(45) DEFAULT NULL,
+  `starting_rate` int DEFAULT NULL,
+  PRIMARY KEY (`gig_id`),
+  UNIQUE KEY `title_UNIQUE` (`title`),
+  KEY `freelancer_id_idx` (`freelancer_id`),
+  CONSTRAINT `gigs_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gigs_images`
+--
+
+DROP TABLE IF EXISTS `gigs_images`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `gigs_images` (
+  `image_id` varchar(45) NOT NULL,
+  `gig_id` varchar(45) DEFAULT NULL,
+  `image` varchar(700) DEFAULT NULL,
+  PRIMARY KEY (`image_id`),
+  KEY `gigs_images_gig_id_idx` (`gig_id`),
+  CONSTRAINT `gigs_images_gig_id` FOREIGN KEY (`gig_id`) REFERENCES `gigs` (`gig_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jobs`
+--
+
+DROP TABLE IF EXISTS `jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jobs` (
+  `job_id` varchar(45) NOT NULL,
+  `client_id` varchar(45) DEFAULT NULL,
+  `company_client_id` varchar(45) DEFAULT NULL,
+  `title` varchar(45) NOT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `category` varchar(45) DEFAULT NULL,
+  `starting_date` datetime DEFAULT NULL,
+  `ending_date` datetime DEFAULT NULL,
+  `starting_amount` int DEFAULT NULL,
+  PRIMARY KEY (`job_id`),
+  UNIQUE KEY `title_UNIQUE` (`title`),
+  KEY `jobs_client_id_idx` (`client_id`),
+  KEY `jobs_company_client_id_idx` (`company_client_id`),
+  CONSTRAINT `jobs_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`),
+  CONSTRAINT `jobs_company_client_id` FOREIGN KEY (`company_client_id`) REFERENCES `company_client` (`company_client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `jobs_attached_files`
+--
+
+DROP TABLE IF EXISTS `jobs_attached_files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jobs_attached_files` (
+  `attached_files_id` varchar(45) NOT NULL,
+  `job_id` varchar(45) DEFAULT NULL,
+  `file` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`attached_files_id`),
+  KEY `jobs_attached_files_job_id_idx` (`job_id`),
+  CONSTRAINT `jobs_attached_files_job_id` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `order_files`
+--
+
+DROP TABLE IF EXISTS `order_files`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_files` (
+  `file_id` varchar(45) NOT NULL,
+  `order_id` varchar(45) DEFAULT NULL,
+  `file` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`file_id`),
+  KEY `order_files_order_id_idx` (`order_id`),
+  CONSTRAINT `order_files_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `order_revisions`
+--
+
+DROP TABLE IF EXISTS `order_revisions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_revisions` (
+  `revision_id` varchar(45) NOT NULL,
+  `order_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`revision_id`),
+  KEY `order_revisions_order_id_idx` (`order_id`),
+  CONSTRAINT `order_revisions_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `order_id` varchar(45) NOT NULL,
+  `freelancer_id` varchar(45) DEFAULT NULL,
+  `company_client_id` varchar(45) DEFAULT NULL,
+  `client_id` varchar(45) DEFAULT NULL,
+  `details` varchar(500) DEFAULT NULL,
+  `order_date` date DEFAULT NULL,
+  `duration` date DEFAULT NULL,
+  `amount` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
+  `order_type` varchar(45) DEFAULT NULL,
+  `order_status` varchar(45) DEFAULT NULL,
+  `completion_date` date DEFAULT NULL,
+  PRIMARY KEY (`order_id`),
+  KEY `orders_freelancer_id_idx` (`freelancer_id`),
+  KEY `orders_company_client_id_idx` (`company_client_id`),
+  KEY `orders_client_id_idx` (`client_id`),
+  CONSTRAINT `orders_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`),
+  CONSTRAINT `orders_company_client_id` FOREIGN KEY (`company_client_id`) REFERENCES `company_client` (`company_client_id`),
+  CONSTRAINT `orders_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `profile`
+--
+
+DROP TABLE IF EXISTS `profile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `profile` (
+  `profile_id` varchar(45) NOT NULL,
+  `bio` varchar(500) DEFAULT NULL,
+  `level` varchar(45) DEFAULT 'Level 1',
+  `degree` varchar(50) DEFAULT NULL,
+  `degree_period` varchar(45) DEFAULT NULL,
+  `company` varchar(45) DEFAULT NULL,
+  `profile_picture` varchar(300) DEFAULT NULL,
+  `secondary` varchar(45) DEFAULT NULL,
+  `higher_secondary` varchar(45) DEFAULT NULL,
+  `year_experience` int DEFAULT NULL,
+  `cv` varchar(300) DEFAULT NULL,
+  `company_website` varchar(45) DEFAULT NULL,
+  `industry_name` varchar(45) DEFAULT NULL,
+  `employeed_range` varchar(45) DEFAULT NULL,
+  `github_link` varchar(45) DEFAULT NULL,
+  `linkedin_link` varchar(45) DEFAULT NULL,
+  `user_type` varchar(45) DEFAULT NULL,
+  `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`profile_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `requests`
+--
+
+DROP TABLE IF EXISTS `requests`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `requests` (
+  `request_id` varchar(45) NOT NULL,
+  `title` varchar(200) DEFAULT NULL,
+  `description` varchar(300) DEFAULT NULL,
+  `posting_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `client_id` varchar(45) DEFAULT NULL,
+  `company_client_id` varchar(45) DEFAULT NULL,
+  `budget` int DEFAULT NULL,
+  PRIMARY KEY (`request_id`),
+  UNIQUE KEY `request_id_UNIQUE` (`request_id`),
+  KEY `client_id_idx` (`client_id`),
+  KEY `company_client_id_idx` (`company_client_id`),
+  CONSTRAINT `client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`),
+  CONSTRAINT `company_client_id` FOREIGN KEY (`company_client_id`) REFERENCES `company_client` (`company_client_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `requests_offers`
+--
+
+DROP TABLE IF EXISTS `requests_offers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `requests_offers` (
+  `request_offer_id` varchar(45) NOT NULL,
+  `request_id` varchar(45) DEFAULT NULL,
+  `freelancer_id` varchar(45) DEFAULT NULL,
+  `description` varchar(300) DEFAULT NULL,
+  `amount` int DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `is_accepted` int DEFAULT '0',
+  PRIMARY KEY (`request_offer_id`),
+  KEY `request_id_idx` (`request_id`),
+  KEY `freelancer_id_idx` (`freelancer_id`),
+  CONSTRAINT `freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`),
+  CONSTRAINT `request_id` FOREIGN KEY (`request_id`) REFERENCES `requests` (`request_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `verification_images`
+--
+
+DROP TABLE IF EXISTS `verification_images`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `verification_images` (
+  `image_id` varchar(45) NOT NULL,
+  `image` varchar(300) DEFAULT NULL,
+  `freelancer_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`image_id`),
+  KEY `freelancer_id_idx` (`freelancer_id`),
+  CONSTRAINT `verification_images_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping routines for database 'pakwork'
+--
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-01-12 18:28:06

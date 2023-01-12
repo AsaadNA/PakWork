@@ -9,6 +9,7 @@ import {
   ShowProfilePictureUploadModalContext,
   ShowVerificationModalContext,
   ClientJobModalContext,
+  RequestCreateModalContext,
 } from "../../../contexts/ModalContext";
 import EditModal from "../../../components/client/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
@@ -16,6 +17,7 @@ import Reviews from "../../../components/reviews/Reviews";
 import ClientJobs from "../../../components/client/jobs/ClientJobs";
 import CreateClientJobModal from "../../../components/client/jobs/CreateClientJobModal";
 import EditClientJobModal from "../../../components/client/jobs/EditClientJobModal";
+import CreateRequestModal from "../../../components/requests/CreateRequestModal";
 
 const ClientProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
@@ -25,6 +27,9 @@ const ClientProfile = () => {
   const [showCreateClientJobModal, setShowCreateClientJobModal] =
     useState(false);
   const [showEditClientJobModal, setShowEditClientJobModal] = useState(false);
+
+  //
+  const [EditJobInfo, setEditJobInfo] = useState({});
 
   const handleCloseVerification = () => setshowVerification(false);
   const handleShowVerification = () => setshowVerification(true);
@@ -38,8 +43,22 @@ const ClientProfile = () => {
     setShowCreateClientJobModal(true);
   const handleCloseCreateClientJobModal = () =>
     setShowCreateClientJobModal(false);
-  const handleShowEditClientJobModal = () => setShowEditClientJobModal(true);
-  const handleCloseEditClientJobModal = () => setShowEditClientJobModal(false);
+
+  const handleShowEditClientJobModal = (jobInfo) => {
+    setEditJobInfo(jobInfo);
+    setShowEditClientJobModal(true);
+  };
+
+  const handleCloseEditClientJobModal = () => {
+    setEditJobInfo({});
+    setShowEditClientJobModal(false);
+  };
+
+  //////
+
+  const [showCreateRequestModal, setCreateRequestModal] = useState(false);
+  const handleShowCreateRequestModal = () => setCreateRequestModal(true);
+  const handleCloseCreateRequestModal = () => setCreateRequestModal(false);
 
   return (
     <ShowProfilePictureUploadModalContext.Provider
@@ -71,30 +90,40 @@ const ClientProfile = () => {
               showEditClientJobModal,
               handleShowEditClientJobModal,
               handleCloseEditClientJobModal,
+              EditJobInfo,
             }}
           >
-            <div>
-              <NavBar></NavBar>
-              <Container className="mt-3">
-                <EditModal></EditModal>
-                <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
-                <VerificationModal></VerificationModal>
-                <CreateClientJobModal></CreateClientJobModal>
-                <EditClientJobModal></EditClientJobModal>
-                <Row>
-                  <Col
-                    className="d-flex justify-content-start align-items-start flex-column"
-                    md={4}
-                  >
-                    <ProfileInfo></ProfileInfo>
-                  </Col>
-                  <Col md={8}>
-                    <ClientJobs></ClientJobs>
-                    <Reviews></Reviews>
-                  </Col>
-                </Row>
-              </Container>
-            </div>
+            <RequestCreateModalContext.Provider
+              value={{
+                showCreateRequestModal,
+                handleShowCreateRequestModal,
+                handleCloseCreateRequestModal,
+              }}
+            >
+              <div>
+                <NavBar></NavBar>
+                <Container className="mt-3">
+                  <EditModal></EditModal>
+                  <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
+                  <VerificationModal></VerificationModal>
+                  <CreateClientJobModal></CreateClientJobModal>
+                  <EditClientJobModal></EditClientJobModal>
+                  <CreateRequestModal></CreateRequestModal>
+                  <Row>
+                    <Col
+                      className="d-flex justify-content-start align-items-start flex-column"
+                      md={4}
+                    >
+                      <ProfileInfo></ProfileInfo>
+                    </Col>
+                    <Col md={8}>
+                      <ClientJobs></ClientJobs>
+                      {/* <Reviews></Reviews>*/}
+                    </Col>
+                  </Row>
+                </Container>
+              </div>
+            </RequestCreateModalContext.Provider>
           </ClientJobModalContext.Provider>
         </ShowEditClientProfileModalContext.Provider>
       </ShowVerificationModalContext.Provider>

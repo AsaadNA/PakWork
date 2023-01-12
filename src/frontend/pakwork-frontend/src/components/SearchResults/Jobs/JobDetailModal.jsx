@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { Modal, Row, Col } from "react-bootstrap";
 import PakworkLogo from "../../../assets/pakwork_logo.svg";
 import { JobDetailModalContext } from "../../../contexts/ModalContext";
+import moment from "moment/moment";
 
 const JobDetailModal = () => {
   const { showJobDetailModal, handleCloseJobDetailModal, selectedJobDetails } =
@@ -30,17 +31,17 @@ const JobDetailModal = () => {
                   <strong>Request:</strong> {selectedJobDetails.request}
                 </p>
                 <p>
-                  <strong>Description:</strong>
+                  <strong>Description: </strong>
                   {selectedJobDetails.description}
                 </p>
                 <p>
-                  <strong>Posted On:</strong> {selectedJobDetails.postedOn}
+                  <strong>Posted On:</strong> {moment.utc(selectedJobDetails.startingTime).local().format("Do MMM YYYY HH:mm:ss")}
                 </p>
                 <p>
-                  <strong>Budget:</strong> ${selectedJobDetails.budget}
+                  <strong>Starting Amount:</strong> ${selectedJobDetails.budget}
                 </p>
                 <p>
-                  <strong>Duration:</strong> {selectedJobDetails.duration}
+                  <strong>Ending Time:</strong>  {moment.utc(selectedJobDetails.endingTime).local().format("Do MMM YYYY HH:mm:ss")}
                 </p>
                 <p>
                   <strong>Job Category:</strong> {selectedJobDetails.category}

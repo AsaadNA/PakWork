@@ -18,6 +18,8 @@ import NotFound404 from "./components/notfound-404/NotFound404";
 import GigsResult from "./components/SearchResults/Gigs/GigsResult";
 import { ShowLoginModalContext } from "./contexts/ModalContext";
 import JobsResult from "./components/SearchResults/Jobs/JobsResult";
+import RequestsResult from "./components/SearchResults/Requests/RequestsResult";
+import Request from "./components/requests/Request";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -71,23 +73,39 @@ function App() {
                   ></Route>
                 </Route>
                 <Route
-                  path="/jobs"
+                  path="/dashboard/available-jobs"
                   exact
                   element={<ProtectedRoute></ProtectedRoute>}
                 >
                   <Route
-                    path="/jobs"
+                    path="/dashboard/available-jobs"
                     exact
                     element={<JobsResult></JobsResult>}
                   ></Route>
                 </Route>
+                <Route
+                  path="/dashboard/buyer-requests"
+                  exact
+                  element={<ProtectedRoute></ProtectedRoute>}
+                >
+                  <Route
+                    path="/dashboard/buyer-requests"
+                    exact
+                    element={<RequestsResult></RequestsResult>}
+                  ></Route>
+                </Route>
                 <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>
+                <Route
+                  path="/request/:requestID"
+                  exact
+                  element={<Request></Request>}
+                ></Route>
                 <Route
                   path="/gigs/search/:searchText"
                   exact
                   element={<GigsResult></GigsResult>}
                 ></Route>
-                 <Route
+                <Route
                   path="/gigs/search/:searchText/filter"
                   exact
                   element={<GigsResult></GigsResult>}

@@ -139,7 +139,7 @@ const ProfileInfo = () => {
                       alt="profile_pic"
                     ></img>
                     <div
-                      style={{top:0}}
+                      style={{ top: 0 }}
                       onClick={handleShowClientEditProfile}
                       className="editprofile-badge"
                     >

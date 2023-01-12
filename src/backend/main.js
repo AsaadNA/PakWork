@@ -12,6 +12,8 @@ const uploadRoutes = require("./routes/upload");
 const adminRoutes = require("./routes/admin");
 const gigsRoutes = require("./routes/gigs");
 const searchRoutes = require("./routes/search");
+const jobsRoutes = require("./routes/jobs");
+const requestRoutes = require("./routes/requests");
 
 dotenv.config();
 
@@ -42,9 +44,10 @@ app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/profile/", profileRoutes);
 app.use("/api/v1/upload/", uploadRoutes);
 app.use("/api/v1/admin/", adminRoutes);
-app.use("/api/v1/gigs/" , gigsRoutes);
-app.use("/api/v1/search/" , searchRoutes);
-
+app.use("/api/v1/gigs/", gigsRoutes);
+app.use("/api/v1/search/", searchRoutes);
+app.use("/api/v1/jobs/", jobsRoutes);
+app.use("/api/v1/requests/", requestRoutes);
 
 app.get("*", (req, res) => {
   res.send("Wrong endpoint buddy");

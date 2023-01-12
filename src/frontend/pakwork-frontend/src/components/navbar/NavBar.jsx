@@ -126,7 +126,7 @@ const NavBar = ({ isHome, isGigResult }) => {
         ) : (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-                          {/*
+              {/*
 
               <Nav.Link
                 className="mx-md-2"
@@ -162,7 +162,7 @@ const NavBar = ({ isHome, isGigResult }) => {
                       Buyer Requests
                     </NavLink>
                   </Nav.Link>
-                    
+
                   {/* 
                   <Nav.Link className="mx-md-2" style={{ fontWeight: "bold" }}>
                     <NavLink
@@ -183,7 +183,7 @@ const NavBar = ({ isHome, isGigResult }) => {
                     style={{ fontWeight: "bold", textDecoration: "none" }}
                   >
                     <NavLink
-                      to="/jobs"
+                      to="/dashboard/available-jobs"
                       className={(navData) =>
                         navData.isActive
                           ? "navlink text-dark"
