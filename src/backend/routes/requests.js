@@ -144,6 +144,34 @@ router.post("/offer/", auth, (req, res) => {
   );
 });
 
+router.delete("/:requestID", auth, (req, res) => {
+  const { requestID } = req.params;
+
+  db.query(
+    `DELETE FROM requests_offers WHERE request_id="${requestID}"`,
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+      } else if (r) {
+        db.query(
+          `DELETE FROM requests WHERE request_id="${requestID}"`,
+          (ee, rr) => {
+            if (ee) {
+              console.log(ee.message);
+            } else if (rr) {
+              res.sendStatus(200);
+            } else {
+              console.log("Could not delete request");
+            }
+          }
+        );
+      } else {
+        console.log("Could not delete offers");
+      }
+    }
+  );
+});
+
 router.post("/", auth, (req, res) => {
   const { title, description, budget } = req.body;
   const { userID, userType } = res.locals;
@@ -173,6 +201,22 @@ router.post("/", auth, (req, res) => {
       });
     }
   });
+});
+
+router.put("/", auth, (req, res) => {
+  const { title, description, budget, request_id } = req.body;
+  db.query(
+    `UPDATE requests SET title="${title}" , description="${description}" , budget="${budget}" WHERE request_id="${request_id}"`,
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+      } else if (r) {
+        res.status(200).send({ message: "Request Updated" });
+      } else {
+        console.log("Could not update request");
+      }
+    }
+  );
 });
 
 module.exports = router;

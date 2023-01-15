@@ -136,37 +136,41 @@ const CreateClientJobModal = () => {
     setformSubmitted(true);
 
     try {
-
       setLoading(true);
 
       let formData = new FormData();
 
-      formData.append("title" , title);
-      formData.append("description" , description);
-      formData.append("category" , JobCategory.value);
-      formData.append("starting_amount" , JobPrice);
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("category", JobCategory.value);
+      formData.append("starting_amount", JobPrice);
 
-      formData.append("starting_date" , moment(StartingDate).format("YYYY-MM-DD HH:mm:ss"));
-      formData.append("ending_date" , moment(EndingDate).format("YYYY-MM-DD HH:mm:ss"));
+      formData.append(
+        "starting_date",
+        moment(StartingDate).format("YYYY-MM-DD HH:mm:ss")
+      );
+      formData.append(
+        "ending_date",
+        moment(EndingDate).format("YYYY-MM-DD HH:mm:ss")
+      );
 
-      for(let i = 0; i < files.length; i++) {
+      for (let i = 0; i < files.length; i++) {
         formData.append("files", files[i]);
       }
 
-      let response = await axios.post("/jobs" , formData, {
+      let response = await axios.post("/jobs", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "x-access-token" : localStorage.getItem("userToken")
+          "x-access-token": localStorage.getItem("userToken"),
         },
       });
 
-      if(response.status === 200) {
+      if (response.status === 200) {
         setformSubmitted(false);
         setLoading(false);
         window.location.reload();
       }
-
-    } catch(err) {
+    } catch (err) {
       setLoading(false);
       toast.error(err.message, {
         position: "top-right",
@@ -367,7 +371,10 @@ const CreateClientJobModal = () => {
                   <p style={{ fontWeight: "bold" }}>
                     Set Your Bidding Period 💡
                   </p>
-                  <p>Remember to choose wisely, you won't be able to edit the period later !</p>
+                  <p>
+                    Remember to choose wisely, you won't be able to edit the
+                    period later !
+                  </p>
                 </Col>
               </Row>
               <h2 class="line-divider ">

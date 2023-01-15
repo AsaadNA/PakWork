@@ -10,6 +10,7 @@ import {
   ShowVerificationModalContext,
   ClientJobModalContext,
   RequestCreateModalContext,
+  RequestEditModalContext,
 } from "../../../contexts/ModalContext";
 import EditModal from "../../../components/client/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
@@ -18,6 +19,7 @@ import ClientJobs from "../../../components/client/jobs/ClientJobs";
 import CreateClientJobModal from "../../../components/client/jobs/CreateClientJobModal";
 import EditClientJobModal from "../../../components/client/jobs/EditClientJobModal";
 import CreateRequestModal from "../../../components/requests/CreateRequestModal";
+import EditRequestModal from "../../../components/requests/EditRequestModal";
 
 const ClientProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
@@ -56,9 +58,24 @@ const ClientProfile = () => {
 
   //////
 
+  ///CREATE REQUEST MODAL
   const [showCreateRequestModal, setCreateRequestModal] = useState(false);
   const handleShowCreateRequestModal = () => setCreateRequestModal(true);
   const handleCloseCreateRequestModal = () => setCreateRequestModal(false);
+
+  //EDIT REQUEST MODAL
+  const [EditRequestInfo, setEditRequestInfo] = useState({});
+  const [showEditRequestModal, setEditRequestModal] = useState(false);
+
+  const handleShowEditRequestModal = (info) => {
+    setEditRequestInfo(info);
+    setEditRequestModal(true);
+  };
+
+  const handleCloseEditRequestModal = () => {
+    setEditRequestInfo({});
+    setEditRequestModal(false);
+  };
 
   return (
     <ShowProfilePictureUploadModalContext.Provider
@@ -100,29 +117,39 @@ const ClientProfile = () => {
                 handleCloseCreateRequestModal,
               }}
             >
-              <div>
-                <NavBar></NavBar>
-                <Container className="mt-3">
-                  <EditModal></EditModal>
-                  <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
-                  <VerificationModal></VerificationModal>
-                  <CreateClientJobModal></CreateClientJobModal>
-                  <EditClientJobModal></EditClientJobModal>
-                  <CreateRequestModal></CreateRequestModal>
-                  <Row>
-                    <Col
-                      className="d-flex justify-content-start align-items-start flex-column"
-                      md={4}
-                    >
-                      <ProfileInfo></ProfileInfo>
-                    </Col>
-                    <Col md={8}>
-                      <ClientJobs></ClientJobs>
-                      {/* <Reviews></Reviews>*/}
-                    </Col>
-                  </Row>
-                </Container>
-              </div>
+              <RequestEditModalContext.Provider
+                value={{
+                  showEditRequestModal,
+                  handleShowEditRequestModal,
+                  handleCloseEditRequestModal,
+                  EditRequestInfo,
+                }}
+              >
+                <div>
+                  <NavBar></NavBar>
+                  <Container className="mt-3">
+                    <EditModal></EditModal>
+                    <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
+                    <VerificationModal></VerificationModal>
+                    <CreateClientJobModal></CreateClientJobModal>
+                    <EditClientJobModal></EditClientJobModal>
+                    <CreateRequestModal></CreateRequestModal>
+                    <EditRequestModal></EditRequestModal>
+                    <Row>
+                      <Col
+                        className="d-flex justify-content-start align-items-start flex-column"
+                        md={4}
+                      >
+                        <ProfileInfo></ProfileInfo>
+                      </Col>
+                      <Col md={8}>
+                        <ClientJobs></ClientJobs>
+                        {/* <Reviews></Reviews>*/}
+                      </Col>
+                    </Row>
+                  </Container>
+                </div>
+              </RequestEditModalContext.Provider>
             </RequestCreateModalContext.Provider>
           </ClientJobModalContext.Provider>
         </ShowEditClientProfileModalContext.Provider>

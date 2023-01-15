@@ -149,7 +149,9 @@ const CreateOrganizationJobModal = () => {
           <ToastContainer></ToastContainer>
           <Container>
             <h2 class="line-divider ">
-              <span class="span-line-divider">Clear & Consice Title</span>
+              <span class="span-line-divider">
+                COMPANY CLIENT & Consice Title
+              </span>
             </h2>
             <Row className="mb-1 p-2 justify-content-center">
               <Form.Group as={Col} md={8} controlId="formGridBio">
@@ -168,7 +170,7 @@ const CreateOrganizationJobModal = () => {
                   isInvalid={title.length > 25 && formSubmitted}
                 ></Form.Control>
                 <Form.Text>
-                  Be Precise as you can, limit is 25 characters.
+                  Be Precise adwds you can, limit is 25 characters.
                 </Form.Text>
                 <Form.Control.Feedback type="invalid">
                   Title must be below 25 characters

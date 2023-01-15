@@ -10,6 +10,7 @@ import {
 import {
   ClientJobModalContext,
   RequestCreateModalContext,
+  RequestEditModalContext,
 } from "../../../contexts/ModalContext";
 import axios from "../../../Api/Api";
 import moment from "moment/moment";
@@ -20,6 +21,9 @@ const ClientJobs = () => {
 
   const { handleShowCreateRequestModal, handleCloseCreateRequestModal } =
     useContext(RequestCreateModalContext);
+
+  const { handleShowEditRequestModal, handleCloseEditRequestModal } =
+    useContext(RequestEditModalContext);
 
   const [jobs, setJobs] = useState([]);
   const [requests, setRequests] = useState([]);
@@ -45,6 +49,26 @@ const ClientJobs = () => {
 
     if (response.status === 200) {
       setRequests(response.data);
+    }
+  };
+
+  const onRequestDelete = async (requestID) => {
+    try {
+      let response = await axios.delete(`/requests/${requestID}`, {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken"),
+        },
+      });
+
+      if (response.status === 200) {
+        let filteredRequests = requests.filter((r) => {
+          return r.request_id !== requestID;
+        });
+
+        setRequests(filteredRequests);
+      }
+    } catch (err) {
+      console.log(err.message);
     }
   };
 
@@ -76,7 +100,7 @@ const ClientJobs = () => {
   const displayRequests = () => {
     return requests.map((r) => {
       return (
-        <Col md={12} className="mb-2">
+        <Col key={r.request_id} md={12} className="mb-2">
           <Card style={{ width: "100%", height: "340px" }}>
             <Card.Header
               style={{
@@ -141,6 +165,14 @@ const ClientJobs = () => {
               </p>
               <p
                 className="text-success ms-4 me-4"
+                onClick={() => {
+                  handleShowEditRequestModal({
+                    requestID: r.request_id,
+                    title: r.title,
+                    description: r.description,
+                    budget: r.budget,
+                  });
+                }}
                 style={{
                   cursor: "pointer",
                   fontWeight: "",
@@ -152,6 +184,9 @@ const ClientJobs = () => {
 
               <p
                 className="text-danger"
+                onClick={() => {
+                  onRequestDelete(r.request_id);
+                }}
                 style={{
                   cursor: "pointer",
                   fontWeight: "",
