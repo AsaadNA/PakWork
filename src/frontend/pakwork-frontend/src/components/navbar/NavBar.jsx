@@ -196,6 +196,13 @@ const NavBar = ({ isHome, isGigResult }) => {
                   </Nav.Link>
                 </>
               ) : null}
+              {user.user_type === "freelancer" ? (
+                <></>
+              ) : !isGigResult ? (
+                <SearchBar></SearchBar>
+              ) : (
+                <></>
+              )}
             </Nav>
             <Nav className="d-flex justify-content-center align-items-center">
               <Nav.Link className="text-dark-50" style={{ fontWeight: "bold" }}>
@@ -212,13 +219,6 @@ const NavBar = ({ isHome, isGigResult }) => {
                   &nbsp;Profile
                 </NavLink>
               </Nav.Link>
-              {user.user_type === "freelancer" ? (
-                <></>
-              ) : !isGigResult ? (
-                <SearchBar></SearchBar>
-              ) : (
-                <></>
-              )}
               <Nav.Link
                 className="text-dark-50"
                 style={{ fontWeight: "bold" }}

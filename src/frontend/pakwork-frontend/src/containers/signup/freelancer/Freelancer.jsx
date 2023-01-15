@@ -13,6 +13,7 @@ import "react-phone-input-2/lib/style.css";
 import PakworkLogo from "../../../assets/pakwork_logo_light.svg";
 import { regions, genders } from "../../../Extras/CategoryLists";
 import { useNavigate } from "react-router-dom";
+import { checkAge } from "../../../Extras/HelperFunctions";
 
 const Freelancer = () => {
   const [formSubmitted, setformSubmitted] = useState(false);
@@ -33,6 +34,7 @@ const Freelancer = () => {
   const [countryState, setcountryState] = useState("");
   const [region, setRegion] = useState(regions[5]);
   const [gender, setGender] = useState(genders[0]);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setformSubmitted(true);
@@ -47,51 +49,14 @@ const Freelancer = () => {
       phoneNumber.length > 9 &&
       region &&
       countryState.length > 3 &&
-      country
+      country &&
+      dateOfBirth.length > 0
     ) {
-      console.log({
-        firstName: firstName,
-        lastName: lastName,
-        username: userName,
-        email: email,
-        password: password,
-        gender: gender.value,
-        phone_number: phoneNumber,
-        region: region.value,
-        country: country.label,
-        state: countryState,
-        dob: dateOfBirth,
-      });
-      toast.success("Sending your application..", {
-        position: "top-right",
-        autoClose: 1500,
-        toastId: "loading",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      try {
-        let response = await axios.post(`/auth/register/freelancer`, {
-          first_name: firstName,
-          last_name: lastName,
-          username: userName,
-          email: email,
-          password: password,
-          gender: gender.value,
-          phone_number: phoneNumber,
-          region: region.value,
-          country: country.label,
-          state: countryState,
-          dob: dateOfBirth,
-        });
-
-        toast.success("Email Verification Sent . Kindly Verify & Login", {
+      if (checkAge(dateOfBirth) >= 18) {
+        toast.success("Sending your application..", {
           position: "top-right",
-          delay: 1000,
-          autoClose: 3000,
+          autoClose: 1500,
+          toastId: "loading",
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -99,16 +64,54 @@ const Freelancer = () => {
           progress: undefined,
           theme: "light",
         });
-        console.log(response);
-        setTimeout(() => {
-          navigate("/");
-        }, 6000);
-      } catch (error) {
-        console.log(error);
-        toast.error(error.response.data.error, {
+        try {
+          let response = await axios.post(`/auth/register/freelancer`, {
+            first_name: firstName,
+            last_name: lastName,
+            username: userName,
+            email: email,
+            password: password,
+            gender: gender.value,
+            phone_number: phoneNumber,
+            region: region.value,
+            country: country.label,
+            state: countryState,
+            dob: dateOfBirth,
+          });
+
+          toast.success("Email Verification Sent . Kindly Verify & Login", {
+            position: "top-right",
+            delay: 1000,
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+          console.log(response);
+          setTimeout(() => {
+            navigate("/");
+          }, 6000);
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response.data.error, {
+            position: "top-right",
+            delay: 2000,
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      } else {
+        toast.error("You must be over 18 to sign up!", {
           position: "top-right",
-          delay: 2000,
-          autoClose: 4000,
+          autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,

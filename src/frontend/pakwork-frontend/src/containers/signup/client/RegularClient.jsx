@@ -13,6 +13,7 @@ import PakworkLogo from "../../../assets/pakwork_logo_light.svg";
 import { useNavigate } from "react-router-dom";
 import { regions, genders } from "../../../Extras/CategoryLists";
 import Spinner from "react-bootstrap/Spinner";
+import { checkAge } from "../../../Extras/HelperFunctions";
 
 const RegularClient = () => {
   const [formSubmitted, setformSubmitted] = useState(false);
@@ -62,33 +63,10 @@ const RegularClient = () => {
       countryState.length > 3 &&
       country
     ) {
-      console.log({
-        firstName: firstName,
-        lastName: lastName,
-        username: userName,
-        email: email,
-        password: password,
-        gender: gender.value,
-        phone_number: phoneNumber,
-        region: region.value,
-        country: country.label,
-        state: countryState,
-      });
-      toast.success("Sending your application..", {
-        position: "top-right",
-        autoClose: 1500,
-        toastId: "loading",
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-      });
-      try {
-        let response = await axios.post(`/auth/register/client`, {
-          first_name: firstName,
-          last_name: lastName,
+      if (checkAge(dateOfBirth) >= 18) {
+        console.log({
+          firstName: firstName,
+          lastName: lastName,
           username: userName,
           email: email,
           password: password,
@@ -98,11 +76,10 @@ const RegularClient = () => {
           country: country.label,
           state: countryState,
         });
-
-        toast.success("Email Verification Sent . Kindly Verify & Login", {
+        toast.success("Sending your application..", {
           position: "top-right",
-          delay: 1000,
-          autoClose: 3000,
+          autoClose: 1500,
+          toastId: "loading",
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -110,26 +87,64 @@ const RegularClient = () => {
           progress: undefined,
           theme: "light",
         });
-        console.log(response);
-        setTimeout(() => {
-          navigate("/");
-        }, 6000);
-      } catch (error) {
-        console.log(error);
-        toast.error(
-          error.response ? error.response.data.error : error.message,
-          {
+        try {
+          let response = await axios.post(`/auth/register/client`, {
+            first_name: firstName,
+            last_name: lastName,
+            username: userName,
+            email: email,
+            password: password,
+            gender: gender.value,
+            phone_number: phoneNumber,
+            region: region.value,
+            country: country.label,
+            state: countryState,
+          });
+
+          toast.success("Email Verification Sent . Kindly Verify & Login", {
             position: "top-right",
-            delay: 2000,
-            autoClose: 4000,
+            delay: 1000,
+            autoClose: 3000,
             hideProgressBar: false,
             closeOnClick: true,
             pauseOnHover: true,
             draggable: true,
             progress: undefined,
             theme: "light",
-          }
-        );
+          });
+          console.log(response);
+          setTimeout(() => {
+            navigate("/");
+          }, 6000);
+        } catch (error) {
+          console.log(error);
+          toast.error(
+            error.response ? error.response.data.error : error.message,
+            {
+              position: "top-right",
+              delay: 2000,
+              autoClose: 4000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "light",
+            }
+          );
+        }
+      } else {
+        toast.error("You must be over 18 to sign up!", {
+          position: "top-right",
+          delay: 2000,
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
       setLoading(false);
     } else {
