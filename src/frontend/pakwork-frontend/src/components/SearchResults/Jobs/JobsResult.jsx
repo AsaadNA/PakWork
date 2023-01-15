@@ -67,11 +67,14 @@ const JobsResult = () => {
   const sortPrice = (sortBy) => {
     let tempArr = [...FilteredJobs];
     setsortState(sortBy);
-    if (sortBy === "hightolow") {
+    console.log(sortBy);
+    if (sortBy === "desc") {
+      console.log(tempArr);
       tempArr.sort(
         (a, b) => parseInt(b.starting_amount) - parseInt(a.starting_amount)
       );
     } else {
+      console.log(tempArr);
       tempArr.sort(
         (a, b) => parseInt(a.starting_amount) - parseInt(b.starting_amount)
       );

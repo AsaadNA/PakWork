@@ -56,7 +56,9 @@ const RequestsResult = () => {
     });
     if (response.status === 200) {
       setRequests(response.data);
-      setFilteredRequests(response.data);
+      let tempArr = response.data;
+      tempArr.sort((a, b) => parseInt(b.budget) - parseInt(a.budget));
+      setFilteredRequests(tempArr);
     }
   };
 
@@ -81,7 +83,7 @@ const RequestsResult = () => {
   const filterCategory = () => {
     let tempArr = [];
 
-    if (sortState === "hightolow") {
+    if (sortState === "desc") {
       tempArr.sort(
         (a, b) => parseInt(b.starting_amount) - parseInt(a.starting_amount)
       );
@@ -95,14 +97,11 @@ const RequestsResult = () => {
   const sortPrice = (sortBy) => {
     let tempArr = [...FilteredRequests];
     setsortState(sortBy);
-    if (sortBy === "hightolow") {
-      tempArr.sort(
-        (a, b) => parseInt(b.starting_amount) - parseInt(a.starting_amount)
-      );
+
+    if (sortBy === "desc") {
+      tempArr.sort((a, b) => parseInt(b.budget) - parseInt(a.budget));
     } else {
-      tempArr.sort(
-        (a, b) => parseInt(a.starting_amount) - parseInt(b.starting_amount)
-      );
+      tempArr.sort((a, b) => parseInt(a.budget) - parseInt(b.budget));
     }
     setFilteredRequests(tempArr);
   };
