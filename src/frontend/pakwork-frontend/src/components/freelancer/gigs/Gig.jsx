@@ -10,6 +10,7 @@ import Footer from "../../footer/Footer";
 import axios from "../../../Api/Api";
 import DefaultProfile from "../../../assets/profile_pic_default.png";
 import NotFound404 from "../../notfound-404/NotFound404";
+import LoginModal from "../../login/LoginModal";
 
 const Gig = () => {
   const { id } = useParams();
@@ -38,7 +39,7 @@ const Gig = () => {
     <>
       <Container>
         <NavBar></NavBar>
-
+        <LoginModal></LoginModal>
         {gigNotFound ? (
           <NotFound404></NotFound404>
         ) : (

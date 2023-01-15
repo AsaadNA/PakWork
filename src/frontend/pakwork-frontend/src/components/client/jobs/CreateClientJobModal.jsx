@@ -134,45 +134,66 @@ const CreateClientJobModal = () => {
     e.preventDefault();
     let userToken = localStorage.getItem("userToken");
     setformSubmitted(true);
+    if (
+      files.length > 0 &&
+      files.length <= 4 &&
+      title.length >= 25 &&
+      title.length <= 80 &&
+      JobCategory.value.length > 10 &&
+      parseInt(JobPrice) >= 5 &&
+      description.length > 50 &&
+      description.length <= 500
+    ) {
+      try {
+        setLoading(true);
 
-    try {
-      setLoading(true);
+        let formData = new FormData();
 
-      let formData = new FormData();
+        formData.append("title", title);
+        formData.append("description", description);
+        formData.append("category", JobCategory.value);
+        formData.append("starting_amount", JobPrice);
 
-      formData.append("title", title);
-      formData.append("description", description);
-      formData.append("category", JobCategory.value);
-      formData.append("starting_amount", JobPrice);
+        formData.append(
+          "starting_date",
+          moment(StartingDate).format("YYYY-MM-DD HH:mm:ss")
+        );
+        formData.append(
+          "ending_date",
+          moment(EndingDate).format("YYYY-MM-DD HH:mm:ss")
+        );
 
-      formData.append(
-        "starting_date",
-        moment(StartingDate).format("YYYY-MM-DD HH:mm:ss")
-      );
-      formData.append(
-        "ending_date",
-        moment(EndingDate).format("YYYY-MM-DD HH:mm:ss")
-      );
+        for (let i = 0; i < files.length; i++) {
+          formData.append("files", files[i]);
+        }
 
-      for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]);
-      }
+        let response = await axios.post("/jobs", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            "x-access-token": localStorage.getItem("userToken"),
+          },
+        });
 
-      let response = await axios.post("/jobs", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          "x-access-token": localStorage.getItem("userToken"),
-        },
-      });
-
-      if (response.status === 200) {
-        setformSubmitted(false);
+        if (response.status === 200) {
+          setformSubmitted(false);
+          setLoading(false);
+          window.location.reload();
+        }
+      } catch (err) {
         setLoading(false);
-        window.location.reload();
+        toast.error(err.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
-    } catch (err) {
-      setLoading(false);
-      toast.error(err.message, {
+    } else {
+      toast.error("Complete Your Submission", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -220,18 +241,20 @@ const CreateClientJobModal = () => {
                     rows={6}
                     placeholder="Hello I need help with this bug, please reach out to me..."
                     value={title}
-                    minLength={5}
-                    maxLength={25}
+                    minLength={25}
+                    maxLength={80}
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
-                    isInvalid={title.length > 25 && formSubmitted}
+                    isInvalid={
+                      (title.length < 25 || title.length > 80) && formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
-                    Be Precise as you can, limit is 25 characters.
+                    Be Precise as you can, limit is 25-80 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Title must be below 25 characters
+                    Title must be greater than 25 and less than 80 characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
@@ -263,13 +286,17 @@ const CreateClientJobModal = () => {
                     onChange={(e) => {
                       setDescription(e.target.value);
                     }}
-                    isInvalid={description.length > 500 && formSubmitted}
+                    isInvalid={
+                      (description.length < 50 || description.length > 500) &&
+                      formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
                     Be Descriptive as you can, limit is 500 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Description must be less than 500 characters
+                    Description must be more than 50 characters and less than
+                    500 characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
@@ -395,6 +422,11 @@ const CreateClientJobModal = () => {
                     </div>
                     <aside style={thumbsContainer}>{thumbs}</aside>
                   </section>
+                  {formSubmitted && files.length > 4 ? (
+                    <Form.Control.Feedback type="invalid">
+                      Maximum Limit For Images is 4
+                    </Form.Control.Feedback>
+                  ) : null}
                 </Form.Group>
                 <Col md={3} className="tip-box">
                   <p style={{ fontWeight: "bold" }}>For a better idea💡</p>

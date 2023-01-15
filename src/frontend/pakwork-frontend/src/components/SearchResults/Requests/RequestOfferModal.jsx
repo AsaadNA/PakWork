@@ -220,7 +220,7 @@ const RequestOfferModal = () => {
                   </Form.Group>
                   <Col md={3} className="tip-box">
                     <p style={{ fontWeight: "bold" }}>
-                      Write something here plz :) 💡
+                      Fair and Competitive Budget 💡
                     </p>
                     <p>Enter a amount price</p>
                   </Col>

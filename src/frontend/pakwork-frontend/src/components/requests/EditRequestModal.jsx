@@ -51,31 +51,49 @@ const EditRequestModal = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setformSubmitted(true);
-
-    try {
-      let response = await axios.put(
-        "/requests/",
-        {
-          request_id: EditRequestInfo.requestID,
-          title: title,
-          description: description,
-          budget: budget,
-        },
-        {
-          headers: {
-            "x-access-token": localStorage.getItem("userToken"),
+    if (
+      title.length >= 25 &&
+      title.length <= 80 &&
+      description.length > 50 &&
+      description.length <= 500 &&
+      parseInt(budget) >= 5
+    ) {
+      try {
+        let response = await axios.put(
+          "/requests/",
+          {
+            request_id: EditRequestInfo.requestID,
+            title: title,
+            description: description,
+            budget: budget,
           },
-        }
-      );
+          {
+            headers: {
+              "x-access-token": localStorage.getItem("userToken"),
+            },
+          }
+        );
 
-      if (response.status === 200) {
-        setformSubmitted(false);
+        if (response.status === 200) {
+          setformSubmitted(false);
+          setLoading(false);
+          window.location.reload();
+        }
+      } catch (err) {
         setLoading(false);
-        window.location.reload();
+        toast.error(err.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
       }
-    } catch (err) {
-      setLoading(false);
-      toast.error(err.message, {
+    } else {
+      toast.error("Complete Your Submission", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -131,12 +149,14 @@ const EditRequestModal = () => {
                     rows={6}
                     placeholder="Hello I need help with this bug, please reach out to me..."
                     value={title}
-                    minLength={5}
-                    maxLength={25}
+                    minLength={25}
+                    maxLength={80}
                     onChange={(e) => {
                       setTitle(e.target.value);
                     }}
-                    isInvalid={title.length > 25 && formSubmitted}
+                    isInvalid={
+                      (title.length < 25 || title.length > 80) && formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
                     Be Precise as you can, limit is 25 characters.
@@ -173,11 +193,15 @@ const EditRequestModal = () => {
                     maxLength={500}
                     onChange={(e) => {
                       setDescription(e.target.value);
-                    }}
-                    isInvalid={description.length > 500 && formSubmitted}
+                    }}  
+                    isInvalid={
+                      (description.length < 50 || description.length > 500) &&
+                      formSubmitted
+                    }
                   ></Form.Control>
                   <Form.Text>
-                    Be Descriptive as you can, limit is 500 characters.
+                    Description must be more than 50 characters and less than
+                    500 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
                     Description must be less than 500 characters
@@ -223,7 +247,7 @@ const EditRequestModal = () => {
                 </Form.Group>
                 <Col md={3} className="tip-box">
                   <p style={{ fontWeight: "bold" }}>
-                    Write something here plz :) 💡
+                    Fair and Competitive Budget 💡
                   </p>
                   <p>Enter a budget price</p>
                 </Col>

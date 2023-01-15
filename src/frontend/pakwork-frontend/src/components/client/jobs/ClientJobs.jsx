@@ -6,6 +6,7 @@ import {
   FaCalendar,
   FaMapPin,
   FaAngleDoubleRight,
+  FaBusinessTime,
 } from "react-icons/fa";
 import {
   ClientJobModalContext,
@@ -110,7 +111,9 @@ const ClientJobs = () => {
               }}
               className="bg-dark text-light"
             >
-              <p>{r.title}</p>
+              <p>
+                <FaBusinessTime></FaBusinessTime> {r.title}
+              </p>
             </Card.Header>
             <Card.Body style={{ textAlign: "left", fontWeight: "" }}>
               <p
@@ -215,7 +218,9 @@ const ClientJobs = () => {
               }}
               className="bg-success text-light"
             >
-              <p>{j.title}</p>
+              <p>
+                <FaBusinessTime></FaBusinessTime> {j.title}
+              </p>
             </Card.Header>
             <Card.Body style={{ textAlign: "left", fontWeight: "" }}>
               <p
