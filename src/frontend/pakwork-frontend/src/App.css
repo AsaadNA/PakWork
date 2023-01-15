@@ -129,7 +129,7 @@ a {
   background-image: url("./assets/signup_background_red.svg");
   background-size: cover;
   background-position: right top;
-  background-color: #c23616;
+  background-color: #016e80;
   overflow-y: scroll;
 }
 .react-tel-input .form-control {
@@ -144,10 +144,10 @@ a {
   border: 0 !important;
 }
 .red-text {
-  color: #c23616 !important;
+  color: #1c8292 !important;
 }
 .red-btn {
-  background-color: #c23616 !important;
+  background-color: #1c8292 !important;
   outline: none !important;
   border: 0 !important;
 }
