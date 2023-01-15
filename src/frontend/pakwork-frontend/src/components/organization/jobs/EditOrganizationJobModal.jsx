@@ -27,10 +27,8 @@ const EditOrganizationJobModal = () => {
   const [ErrorMessagePrice, setErrorMessagePrice] = useState("");
   const [PriceFeedbackClass, setPriceFeedbackClass] = useState("");
 
-  const {
-    showCreateOrganizationJobModal,
-    handleCloseOrganizationCreateJobModal,
-  } = useContext(OrganizationJobModalContext);
+  const { showEditOrganizationJobModal, handleCloseOrganizationEditJobModal } =
+    useContext(OrganizationJobModalContext);
 
   const thumbsContainer = {
     display: "flex",
@@ -133,8 +131,8 @@ const EditOrganizationJobModal = () => {
   return (
     <>
       <Modal
-        show={showCreateOrganizationJobModal}
-        onHide={handleCloseOrganizationCreateJobModal}
+        show={showEditOrganizationJobModal}
+        onHide={handleCloseOrganizationEditJobModal}
         size={"xl"}
       >
         <Modal.Header closeButton>
