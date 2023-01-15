@@ -238,7 +238,7 @@ const EditRequestModal = () => {
                     className="w-75 mt-4"
                     disabled={loading}
                   >
-                    {`Create My Request! 🚀`}
+                    {`Edit My Request! 🚀`}
                   </Button>
                 </Form.Group>
               </Row>

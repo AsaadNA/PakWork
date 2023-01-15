@@ -8,6 +8,8 @@ import {
   ShowEditOrganizationProfileModalContext,
   ShowProfilePictureUploadModalContext,
   ShowVerificationModalContext,
+  RequestCreateModalContext,
+  RequestEditModalContext,
 } from "../../../contexts/ModalContext";
 import EditModal from "../../../components/organization/profile/EditModal";
 import ProfilePhotoUploadModal from "../../../components/upload-profile-photo/ProfilePhotoUploadModal";
@@ -16,6 +18,8 @@ import OrganizationJobs from "../../../components/organization/jobs/Organization
 import { OrganizationJobModalContext } from "../../../contexts/ModalContext";
 import CreateOrganizationJobModal from "../../../components/organization/jobs/CreateOrganizationJobModal";
 import EditOrganizationJobModal from "../../../components/organization/jobs/EditOrganizationJobModal";
+import CreateRequestModal from "../../../components/requests/CreateRequestModal";
+import EditRequestModal from "../../../components/requests/EditRequestModal";
 
 const OrganizationProfile = () => {
   const [showVerification, setshowVerification] = useState(false);
@@ -26,6 +30,8 @@ const OrganizationProfile = () => {
     useState(false);
   const [showEditOrganizationJobModal, setshowEditOrganizationJobModal] =
     useState(false);
+
+  const [EditJobInfo, setEditJobInfo] = useState({});
 
   const handleCloseVerification = () => setshowVerification(false);
   const handleShowVerification = () => setshowVerification(true);
@@ -39,10 +45,35 @@ const OrganizationProfile = () => {
     setshowCreateOrganizationJobModal(true);
   const handleCloseOrganizationCreateJobModal = () =>
     setshowCreateOrganizationJobModal(false);
-  const handleshowEditOrganizationJobModal = () =>
+
+  const handleshowEditOrganizationJobModal = (jobInfo) => {
+    setEditJobInfo(jobInfo);
     setshowEditOrganizationJobModal(true);
-  const handleCloseOrganizationEditJobModal = () =>
+  };
+
+  const handleCloseOrganizationEditJobModal = () => {
+    setEditJobInfo({});
     setshowEditOrganizationJobModal(false);
+  };
+
+  ///CREATE REQUEST MODAL
+  const [showCreateRequestModal, setCreateRequestModal] = useState(false);
+  const handleShowCreateRequestModal = () => setCreateRequestModal(true);
+  const handleCloseCreateRequestModal = () => setCreateRequestModal(false);
+
+  //EDIT REQUEST MODAL
+  const [EditRequestInfo, setEditRequestInfo] = useState({});
+  const [showEditRequestModal, setEditRequestModal] = useState(false);
+
+  const handleShowEditRequestModal = (info) => {
+    setEditRequestInfo(info);
+    setEditRequestModal(true);
+  };
+
+  const handleCloseEditRequestModal = () => {
+    setEditRequestInfo({});
+    setEditRequestModal(false);
+  };
 
   return (
     <ShowProfilePictureUploadModalContext.Provider
@@ -74,30 +105,50 @@ const OrganizationProfile = () => {
               showEditOrganizationJobModal,
               handleshowEditOrganizationJobModal,
               handleCloseOrganizationEditJobModal,
+              EditJobInfo,
             }}
           >
-            <div>
-              <NavBar></NavBar>
-              <Container className="mt-3">
-                <EditModal></EditModal>
-                <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
-                <VerificationModal></VerificationModal>
-                <CreateOrganizationJobModal></CreateOrganizationJobModal>
-                <EditOrganizationJobModal></EditOrganizationJobModal>
-                <Row>
-                  <Col
-                    className="d-flex justify-content-start align-items-start flex-column"
-                    md={4}
-                  >
-                    <ProfileInfo></ProfileInfo>
-                  </Col>
-                  <Col md={8}>
-                    <OrganizationJobs></OrganizationJobs>
-                    <Reviews></Reviews>
-                  </Col>
-                </Row>
-              </Container>
-            </div>
+            <RequestCreateModalContext.Provider
+              value={{
+                showCreateRequestModal,
+                handleShowCreateRequestModal,
+                handleCloseCreateRequestModal,
+              }}
+            >
+              <RequestEditModalContext.Provider
+                value={{
+                  showEditRequestModal,
+                  handleShowEditRequestModal,
+                  handleCloseEditRequestModal,
+                  EditRequestInfo,
+                }}
+              >
+                <div>
+                  <NavBar></NavBar>
+                  <Container className="mt-3">
+                    <EditModal></EditModal>
+                    <ProfilePhotoUploadModal></ProfilePhotoUploadModal>
+                    <VerificationModal></VerificationModal>
+                    <CreateOrganizationJobModal></CreateOrganizationJobModal>
+                    <EditOrganizationJobModal></EditOrganizationJobModal>
+                    <CreateRequestModal></CreateRequestModal>
+                    <EditRequestModal></EditRequestModal>
+                    <Row>
+                      <Col
+                        className="d-flex justify-content-start align-items-start flex-column"
+                        md={4}
+                      >
+                        <ProfileInfo></ProfileInfo>
+                      </Col>
+                      <Col md={8}>
+                        <OrganizationJobs></OrganizationJobs>
+                        <Reviews></Reviews>
+                      </Col>
+                    </Row>
+                  </Container>
+                </div>
+              </RequestEditModalContext.Provider>
+            </RequestCreateModalContext.Provider>
           </OrganizationJobModalContext.Provider>
         </ShowEditOrganizationProfileModalContext.Provider>
       </ShowVerificationModalContext.Provider>

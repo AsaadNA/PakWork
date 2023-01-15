@@ -38,8 +38,9 @@ router.post(
 
       if (userType === "client") {
         query += `client_id,title,description,category,starting_date,ending_date,starting_amount) VALUES ("${generated_jobID}","${userID}","${title}","${description}","${category}","${starting_date}","${ending_date}","${starting_amount}");`;
-      } else {
+      } else if (userType === "company_client") {
         query += `company_client_id,title,description,category,starting_date,ending_date,starting_amount) VALUES ("${generated_jobID}","${userID}","${title}","${description}","${category}","${starting_date}","${ending_date}","${starting_amount}");`;
+        console.log(query);
       }
 
       db.query(query, (e, r) => {
@@ -177,6 +178,8 @@ router.get("/", auth, (req, res) => {
   let query = ``;
   if (userType === "client") {
     query = `select * from jobs where client_id="${userID}";`;
+  } else if (userType === "company_client") {
+    query = `select * from jobs where company_client_id="${userID}";`;
   }
 
   db.query(query, (err, data) => {
