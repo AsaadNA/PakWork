@@ -15,7 +15,7 @@ const PopularCategory = () => {
       type: "Programming & Tech",
     },
     {
-      name: "Website Development",
+      name: "Web Development",
       type: "Programming & Tech",
     },
     {
@@ -73,6 +73,11 @@ const PopularCategory = () => {
                         marginTop: "60px",
                         fontWeight: "bold",
                         cursor: "pointer",
+                      }}
+                      onClick={() => {
+                        window.location.replace(
+                          `http://localhost:3000/gigs/search/%20/filter?GigCategory=${Category.name}&SortByPrice=desc&SortByRating=desc`
+                        );
                       }}
                     >
                       Explore

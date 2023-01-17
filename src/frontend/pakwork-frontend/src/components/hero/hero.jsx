@@ -22,14 +22,14 @@ const Hero = () => {
         <div className="d-flex mt-2">
           <SearchBar></SearchBar>
         </div>
-        <div className="mt-3 searched-items">
+        {/* <div className="mt-3 searched-items">
           <span>
             <strong>Popular:</strong>
           </span>
           <span className="searched-item">Web Development</span>
           <span className="searched-item">Logo Designing</span>
           <span className="searched-item">Virtual Assistant</span>
-        </div>
+        </div> */}
       </Col>
       <Col md={6}>
         <img
