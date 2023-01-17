@@ -20,7 +20,7 @@ const Hero = () => {
           Turn your idea into a reality
         </h4>
         <div className="d-flex mt-2">
-          <SearchBar></SearchBar>
+          <SearchBar isHome={true}></SearchBar>
         </div>
         {/* <div className="mt-3 searched-items">
           <span>

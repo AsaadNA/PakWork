@@ -11,7 +11,7 @@ import { FaSearch } from "react-icons/fa";
 
 */
 
-const SearchBar = () => {
+const SearchBar = ({ isHome }) => {
   const [inputText, setInputText] = useState("");
 
   return (
@@ -24,7 +24,10 @@ const SearchBar = () => {
         }
       }}
     >
-      <InputGroup onChange={(e) => setInputText([e.target.value])}>
+      <InputGroup
+        onChange={(e) => setInputText([e.target.value])}
+        className={isHome && "home-searchbar"}
+      >
         <Form.Control
           type="text"
           placeholder="Search Gigs"

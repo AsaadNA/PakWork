@@ -298,8 +298,13 @@ a {
   max-height: 400px; /* change this to whatever you want */
   width: auto;
 }
-
+.home-searchbar {
+  width: 500px !important;
+}
 @media (max-width: 767.98px) {
+  .home-searchbar {
+    width: 100% !important;
+  }
   .register-btn {
     margin-left: 0px;
     margin-top: 10px;
