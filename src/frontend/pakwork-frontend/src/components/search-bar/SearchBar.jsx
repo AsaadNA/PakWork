@@ -34,6 +34,17 @@ const SearchBar = ({ isHome }) => {
           className="Nav-search"
         ></Form.Control>
         <Button type="submit" variant="success">
+          {isHome && (
+            <span
+              style={{
+                marginRight: "10px",
+                marginBottom: "5px",
+                fontWeight: "bold",
+              }}
+            >
+              Search
+            </span>
+          )}
           <FaSearch style={{ marginBottom: "5px" }}></FaSearch>
         </Button>
       </InputGroup>
