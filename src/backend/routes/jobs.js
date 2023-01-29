@@ -45,7 +45,7 @@ router.post(
 
       db.query(query, (e, r) => {
         if (e) {
-          res.status(400).send({ error: "Job Title already exists" });
+          res.status(400).send({ error: e.message });
         } else if (r) {
           async.forEachOfSeries(req.files, (file, idx, cb) => {
             console.log(file.filename);
@@ -63,7 +63,6 @@ router.post(
         }
       });
     } else {
-      console.log("FUCK3");
       res.status(400).send({
         error: "Could not create job",
       });

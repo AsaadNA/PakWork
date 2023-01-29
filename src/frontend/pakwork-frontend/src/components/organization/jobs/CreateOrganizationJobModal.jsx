@@ -299,7 +299,8 @@ const CreateOrganizationJobModal = () => {
                     Be Descriptive as you can, limit is 500 characters.
                   </Form.Text>
                   <Form.Control.Feedback type="invalid">
-                    Description must be less than 500 characters
+                    Description must be greater than 50 and less than 500
+                    characters
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Col md={3} className="tip-box">
