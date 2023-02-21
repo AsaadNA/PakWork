@@ -96,13 +96,13 @@ io.on("connection", (socket) => {
             } else if (r.length > 0) {
               if (data.amount > r[0]["amount"]) {
                 db.query(
-                  `UPDATE jobs SET starting_amount=${data.amount} WHERE job_id="${data.jobID}";`,
+                  `UPDATE jobs SET current_highest_bidder="${data.username}" ,starting_amount=${data.amount} WHERE job_id="${data.jobID}";`,
                   (er, re) => {
                     if (er) {
                       console.log(er.message);
                     } else if (re) {
                       db.query(
-                        `UPDATE bids SET amount=${data.amount} WHERE job_id="${data.jobID}"`,
+                        `UPDATE bids SET username="${data.username}" , amount=${data.amount} WHERE job_id="${data.jobID}"`,
                         (err, ress) => {
                           if (err) {
                             console.log(err.message);
@@ -148,7 +148,7 @@ io.on("connection", (socket) => {
                       console.log(e.message);
                     } else if (r) {
                       db.query(
-                        `UPDATE jobs SET starting_amount=${data.amount} WHERE job_id="${data.jobID}";`,
+                        `UPDATE jobs SET current_highest_bidder="${data.username}" ,starting_amount=${data.amount} WHERE job_id="${data.jobID}";`,
                         (er, re) => {
                           if (er) {
                             console.log(er.message);

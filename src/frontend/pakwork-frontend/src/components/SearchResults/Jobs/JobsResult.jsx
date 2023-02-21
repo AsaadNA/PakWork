@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import NavBar from "../../navbar/NavBar";
 import {
   Container,
@@ -33,8 +33,6 @@ const JobsResult = () => {
 
   const [isConnected, setIsConnected] = useState(socket.connected);
 
-  const biddingButton = useRef();
-
   const fetchAllJobs = async () => {
     let response = await axios.get("/jobs/all");
     if (response.status === 200) {
@@ -61,9 +59,11 @@ const JobsResult = () => {
     socket.on("bid", (data) => {
       if (jobs.length > 0 && isConnected) {
         //Update & Find the job emitted from the event
+        //The Amount and the highest bidder
         let updatedJobs = jobs.map((j) => {
           if (j.job_id === data.jobID) {
             j.starting_amount = data.amount;
+            j.current_highest_bidder = data.username;
           }
         });
 
@@ -171,9 +171,7 @@ const JobsResult = () => {
             </span>
           </td>
           <td>
-            <Button ref={biddingButton} disabled>
-              Post Bid
-            </Button>
+            <Button disabled>Post Bid</Button>
           </td>
         </React.Fragment>
       );
@@ -182,18 +180,11 @@ const JobsResult = () => {
         <React.Fragment>
           <td>
             <span>
-              {days}d {hours}h {minutes}m
+              {days}d {hours}h {minutes}m {seconds}s
             </span>
           </td>
           <td>
-            <Button
-              ref={biddingButton}
-              onClick={(e) => {
-                onPostBid(e);
-              }}
-            >
-              Post Bid
-            </Button>
+            <Button onClick={(e) => onPostBid(e)}>Post Bid</Button>
           </td>
         </React.Fragment>
       );
@@ -275,6 +266,7 @@ const JobsResult = () => {
                     <th>Category</th>
                     <th>Ending Time</th>
                     <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -324,6 +316,16 @@ const JobsResult = () => {
                               date={job.ending_date}
                               renderer={countRenderer}
                             />
+                            {job.current_highest_bidder ===
+                            JSON.parse(localStorage.getItem("user"))[
+                              "username"
+                            ] ? (
+                              <td>
+                                <span>
+                                  <strong>Winner</strong>
+                                </span>
+                              </td>
+                            ) : null}
                           </tr>
                         );
                       })

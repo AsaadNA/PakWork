@@ -159,7 +159,7 @@ router.delete("/:jobID", auth, (req, res) => {
 
 router.get("/all", (req, res) => {
   db.query(
-    `select j.job_id , j.description , j.title, j.category, j.starting_date , j.ending_date, j.starting_amount , p.profile_picture from jobs j inner join profile p on j.client_id = p.profile_id or j.company_client_id = p.profile_id`,
+    `select j.job_id , j.description , j.title, j.category, j.starting_date , j.ending_date, j.starting_amount, j.current_highest_bidder , p.profile_picture from jobs j inner join profile p on j.client_id = p.profile_id or j.company_client_id = p.profile_id`,
     (e, r) => {
       if (e) {
         res.status(400).send({ error: e.message });
