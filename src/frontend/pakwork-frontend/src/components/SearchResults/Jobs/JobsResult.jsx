@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NavBar from "../../navbar/NavBar";
-import { Container, Row, Col, Table, InputGroup, Form } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  InputGroup,
+  Form,
+  Button,
+} from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import { GigJobCategories, SortByPrice } from "../../../Extras/CategoryLists";
 import Select from "react-select";
@@ -8,6 +16,13 @@ import JobDetailModal from "./JobDetailModal";
 import { JobDetailModalContext } from "../../../contexts/ModalContext";
 import axios from "../../../Api/Api";
 import moment from "moment/moment";
+import Countdown from "react-countdown";
+
+import io from "socket.io-client";
+
+const socket = io("http://localhost:4000/", {
+  transports: ["websocket"],
+});
 
 const JobsResult = () => {
   const [jobs, setjobs] = useState([]);
@@ -15,6 +30,10 @@ const JobsResult = () => {
   const [sortState, setsortState] = useState("hightolow");
   const [showJobDetailModal, setshowJobDetailModal] = useState(false);
   const [selectedJobDetails, setselectedJobDetails] = useState();
+
+  const [isConnected, setIsConnected] = useState(socket.connected);
+
+  const biddingButton = useRef();
 
   const fetchAllJobs = async () => {
     let response = await axios.get("/jobs/all");
@@ -24,9 +43,60 @@ const JobsResult = () => {
     }
   };
 
+  //Handles Socket Stuff
   useEffect(() => {
     fetchAllJobs();
   }, []);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      setIsConnected(true);
+    });
+
+    socket.on("invalid_bid", (data) => {
+      alert(`ERR: ${data.msg}`);
+    });
+
+    //Handles incoming bids
+    socket.on("bid", (data) => {
+      if (jobs.length > 0 && isConnected) {
+        //Update & Find the job emitted from the event
+        let updatedJobs = jobs.map((j) => {
+          if (j.job_id === data.jobID) {
+            j.starting_amount = data.amount;
+          }
+        });
+
+        //Traditionlly setting the state using useState does not work
+        //So we use functional function to update
+        setjobs((prev) => [...prev, updatedJobs]);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      setIsConnected(false);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("bid");
+      socket.off("invalid_bid");
+      socket.off("disconnect");
+    };
+  }, [jobs, isConnected]);
+
+  //HANDLE BIDDING POST
+  const onPostBid = (e) => {
+    let jobID = e.target.parentNode.parentNode.id;
+    let bidAmount = prompt(`Enter Bid Amount for ${jobID}`);
+    if (bidAmount) {
+      socket.emit("bid", {
+        jobID: jobID,
+        amount: bidAmount,
+        username: JSON.parse(localStorage.getItem("user"))["username"],
+      });
+    }
+  };
 
   const filterDescription = (text) => {
     const tempArr = [];
@@ -88,6 +158,46 @@ const JobsResult = () => {
   const handleOpenJobDetailModal = (jobDetails) => {
     setselectedJobDetails(jobDetails);
     setshowJobDetailModal(true);
+  };
+
+  //Custom Renderer For Our CountDown timer
+  const countRenderer = ({ days, hours, minutes, seconds, completed }) => {
+    if (completed) {
+      return (
+        <React.Fragment>
+          <td>
+            <span>
+              <strong>Bidding Finished</strong>
+            </span>
+          </td>
+          <td>
+            <Button ref={biddingButton} disabled>
+              Post Bid
+            </Button>
+          </td>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <React.Fragment>
+          <td>
+            <span>
+              {days}d {hours}h {minutes}m
+            </span>
+          </td>
+          <td>
+            <Button
+              ref={biddingButton}
+              onClick={(e) => {
+                onPostBid(e);
+              }}
+            >
+              Post Bid
+            </Button>
+          </td>
+        </React.Fragment>
+      );
+    }
   };
 
   return (
@@ -161,21 +271,22 @@ const JobsResult = () => {
                     <th>Posted On</th>
                     <th>Client</th>
                     <th>Request</th>
-                    <th>Starting Amount</th>
-                    <th>Ending Time</th>
+                    <th>Current Bid</th>
                     <th>Category</th>
+                    <th>Ending Time</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
                   {FilteredJobs.length > 0
                     ? FilteredJobs.map((job, i) => {
                         return (
-                          <tr key={i}>
+                          <tr id={job.job_id} key={i}>
                             <td>
                               {moment
                                 .utc(job.starting_date)
                                 .local()
-                                .format("Do MMM YYYY HH:mm:ss")}
+                                .format("Do MMM YYYY")}
                             </td>
                             <td>
                               <img
@@ -207,16 +318,12 @@ const JobsResult = () => {
                               </p>
                             </td>
                             <td>
-                              <p>
-                                {moment
-                                  .utc(job.ending_date)
-                                  .local()
-                                  .format("Do MMM YYYY HH:mm:ss")}
-                              </p>
-                            </td>
-                            <td>
                               <p>{job.category}</p>
                             </td>
+                            <Countdown
+                              date={job.ending_date}
+                              renderer={countRenderer}
+                            />
                           </tr>
                         );
                       })
