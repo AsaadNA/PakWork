@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
-// you will also need the css that comes with bootstrap-daterangepicker
+import "react-chat-elements/dist/main.css";
 import "bootstrap-daterangepicker/daterangepicker.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./containers/home/Home";
@@ -22,6 +22,7 @@ import RequestsResult from "./components/SearchResults/Requests/RequestsResult";
 import Request from "./components/requests/Request";
 import OrderPage from "./components/order-management/Order/OrderPage";
 import Orders from "./components/order-management/Orders";
+import Chat from "./components/chat/Chat";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -132,6 +133,17 @@ function App() {
                     path="/dashboard/orders/:orderID"
                     exact
                     element={<OrderPage></OrderPage>}
+                  ></Route>
+                </Route>
+                <Route
+                  path="/dashboard/inbox"
+                  exact
+                  element={<ProtectedRoute></ProtectedRoute>}
+                >
+                  <Route
+                    path="/dashboard/inbox"
+                    exact
+                    element={<Chat></Chat>}
                   ></Route>
                 </Route>
                 <Route path="*" element={<NotFound404></NotFound404>}></Route>

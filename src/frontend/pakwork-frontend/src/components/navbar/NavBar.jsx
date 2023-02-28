@@ -10,7 +10,7 @@ import { Link as RouterLink, NavLink, useNavigate } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
-import { FaSearch, FaUser } from "react-icons/fa";
+import { FaFacebookMessenger, FaInbox, FaSearch, FaUser } from "react-icons/fa";
 import { Form, InputGroup } from "react-bootstrap";
 import SearchBar from "../search-bar/SearchBar";
 
@@ -201,6 +201,20 @@ const NavBar = ({ isHome, isGigResult }) => {
               )}
             </Nav>
             <Nav className="d-flex justify-content-center align-items-center">
+              <Nav.Link className="text-dark-50" style={{ fontWeight: "bold" }}>
+                <NavLink
+                  to="/dashboard/inbox"
+                  className={(navData) =>
+                    navData.isActive
+                      ? "navlink-btn text-dark"
+                      : "navlink-btn text-dark-50"
+                  }
+                  style={{ textDecoration: "none" }}
+                >
+                  <FaInbox style={{ marginBottom: "4px" }}></FaInbox>
+                  &nbsp;
+                </NavLink>
+              </Nav.Link>
               <Nav.Link className="text-dark-50" style={{ fontWeight: "bold" }}>
                 <NavLink
                   to="/dashboard/profile"
