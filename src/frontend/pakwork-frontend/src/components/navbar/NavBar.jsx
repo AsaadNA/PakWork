@@ -126,8 +126,6 @@ const NavBar = ({ isHome, isGigResult }) => {
         ) : (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              {/*
-
               <Nav.Link
                 className="mx-md-2"
                 style={{ fontWeight: "bold", textDecoration: "none" }}
@@ -143,9 +141,7 @@ const NavBar = ({ isHome, isGigResult }) => {
                 >
                   Manage Orders
                 </NavLink>
-
               </Nav.Link>
-                                             */}
 
               {user.user_type === "freelancer" ? (
                 <>

@@ -35,13 +35,21 @@ const JobDetailModal = () => {
                   {selectedJobDetails.description}
                 </p>
                 <p>
-                  <strong>Posted On:</strong> {moment.utc(selectedJobDetails.startingTime).local().format("Do MMM YYYY HH:mm:ss")}
+                  <strong>Posted On:</strong>{" "}
+                  {moment
+                    .utc(selectedJobDetails.startingTime)
+                    .local()
+                    .format("Do MMM YYYY HH:mm:ss")}
                 </p>
                 <p>
                   <strong>Starting Amount:</strong> ${selectedJobDetails.budget}
                 </p>
                 <p>
-                  <strong>Ending Time:</strong>  {moment.utc(selectedJobDetails.endingTime).local().format("Do MMM YYYY HH:mm:ss")}
+                  <strong>Ending Time:</strong>{" "}
+                  {moment
+                    .utc(selectedJobDetails.endingTime)
+                    .local()
+                    .format("Do MMM YYYY HH:mm:ss")}
                 </p>
                 <p>
                   <strong>Job Category:</strong> {selectedJobDetails.category}

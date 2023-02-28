@@ -9,7 +9,7 @@ import { GigJobCategories } from "../../../Extras/CategoryLists";
 import CurrencyInput from "react-currency-input-field";
 import { useDropzone } from "react-dropzone";
 import DateRangePicker from "react-bootstrap-daterangepicker";
-import moment from "moment/moment";
+import moment, { duration } from "moment/moment";
 
 const CreateClientJobModal = () => {
   const priceLimit = 20000;
@@ -20,6 +20,7 @@ const CreateClientJobModal = () => {
   const [JobPrice, setJobPrice] = useState("5");
   const [StartingDate, setStartingDate] = useState(new Date().toLocaleString());
   const [EndingDate, setEndingDate] = useState(new Date().toLocaleString());
+  const [Duration, setDuration] = useState(1);
 
   const [formSubmitted, setformSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -373,7 +374,7 @@ const CreateClientJobModal = () => {
               <Row className="mb-1 p-2 justify-content-center">
                 <Form.Group
                   as={Col}
-                  md={8}
+                  md={4}
                   className="mt-2"
                   controlId="formGridCategory"
                 >
@@ -395,6 +396,23 @@ const CreateClientJobModal = () => {
                       <input className="form-control" type="text" required />
                     </DateRangePicker>
                   </div>
+                </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md={4}
+                  className="mt-2"
+                  controlId="formGridCategory"
+                >
+                  <Form.Label for="duration">
+                    Select The Duration For Your Job (Days)
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={1}
+                    value={Duration}
+                    onChange={(e) => setDuration()}
+                    required
+                  ></Form.Control>
                 </Form.Group>
                 <Col md={3} className="tip-box">
                   <p style={{ fontWeight: "bold" }}>

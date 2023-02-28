@@ -20,6 +20,8 @@ import { ShowLoginModalContext } from "./contexts/ModalContext";
 import JobsResult from "./components/SearchResults/Jobs/JobsResult";
 import RequestsResult from "./components/SearchResults/Requests/RequestsResult";
 import Request from "./components/requests/Request";
+import OrderPage from "./components/order-management/Order/OrderPage";
+import Orders from "./components/order-management/Orders";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -110,6 +112,28 @@ function App() {
                   exact
                   element={<GigsResult></GigsResult>}
                 ></Route>
+                <Route
+                  path="/dashboard/orders"
+                  exact
+                  element={<ProtectedRoute></ProtectedRoute>}
+                >
+                  <Route
+                    path="/dashboard/orders"
+                    exact
+                    element={<Orders></Orders>}
+                  ></Route>
+                </Route>
+                <Route
+                  path="/dashboard/orders/:orderID"
+                  exact
+                  element={<ProtectedRoute></ProtectedRoute>}
+                >
+                  <Route
+                    path="/dashboard/orders/:orderID"
+                    exact
+                    element={<OrderPage></OrderPage>}
+                  ></Route>
+                </Route>
                 <Route path="*" element={<NotFound404></NotFound404>}></Route>
               </Route>
             </Routes>

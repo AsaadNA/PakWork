@@ -12,6 +12,7 @@ const CreateRequestModal = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [budget, setBudget] = useState("5");
+  const [Duration, setDuration] = useState(1);
 
   const [formSubmitted, setformSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -211,12 +212,12 @@ const CreateRequestModal = () => {
                 </Col>
               </Row>
               <h2 class="line-divider ">
-                <span class="span-line-divider ">Budget</span>
+                <span class="span-line-divider ">Budget & Duration</span>
               </h2>
               <Row className="ms-4 p-2 justify-content-left">
                 <Form.Group
                   as={Col}
-                  md={8}
+                  md={4}
                   className="mt-2"
                   controlId="formGridCategory"
                 >
@@ -237,11 +238,28 @@ const CreateRequestModal = () => {
                   />
                   <div className="invalid-feedback">{ErrorMessagePrice}</div>
                 </Form.Group>
+                <Form.Group
+                  as={Col}
+                  md={4}
+                  className="mt-2"
+                  controlId="formGridCategory"
+                >
+                  <Form.Label for="duration">
+                    Select The Duration For Your Job (Days)
+                  </Form.Label>
+                  <Form.Control
+                    type="number"
+                    min={1}
+                    value={Duration}
+                    onChange={(e) => setDuration()}
+                    required
+                  ></Form.Control>
+                </Form.Group>
                 <Col md={3} className="tip-box">
                   <p style={{ fontWeight: "bold" }}>
-                    Fair and Competitive Budget 💡
+                    Fair and Competitive Budget With Duration 💡
                   </p>
-                  <p>Enter a budget price</p>
+                  <p>Enter a budget price and a duration</p>
                 </Col>
                 <Form.Group
                   as={Col}
