@@ -1,21 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Row, Col, Table } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import NavBar from "../navbar/NavBar";
+import axios from "../../Api/Api";
+import moment from "moment/moment";
+import { toSentenceCase } from "../../Extras/HelperFunctions";
 
 const Orders = () => {
-  const Orders = [
-    {
-      id: 12,
-      description: "I will do your javscript task",
-      buyer: {
-        username: "henrywu",
-        picture:
-          "http://localhost:4000//images/profiles/7wOoIEpP8bTpKt3g2hU682p92xJEQkQRFDIstCGqNUZWG",
+  const [Orders, setOrders] = useState([]);
+  const [userType, setUserType] = useState("");
+
+  const fetchOrders = async () => {
+    let result = await axios.put(
+      "/orders/",
+      {
+        tokenData: JSON.parse(localStorage.getItem("user")),
       },
-      dueDate: "10th Feb 2022",
-    },
-  ];
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken"),
+        },
+      }
+    );
+
+    if (result.status === 200) {
+      setOrders(result.data);
+    }
+  };
+
+  useEffect(() => {
+    setUserType(JSON.parse(localStorage.getItem("user"))["user_type"]);
+    fetchOrders();
+  }, []);
+
   return (
     <Container>
       <NavBar></NavBar>
@@ -24,32 +41,69 @@ const Orders = () => {
           <Table style={{ textAlign: "left" }}>
             <thead>
               <tr>
-                <th>Order Description</th>
-                <th>Placed By</th>
+                <th>Title</th>
+                {userType === "freelancer" ? (
+                  <th>Client</th>
+                ) : (
+                  <th>Fulfilled By</th>
+                )}
+                <th>Amount</th>
+                <th>Order Status</th>
+                <th>Category</th>
                 <th>Due Date</th>
-                <th></th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {Orders.map((order) => {
                 return (
-                  <tr>
-                    <td>{order.description}</td>
+                  <tr key={order.order_id}>
+                    <td>{order.title}</td>
                     <td>
                       <div className="seller-mini-banner">
-                        <img src={order.buyer.picture} alt="buyer_pic"></img>
-
+                        <img
+                          src={`http://localhost:4000/${order.profile_picture}`}
+                          alt="buyer_pic"
+                        ></img>
                         <span
                           style={{ paddingLeft: "10px", fontWeight: "bold" }}
                         >
-                          {order.buyer.username}
+                          {order.username
+                            ? order.username
+                            : order.freelancer_username}
                         </span>
                       </div>
                     </td>
-                    <td>{order.dueDate}</td>
+                    <td>${order.amount}</td>
+                    <td>
+                      {order.order_status === "Delivered" ? (
+                        <p className="order-status-badge-delivered">
+                          {toSentenceCase(order.order_status)}
+                        </p>
+                      ) : order.order_status === "Overdue" ? (
+                        <p className="order-status-badge-overdue">
+                          {toSentenceCase(order.order_status)}
+                        </p>
+                      ) : (
+                        <p className="order-status-badge-progress">
+                          {toSentenceCase(order.order_status)}
+                        </p>
+                      )}
+                    </td>
+                    {!order.category ? (
+                      <td>Request Job</td>
+                    ) : (
+                      <td>{order.category}</td>
+                    )}
+                    <td>
+                      {moment
+                        .utc(order.ending_date)
+                        .local()
+                        .format("Do MMM YYYY")}
+                    </td>
                     <td>
                       <NavLink
-                        to={`/dashboard/orders/${order.id}`}
+                        to={`/dashboard/orders/${order.order_id}`}
                         className="navlink"
                         style={{ fontWeight: "bold" }}
                       >

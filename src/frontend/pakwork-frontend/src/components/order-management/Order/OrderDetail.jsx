@@ -3,7 +3,7 @@ import { Card } from "react-bootstrap";
 import { toSentenceCase } from "../../../Extras/HelperFunctions";
 
 const OrderDetail = () => {
-  const orderStatus = "progress";
+  const orderStatus = "delivered";
   return (
     <Card style={{ textAlign: "left" }} className="m-2">
       <Card.Body>

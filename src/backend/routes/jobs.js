@@ -2,7 +2,6 @@ const router = require("express").Router();
 const auth = require("../middlewares/auth");
 const randtoken = require("rand-token");
 const async = require("async");
-
 const db = require("../configs/database");
 const multer = require("multer");
 const { storageOptionsPDFs, pdfFilter } = require("../common/storageOptions");
@@ -23,9 +22,8 @@ router.post(
       starting_amount,
       starting_date,
       ending_date,
+      duration,
     } = req.body;
-
-    console.log(starting_date);
 
     if (req.files === undefined) {
       res.status(400).send({
@@ -37,9 +35,9 @@ router.post(
       let query = `INSERT into jobs (job_id,`;
 
       if (userType === "client") {
-        query += `client_id,title,description,category,starting_date,ending_date,starting_amount) VALUES ("${generated_jobID}","${userID}","${title}","${description}","${category}","${starting_date}","${ending_date}","${starting_amount}");`;
+        query += `client_id,title,description,category,starting_date,ending_date,starting_amount,duration) VALUES ("${generated_jobID}","${userID}","${title}","${description}","${category}","${starting_date}","${ending_date}","${starting_amount}",${duration});`;
       } else if (userType === "company_client") {
-        query += `company_client_id,title,description,category,starting_date,ending_date,starting_amount) VALUES ("${generated_jobID}","${userID}","${title}","${description}","${category}","${starting_date}","${ending_date}","${starting_amount}");`;
+        query += `company_client_id,title,description,category,starting_date,ending_date,starting_amount,duration) VALUES ("${generated_jobID}","${userID}","${title}","${description}","${category}","${starting_date}","${ending_date}","${starting_amount},${duration}");`;
         console.log(query);
       }
 
@@ -159,7 +157,7 @@ router.delete("/:jobID", auth, (req, res) => {
 
 router.get("/all", (req, res) => {
   db.query(
-    `select j.job_id , j.description , j.title, j.category, j.starting_date , j.ending_date, j.starting_amount, j.current_highest_bidder , p.profile_picture from jobs j inner join profile p on j.client_id = p.profile_id or j.company_client_id = p.profile_id`,
+    `select j.job_id , j.description , j.title, j.category,j.duration, j.starting_date , j.ending_date, j.starting_amount, j.current_highest_bidder , p.profile_picture from jobs j inner join profile p on j.client_id = p.profile_id or j.company_client_id = p.profile_id`,
     (e, r) => {
       if (e) {
         res.status(400).send({ error: e.message });

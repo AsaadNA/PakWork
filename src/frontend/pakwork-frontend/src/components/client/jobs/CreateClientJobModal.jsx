@@ -170,6 +170,8 @@ const CreateClientJobModal = () => {
           formData.append("files", files[i]);
         }
 
+        formData.append("duration", Duration);
+
         let response = await axios.post("/jobs", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -410,7 +412,7 @@ const CreateClientJobModal = () => {
                     type="number"
                     min={1}
                     value={Duration}
-                    onChange={(e) => setDuration()}
+                    onChange={(e) => setDuration([e.target.value])}
                     required
                   ></Form.Control>
                 </Form.Group>

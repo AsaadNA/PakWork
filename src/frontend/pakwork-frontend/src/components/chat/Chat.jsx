@@ -18,7 +18,7 @@ const Chat = () => {
                 alt: "kursat_avatar",
                 title: "Kursat",
                 subtitle:
-                  "Why don't we go to the No Way Home movie this weekend ?",
+                  "Why don't we go to the No Way Home movies this weekend ?",
                 date: new Date(),
                 unread: 3,
               },

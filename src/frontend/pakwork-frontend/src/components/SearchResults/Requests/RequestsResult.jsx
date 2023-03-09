@@ -173,7 +173,8 @@ const RequestsResult = () => {
                       <th>Client</th>
                       <th>Request</th>
                       <th>Budget</th>
-                      <th>Action</th>
+                      <th>Project Duration</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -185,7 +186,7 @@ const RequestsResult = () => {
                                 {moment
                                   .utc(request.posting_date)
                                   .local()
-                                  .format("Do MMM YYYY HH:mm:ss")}
+                                  .format("Do MMM YYYY")}
                               </td>
                               <td>
                                 <img
@@ -213,6 +214,9 @@ const RequestsResult = () => {
                                 <p className="text-success">
                                   ${request.budget}
                                 </p>
+                              </td>
+                              <td>
+                                <p>{request.duration} Days</p>
                               </td>
                               <td>
                                 {request.already_sent ? (

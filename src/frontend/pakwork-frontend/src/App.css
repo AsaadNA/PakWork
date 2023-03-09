@@ -319,7 +319,7 @@ a {
   border-radius: 5px;
 }
 .order-status-badge-delivered {
-  background-color: #1c8292;
+  background-color: #006837;
   text-align: center;
   color: #fafafa;
   padding: 1% 3%;
@@ -329,6 +329,16 @@ a {
 }
 .order-status-badge-completed {
   background-color: #006837;
+  text-align: center;
+  color: #fafafa;
+  padding: 1% 3%;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+}
+
+.order-status-badge-overdue {
+  background-color: #ff0000;
   text-align: center;
   color: #fafafa;
   padding: 1% 3%;

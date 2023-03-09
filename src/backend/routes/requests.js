@@ -55,6 +55,9 @@ router.get("/", auth, (req, res) => {
   );
 });
 
+//This basically fetches all the requests from the database
+//but it also fetches requests that the logged in freelancer
+//made offers to.
 router.get("/freelancer", auth, (req, res) => {
   const { userID } = res.locals;
   //Get all requests that have been sent by the freelancer
@@ -67,7 +70,7 @@ router.get("/freelancer", auth, (req, res) => {
         //This will also sent whether if the freelancer has already sent an offer
         //to the request or not
         db.query(
-          `select r.request_id , r.title, r.description , r.posting_date , r.budget, p.profile_picture from requests r inner join profile p on r.client_id = p.profile_id or r.company_client_id = p.profile_id`,
+          `select r.duration,  r.request_id , r.title, r.description , r.posting_date , r.budget, p.profile_picture from requests r inner join profile p on r.client_id = p.profile_id or r.company_client_id = p.profile_id`,
           (e, rr) => {
             if (e) {
               res.status(400).send({ err: e.message });
@@ -83,6 +86,7 @@ router.get("/freelancer", auth, (req, res) => {
                   profile_picture: result.profile_picture,
                   request_id: result.request_id,
                   title: result.title,
+                  duration: result.duration,
                   already_sent: Object.values(offersSentTo).includes(
                     result.request_id
                   ),
@@ -173,16 +177,16 @@ router.delete("/:requestID", auth, (req, res) => {
 });
 
 router.post("/", auth, (req, res) => {
-  const { title, description, budget } = req.body;
+  const { title, description, budget, duration } = req.body;
   const { userID, userType } = res.locals;
 
   let requestID = randtoken.uid(12);
-  let query = `INSERT INTO requests (request_id,title,description,budget,`;
+  let query = `INSERT INTO requests (request_id,title,description,budget,duration,`;
 
   if (userType === "client") {
-    query += `client_id) VALUES ("${requestID}","${title}" , "${description}" , "${budget}" , "${userID}");`;
+    query += `client_id) VALUES ("${requestID}","${title}" , "${description}" , "${budget}" , ${duration} , "${userID}");`;
   } else {
-    query += `company_client_id) VALUES ("${requestID}","${title}" , "${description}" , "${budget}" , "${userID}");`;
+    query += `company_client_id) VALUES ("${requestID}","${title}" , "${description}" , "${budget}" , ${duration} , "${userID}");`;
   }
 
   db.query(query, (e, r) => {
@@ -214,6 +218,80 @@ router.put("/", auth, (req, res) => {
         res.status(200).send({ message: "Request Updated" });
       } else {
         console.log("Could not update request");
+      }
+    }
+  );
+});
+
+/*
+
+  1. When client accepts offer
+    2. Insert offer into orders
+    3. Delete all the other offers
+    4. Delete Job Itself
+
+*/
+
+const moment = require("moment");
+
+//For accepting a specific offer for a request
+router.put("/offer/accept/", auth, (req, res) => {
+  //This gets the offer data to the request
+  const { amount, username } = req.body.offerData;
+  const { requestID } = req.body; //request id for getting duration
+
+  //Find the duration for the order
+  //The info for order will be same as the request
+  db.query(
+    `SELECT title,description,duration from requests WHERE request_id="${requestID}"`,
+    (er, ree) => {
+      if (er) {
+        console.log(er.message);
+        res.sendStatus(400);
+      } else if (ree.length > 0) {
+        //Insert the data into orders
+        let duration = ree[0].duration;
+        let ending_date = moment(new Date(), "YYYY-MM-DD HH:mm:ss")
+          .add(duration, "days")
+          .format("YYYY-MM-DD HH:mm:ss");
+        let orderID = randtoken.uid(10);
+
+        //TODO: Differentiate CC & C here
+
+        db.query(
+          `INSERT INTO orders (order_id,client_id,description,ending_date,amount,title,freelancer_username) 
+        VALUES ("${orderID}" , "${res.locals.userID}" , "${ree[0].description}" , "${ending_date}" , "${amount}" , "${ree[0].title}" , "${username}");`,
+          (er, re) => {
+            if (er) {
+              console.log(er.message);
+              res.sendStatus(400);
+            } else if (re) {
+              //Delete Other offers
+              db.query(
+                `DELETE from requests_offers WHERE request_id="${requestID}"`,
+                (er, re) => {
+                  if (er) {
+                    console.log(er.message);
+                    res.sendStatus(400);
+                  } else if (re) {
+                    //Delete Request itself
+                    db.query(
+                      `DELETE from requests WHERE request_id="${requestID}"`,
+                      (er, re) => {
+                        if (er) {
+                          console.log(er.message);
+                          res.sendStatus(400);
+                        } else if (re) {
+                          res.sendStatus(200);
+                        }
+                      }
+                    );
+                  }
+                }
+              );
+            }
+          }
+        );
       }
     }
   );

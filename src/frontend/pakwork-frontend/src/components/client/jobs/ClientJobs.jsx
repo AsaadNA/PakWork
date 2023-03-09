@@ -258,18 +258,21 @@ const ClientJobs = () => {
                 Category:
               </p>
               <p>{j.category}</p>
-            </Card.Body>
-            <Card.Footer className="d-flex flex-row justify-space-between align-items-center">
               <p
-                className="text-success"
                 style={{
-                  cursor: "pointer",
-                  fontWeight: "",
+                  lineHeight: "10px",
+                  fontWeight: "bold",
                 }}
               >
-                View All Bids &nbsp;
-                <FaAngleDoubleRight></FaAngleDoubleRight>
+                Current Highest Bidder:
               </p>
+              {j.current_highest_bidder ? (
+                <p>{j.current_highest_bidder}</p>
+              ) : (
+                <p>No Bids have been placed</p>
+              )}
+            </Card.Body>
+            <Card.Footer className="d-flex flex-row justify-space-between align-items-center">
               <p
                 onClick={() =>
                   handleShowEditClientJobModal({
@@ -282,7 +285,7 @@ const ClientJobs = () => {
                     endDate: j.ending_date,
                   })
                 }
-                className="text-success ms-4 me-4"
+                className="text-success me-4"
                 style={{
                   cursor: "pointer",
                   fontWeight: "",

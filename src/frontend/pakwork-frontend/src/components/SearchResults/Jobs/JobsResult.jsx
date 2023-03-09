@@ -32,6 +32,7 @@ const JobsResult = () => {
   const [selectedJobDetails, setselectedJobDetails] = useState();
 
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [finishedJobs, setFinishedJobs] = useState();
 
   const fetchAllJobs = async () => {
     let response = await axios.get("/jobs/all");
@@ -88,7 +89,7 @@ const JobsResult = () => {
   //HANDLE BIDDING POST
   const onPostBid = (e) => {
     let jobID = e.target.parentNode.parentNode.id;
-    let bidAmount = prompt(`Enter Bid Amount for ${jobID}`);
+    let bidAmount = prompt(`Enter Bid Amount `);
     if (bidAmount) {
       socket.emit("bid", {
         jobID: jobID,
@@ -161,8 +162,20 @@ const JobsResult = () => {
   };
 
   //Custom Renderer For Our CountDown timer
-  const countRenderer = ({ days, hours, minutes, seconds, completed }) => {
+  const countRenderer = ({
+    props,
+    days,
+    hours,
+    minutes,
+    seconds,
+    completed,
+  }) => {
     if (completed) {
+      //Emit to the server to move the bid
+      socket.emit("move_job_to_order", {
+        jobID: props.value,
+      });
+
       return (
         <React.Fragment>
           <td>
@@ -264,9 +277,9 @@ const JobsResult = () => {
                     <th>Request</th>
                     <th>Current Bid</th>
                     <th>Category</th>
+                    <th>Project Duration</th>
                     <th>Ending Time</th>
-                    <th></th>
-                    <th></th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -312,7 +325,11 @@ const JobsResult = () => {
                             <td>
                               <p>{job.category}</p>
                             </td>
+                            <td>
+                              <p>{job.duration} Days</p>
+                            </td>
                             <Countdown
+                              value={job.job_id}
                               date={job.ending_date}
                               renderer={countRenderer}
                             />
@@ -321,9 +338,7 @@ const JobsResult = () => {
                               "username"
                             ] ? (
                               <td>
-                                <span>
-                                  <strong>Winner</strong>
-                                </span>
+                                <span style={{ color: "green" }}>⭐</span>
                               </td>
                             ) : null}
                           </tr>

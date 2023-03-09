@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import NavBar from "../navbar/NavBar";
@@ -34,8 +34,25 @@ const Request = () => {
     }
   };
 
-  const onOfferAccepted = async (requestOfferID) => {
-    alert(`Offer Accepted + ${requestOfferID}`);
+  const navigate = useNavigate();
+
+  const onOfferAccepted = async (offerData) => {
+    let result = await axios.put(
+      "/requests/offer/accept",
+      {
+        requestID,
+        offerData,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken"),
+        },
+      }
+    );
+
+    if (result.status === 200) {
+      navigate("/dashboard/orders");
+    }
   };
 
   const onOfferDelete = async (requestOfferID) => {
@@ -80,7 +97,7 @@ const Request = () => {
                     <th>Title</th>
                     <th>Freelancer</th>
                     <th>Amount</th>
-                    <th>Action</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,7 +121,7 @@ const Request = () => {
                               <Button
                                 variant="success"
                                 onClick={() => {
-                                  onOfferAccepted(r.request_offer_id);
+                                  onOfferAccepted(r);
                                 }}
                               >
                                 Accept
@@ -117,6 +134,9 @@ const Request = () => {
                                 variant="danger"
                               >
                                 Reject
+                              </Button>
+                              <Button className="ms-2" variant="info">
+                                Message
                               </Button>
                             </td>
                           </tr>

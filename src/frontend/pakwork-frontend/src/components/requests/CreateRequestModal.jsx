@@ -67,6 +67,7 @@ const CreateRequestModal = () => {
             title: title,
             description: description,
             budget: budget,
+            duration: Duration,
           },
           {
             headers: {
@@ -251,7 +252,7 @@ const CreateRequestModal = () => {
                     type="number"
                     min={1}
                     value={Duration}
-                    onChange={(e) => setDuration()}
+                    onChange={(e) => setDuration([e.target.value])}
                     required
                   ></Form.Control>
                 </Form.Group>
