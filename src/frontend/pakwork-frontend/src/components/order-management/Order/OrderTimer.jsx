@@ -1,8 +1,61 @@
-import React from "react";
-import Timer from "../../timer/Timer";
+import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
+import Countdown from "react-countdown";
 
-const OrderTimer = ({ timeStamp }) => {
+import io from "socket.io-client";
+
+const socket = io("http://localhost:4000/", {
+  transports: ["websocket"],
+});
+
+const OrderTimer = ({ orderID, orderStatus, timeStamp }) => {
+  const [isConnected, setIsConnected] = useState(socket.connected);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      setIsConnected(true);
+    });
+    socket.on("disconnect", () => {
+      setIsConnected(false);
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("bid");
+      socket.off("invalid_bid");
+      socket.off("disconnect");
+    };
+  }, [isConnected]);
+
+  //Custom Renderer For Our CountDown timer
+  const countRenderer = ({ days, hours, minutes, seconds, completed }) => {
+    //If the timer goes to 0 and the status still says
+    //Its "In Progress" Change the Status
+    if (completed && orderStatus === "In Progress" && isConnected) {
+      socket.emit("change_order_status_to_overdue", {
+        orderID,
+      });
+
+      window.location.reload();
+    }
+    return (
+      <div className="timer">
+        <div className="timer-label">
+          {days} <span>Days</span>
+        </div>
+        <div className="timer-label">
+          {hours} <span>Hours</span>
+        </div>
+        <div className="timer-label">
+          {minutes} <span>Minutes</span>
+        </div>
+        <div className="timer-label">
+          {seconds} <span>Seconds</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <Card>
       <Card.Header
@@ -23,7 +76,7 @@ const OrderTimer = ({ timeStamp }) => {
         </span>
       </Card.Header>
       <Card.Body>
-        <Timer timeStamp={timeStamp}></Timer>
+        <Countdown date={timeStamp} renderer={countRenderer} />
       </Card.Body>
     </Card>
   );

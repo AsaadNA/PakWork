@@ -1,9 +1,9 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { toSentenceCase } from "../../../Extras/HelperFunctions";
+import moment from "moment/moment";
 
-const OrderDetail = () => {
-  const orderStatus = "delivered";
+const OrderDetail = ({ orderStatus, orderID, endingDate, amount }) => {
   return (
     <Card style={{ textAlign: "left" }} className="m-2">
       <Card.Body>
@@ -11,26 +11,29 @@ const OrderDetail = () => {
         <div style={{ lineHeight: "10px" }}>
           <div className="d-flex justify-content-between">
             <p className="order-detail-heading">Order ID</p>
-            <p className="order-detail-value">PK03434234234</p>
+            <p className="order-detail-value">{orderID}</p>
           </div>
           <div className="d-flex justify-content-between">
             <p className="order-detail-heading">Delivery Date</p>
-            <p className="order-detail-value">Feb 29, 9:10 PM</p>
+            <p className="order-detail-value">
+              {" "}
+              {moment.utc(endingDate).local().format("Do MMM YYYY HH:MM")}
+            </p>
           </div>
           <div className="d-flex justify-content-between">
             <p className="order-detail-heading">Total Price</p>
-            <p className="order-detail-value">$25</p>
+            <p className="order-detail-value">${amount}</p>
           </div>
         </div>
         <hr></hr>
         <div className="d-flex justify-content-between">
           <p style={{ fontWeight: "bold", fontSize: "1.2em" }}>Order Status</p>
-          {orderStatus === "delivered" ? (
+          {orderStatus === "Delivered" ? (
             <p className="order-status-badge-delivered">
               {toSentenceCase(orderStatus)}
             </p>
-          ) : orderStatus === "completed" ? (
-            <p className="order-status-badge-completed">
+          ) : orderStatus === "Overdue" ? (
+            <p className="order-status-badge-overdue">
               {toSentenceCase(orderStatus)}
             </p>
           ) : (

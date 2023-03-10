@@ -77,67 +77,66 @@ const server = app.listen(process.env.MAIN_SERVER_PORT, (err) => {
 const io = socketio(server);
 
 io.on("connection", (socket) => {
-  console.log(`Client Connected ${socket.id}`);
+  //Changing Order Status to Overdue
+  socket.on("change_order_status_to_overdue", (data) => {
+    const { orderID } = data;
+    db.query(
+      `UPDATE orders SET order_status="Overdue" WHERE order_id="${orderID}"`,
+      (er, re) => {
+        if (er) {
+          console.log(er.message);
+        }
+      }
+    );
+  });
 
   //Move Job to Order Managment
+  //We Are Not Deleting Job Attached Files because we will
+  //use it for Order Details
   socket.on("move_job_to_order", (data) => {
     const { jobID } = data;
-
     db.query(`SELECT * FROM jobs WHERE job_id="${jobID}"`, (e, re) => {
       if (e) {
         console.log(e.message);
       } else if (re.length > 0) {
-        db.query(
-          `DELETE from jobs_attached_files WHERE job_id="${jobID}"`,
-          (e, r) => {
-            if (e) {
-              console.log(e.message);
-            } else if (r) {
-              db.query(`DELETE from bids where job_id="${jobID}"`, (e, r) => {
-                if (e) {
-                  console.log(e.message);
-                } else if (r) {
-                  db.query(
-                    `DELETE from jobs where job_id="${jobID}"`,
-                    (e, r) => {
-                      if (e) {
-                        console.log(e.message);
-                      } else if (r) {
-                        let final_ending_date = moment(
-                          re[0].ending_date,
-                          "YYYY-MM-DD HH:mm:ss"
-                        )
-                          .add(re[0].duration, "days")
-                          .format("YYYY-MM-DD HH:mm:ss");
+        db.query(`DELETE from bids where job_id="${jobID}"`, (e, r) => {
+          if (e) {
+            console.log(e.message);
+          } else if (r) {
+            db.query(`DELETE from jobs where job_id="${jobID}"`, (e, r) => {
+              if (e) {
+                console.log(e.message);
+              } else if (r) {
+                let final_ending_date = moment(
+                  re[0].ending_date,
+                  "YYYY-MM-DD HH:mm:ss"
+                )
+                  .add(re[0].duration, "days")
+                  .format("YYYY-MM-DD HH:mm:ss");
 
-                        //TODO: Differentiate CC & C here
+                //TODO: Differentiate CC & C here
 
-                        db.query(
-                          `INSERT INTO orders (order_id,client_id,description,ending_date,amount,category,title,freelancer_username) 
-                        VALUES ("${re[0].job_id}" , "${re[0].client_id}" , "${re[0].description}" , "${final_ending_date}" , "${re[0].starting_amount}" , "${re[0].category}" , "${re[0].title}" , "${re[0].current_highest_bidder}");`,
-                          (err, result) => {
-                            if (err) {
-                              console.log(err.message);
-                            } else if (result) {
-                              console.log("Inserted to orders " + re[0].job_id);
-                            }
-                          }
-                        );
-                      }
+                db.query(
+                  `INSERT INTO orders (order_id,client_id,description,ending_date,amount,category,title,freelancer_username) 
+                  VALUES ("${re[0].job_id}" , "${re[0].client_id}" , "${re[0].description}" , "${final_ending_date}" , "${re[0].starting_amount}" , "${re[0].category}" , "${re[0].title}" , "${re[0].current_highest_bidder}");`,
+                  (err, result) => {
+                    if (err) {
+                      console.log(err.message);
+                    } else if (result) {
+                      console.log("Inserted to orders " + re[0].job_id);
                     }
-                  );
-                }
-              });
-            }
+                  }
+                );
+              }
+            });
           }
-        );
+        });
       }
     });
   });
 
   //SINCE WE ARE ALSO KEEEPING TRACK OF THE STARTING_AMOUNT IN JOBS
   //WE NEED TO ALSO UPDATE IT.. IF A USER BASICALLY REFRESHES THE PAGE
-
   socket.on("bid", (data) => {
     db.query(`SELECT * from bids WHERE job_id="${data.jobID}"`, (e, r) => {
       if (e) {

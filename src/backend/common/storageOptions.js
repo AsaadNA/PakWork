@@ -39,7 +39,7 @@ const storageOptionsPDFs = multer.diskStorage({
     cb(null, "resources/files/pdfs");
   },
   file(req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, Date.now() + ".pdf");
   },
 });
 

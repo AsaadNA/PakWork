@@ -420,3 +420,19 @@ a {
     padding-right: 7em !important;
   }
 }
+
+.timer {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.timer-label {
+  font-size: 4rem;
+  margin: 0 1rem;
+  text-align: center;
+}
+
+.timer-label span {
+  font-size: 1.2rem;
+  display: block;
+}

@@ -410,7 +410,6 @@ const CreateClientJobModal = () => {
                   </Form.Label>
                   <Form.Control
                     type="number"
-                    min={1}
                     value={Duration}
                     onChange={(e) => setDuration([e.target.value])}
                     required

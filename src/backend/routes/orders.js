@@ -2,6 +2,33 @@ const router = require("express").Router();
 const db = require("../configs/database");
 const auth = require("../middlewares/auth");
 
+//TODO: Implement Company Client Here
+
+router.get("/detail/:orderID", auth, (req, res) => {
+  const { orderID } = req.params;
+  db.query(`SELECT * FROM orders WHERE order_id="${orderID}"`, (er, re) => {
+    if (er) {
+      res.sendStatus(400);
+    } else if (re.length > 0) {
+      let data = re[0];
+      db.query(
+        `SELECT * from jobs_attached_files WHERE job_id="${orderID}"`,
+        (err, result) => {
+          if (err) {
+            res.sendStatus(400);
+          } else if (result.length > 0) {
+            data.files = result;
+            res.status(200).send(data);
+          } else {
+            data.files = null;
+            res.status(200).send(data);
+          }
+        }
+      );
+    }
+  });
+});
+
 router.put("/", auth, (req, res) => {
   const { userType, userID } = res.locals;
   const { username } = req.body.tokenData;
