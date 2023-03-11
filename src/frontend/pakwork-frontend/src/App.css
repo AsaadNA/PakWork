@@ -436,3 +436,8 @@ a {
   font-size: 1.2rem;
   display: block;
 }
+
+.dropZone:hover {
+  cursor: pointer;
+  color: rgb(143, 143, 143);
+}

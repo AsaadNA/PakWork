@@ -2,7 +2,6 @@ import React from "react";
 import { Container, Row, Col, InputGroup } from "react-bootstrap";
 import NavBar from "../navbar/NavBar";
 import { ChatList, MessageList, Input, Button } from "react-chat-elements";
-import { FaPlane } from "react-icons/fa";
 
 const Chat = () => {
   return (

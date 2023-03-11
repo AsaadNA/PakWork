@@ -1,14 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Card } from "react-bootstrap";
 import Countdown from "react-countdown";
-
-import io from "socket.io-client";
-
-const socket = io("http://localhost:4000/", {
-  transports: ["websocket"],
-});
+import { SocketContext } from "../../../contexts/socket";
 
 const OrderTimer = ({ orderID, orderStatus, timeStamp }) => {
+  const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   useEffect(() => {

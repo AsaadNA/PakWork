@@ -23,6 +23,7 @@ import Request from "./components/requests/Request";
 import OrderPage from "./components/order-management/Order/OrderPage";
 import Orders from "./components/order-management/Orders";
 import Chat from "./components/chat/Chat";
+import { SocketContext, socket } from "./contexts/socket";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -32,127 +33,129 @@ function App() {
     setShowLogin(true);
   };
   return (
-    <div className="App">
-      <ShowLoginModalContext.Provider
-        value={{ showLogin, handleCloseLogin, handleShowLogin }}
-      >
-        <Router>
-          <Fragment>
-            <Routes>
-              <Route element={<AnimatedLayout></AnimatedLayout>}>
-                <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
-                  <Route path="/" exact element={<Home></Home>}></Route>
-                </Route>
-                <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
-                  <Route
-                    path="/signup/freelancer"
-                    exact
-                    element={<Freelancer></Freelancer>}
-                  ></Route>
-                </Route>
-                <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
-                  <Route
-                    path="/signup/client"
-                    exact
-                    element={<RegularClient></RegularClient>}
-                  ></Route>
-                </Route>
-                <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
-                  <Route
-                    path="/signup/organization"
-                    exact
-                    element={<OrganizationalClient></OrganizationalClient>}
-                  ></Route>
-                </Route>
-                <Route
-                  path="/dashboard/profile"
-                  exact
-                  element={<ProtectedRoute></ProtectedRoute>}
-                >
+    <SocketContext.Provider value={socket}>
+      <div className="App">
+        <ShowLoginModalContext.Provider
+          value={{ showLogin, handleCloseLogin, handleShowLogin }}
+        >
+          <Router>
+            <Fragment>
+              <Routes>
+                <Route element={<AnimatedLayout></AnimatedLayout>}>
+                  <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                    <Route path="/" exact element={<Home></Home>}></Route>
+                  </Route>
+                  <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                    <Route
+                      path="/signup/freelancer"
+                      exact
+                      element={<Freelancer></Freelancer>}
+                    ></Route>
+                  </Route>
+                  <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                    <Route
+                      path="/signup/client"
+                      exact
+                      element={<RegularClient></RegularClient>}
+                    ></Route>
+                  </Route>
+                  <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
+                    <Route
+                      path="/signup/organization"
+                      exact
+                      element={<OrganizationalClient></OrganizationalClient>}
+                    ></Route>
+                  </Route>
                   <Route
                     path="/dashboard/profile"
                     exact
-                    element={<ProfileSelector></ProfileSelector>}
-                  ></Route>
-                </Route>
-                <Route
-                  path="/dashboard/available-jobs"
-                  exact
-                  element={<ProtectedRoute></ProtectedRoute>}
-                >
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  >
+                    <Route
+                      path="/dashboard/profile"
+                      exact
+                      element={<ProfileSelector></ProfileSelector>}
+                    ></Route>
+                  </Route>
                   <Route
                     path="/dashboard/available-jobs"
                     exact
-                    element={<JobsResult></JobsResult>}
-                  ></Route>
-                </Route>
-                <Route
-                  path="/dashboard/buyer-requests"
-                  exact
-                  element={<ProtectedRoute></ProtectedRoute>}
-                >
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  >
+                    <Route
+                      path="/dashboard/available-jobs"
+                      exact
+                      element={<JobsResult></JobsResult>}
+                    ></Route>
+                  </Route>
                   <Route
                     path="/dashboard/buyer-requests"
                     exact
-                    element={<RequestsResult></RequestsResult>}
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  >
+                    <Route
+                      path="/dashboard/buyer-requests"
+                      exact
+                      element={<RequestsResult></RequestsResult>}
+                    ></Route>
+                  </Route>
+                  <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>
+                  <Route
+                    path="/request/:requestID"
+                    exact
+                    element={<Request></Request>}
                   ></Route>
-                </Route>
-                <Route path="/gig/:id" exact element={<Gig></Gig>}></Route>
-                <Route
-                  path="/request/:requestID"
-                  exact
-                  element={<Request></Request>}
-                ></Route>
-                <Route
-                  path="/gigs/search/:searchText"
-                  exact
-                  element={<GigsResult></GigsResult>}
-                ></Route>
-                <Route
-                  path="/gigs/search/:searchText/filter"
-                  exact
-                  element={<GigsResult></GigsResult>}
-                ></Route>
-                <Route
-                  path="/dashboard/orders"
-                  exact
-                  element={<ProtectedRoute></ProtectedRoute>}
-                >
+                  <Route
+                    path="/gigs/search/:searchText"
+                    exact
+                    element={<GigsResult></GigsResult>}
+                  ></Route>
+                  <Route
+                    path="/gigs/search/:searchText/filter"
+                    exact
+                    element={<GigsResult></GigsResult>}
+                  ></Route>
                   <Route
                     path="/dashboard/orders"
                     exact
-                    element={<Orders></Orders>}
-                  ></Route>
-                </Route>
-                <Route
-                  path="/dashboard/orders/:orderID"
-                  exact
-                  element={<ProtectedRoute></ProtectedRoute>}
-                >
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  >
+                    <Route
+                      path="/dashboard/orders"
+                      exact
+                      element={<Orders></Orders>}
+                    ></Route>
+                  </Route>
                   <Route
                     path="/dashboard/orders/:orderID"
                     exact
-                    element={<OrderPage></OrderPage>}
-                  ></Route>
-                </Route>
-                <Route
-                  path="/dashboard/inbox"
-                  exact
-                  element={<ProtectedRoute></ProtectedRoute>}
-                >
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  >
+                    <Route
+                      path="/dashboard/orders/:orderID"
+                      exact
+                      element={<OrderPage></OrderPage>}
+                    ></Route>
+                  </Route>
                   <Route
                     path="/dashboard/inbox"
                     exact
-                    element={<Chat></Chat>}
-                  ></Route>
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  >
+                    <Route
+                      path="/dashboard/inbox"
+                      exact
+                      element={<Chat></Chat>}
+                    ></Route>
+                  </Route>
+                  <Route path="*" element={<NotFound404></NotFound404>}></Route>
                 </Route>
-                <Route path="*" element={<NotFound404></NotFound404>}></Route>
-              </Route>
-            </Routes>
-          </Fragment>
-        </Router>
-      </ShowLoginModalContext.Provider>
-    </div>
+              </Routes>
+            </Fragment>
+          </Router>
+        </ShowLoginModalContext.Provider>
+      </div>
+    </SocketContext.Provider>
   );
 }
 

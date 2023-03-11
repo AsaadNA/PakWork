@@ -1,6 +1,12 @@
 const router = require("express").Router();
+const {
+  storageOptionOrderFiles,
+  zipFilter,
+} = require("../common/storageOptions");
 const db = require("../configs/database");
 const auth = require("../middlewares/auth");
+const multer = require("multer");
+const randtoken = require("rand-token");
 
 //TODO: Implement Company Client Here
 
@@ -52,5 +58,55 @@ router.put("/", auth, (req, res) => {
     }
   });
 });
+
+//Retrieve Delievery Order File
+router.get("/deliver/:orderID", auth, (req, res) => {
+  const { orderID } = req.params;
+  db.query(
+    `SELECT file FROM order_files WHERE order_id="${orderID}"`,
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+        res.sendStatus(400);
+      } else if (r.length > 0) {
+        res.send(r);
+      }
+    }
+  );
+});
+
+router.post(
+  "/deliver/",
+  auth,
+  multer({ storage: storageOptionOrderFiles, fileFilter: zipFilter }).single(
+    "zip"
+  ),
+  (req, res) => {
+    const { orderID } = req.body;
+    if (req.file) {
+      let fileID = randtoken.uid(10);
+      db.query(
+        `INSERT INTO order_files (file_id,order_id,file) VALUES ("${fileID}" , "${orderID}" , "/zip/${req.file.filename}")`,
+        (er, re) => {
+          if (er) {
+            console.log(er.message);
+            res.sendStatus(400);
+          } else if (re) {
+            db.query(
+              `UPDATE orders SET order_status="Delivered" WHERE order_id="${orderID}"`,
+              (e, r) => {
+                if (e) {
+                  console.log(e.message);
+                } else if (r) {
+                  res.sendStatus(200);
+                }
+              }
+            );
+          }
+        }
+      );
+    }
+  }
+);
 
 module.exports = router;

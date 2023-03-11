@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import NavBar from "../../navbar/NavBar";
 import OrderDelivery from "./OrderDelivery";
 import OrderDetail from "./OrderDetail";
@@ -14,6 +14,29 @@ const OrderPage = () => {
 
   const [userType, setUserType] = useState("");
   const [orderDetails, setOrderDetails] = useState({});
+  const [deliveryLink, setDeliveryLink] = useState("");
+  const [isDelivered, setIsDelivered] = useState(false);
+
+  const fetchDeliveryFiles = async () => {
+    let result = await axios.get(`/orders/deliver/${orderID}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("userToken"),
+      },
+    });
+
+    if (result.status === 200) {
+      setDeliveryLink(result.data);
+      setIsDelivered(true);
+    }
+  };
+
+  useEffect(() => {
+    if (orderDetails.order_id) {
+      if (orderDetails.order_status === "Delivered") {
+        fetchDeliveryFiles();
+      }
+    }
+  }, [orderDetails.order_id]);
 
   const getOrderDetails = async () => {
     let result = await axios.get(`/orders/detail/${orderID}`, {
@@ -48,6 +71,8 @@ const OrderPage = () => {
           </Col>
           <Col md={4}>
             <OrderDetail
+              isDelivered={isDelivered}
+              deliveryLink={deliveryLink}
               endingDate={orderDetails.ending_date}
               orderID={orderDetails.order_id}
               amount={orderDetails.amount}
@@ -63,9 +88,15 @@ const OrderPage = () => {
               orderDescription={orderDetails.description}
             ></OrderRequirement>
             <br></br>
-            {userType === "freelancer" ? <OrderDelivery></OrderDelivery> : null}
+            {userType === "freelancer" && orderDetails.order_id ? (
+              <OrderDelivery
+                orderID={orderDetails.order_id}
+                isDelivered={isDelivered}
+              ></OrderDelivery>
+            ) : null}
             <br></br>
           </Col>
+
           <Col md={4}>
             <OrderHelp></OrderHelp>
           </Col>

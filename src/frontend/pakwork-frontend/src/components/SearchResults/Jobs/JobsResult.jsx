@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import NavBar from "../../navbar/NavBar";
 import {
   Container,
@@ -17,12 +17,7 @@ import { JobDetailModalContext } from "../../../contexts/ModalContext";
 import axios from "../../../Api/Api";
 import moment from "moment/moment";
 import Countdown from "react-countdown";
-
-import io from "socket.io-client";
-
-const socket = io("http://localhost:4000/", {
-  transports: ["websocket"],
-});
+import { SocketContext } from "../../../contexts/socket";
 
 const JobsResult = () => {
   const [jobs, setjobs] = useState([]);
@@ -31,8 +26,8 @@ const JobsResult = () => {
   const [showJobDetailModal, setshowJobDetailModal] = useState(false);
   const [selectedJobDetails, setselectedJobDetails] = useState();
 
+  const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
-  const [finishedJobs, setFinishedJobs] = useState();
 
   const fetchAllJobs = async () => {
     let response = await axios.get("/jobs/all");

@@ -1,9 +1,16 @@
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, Button } from "react-bootstrap";
 import { toSentenceCase } from "../../../Extras/HelperFunctions";
 import moment from "moment/moment";
 
-const OrderDetail = ({ orderStatus, orderID, endingDate, amount }) => {
+const OrderDetail = ({
+  isDelivered,
+  deliveryLink,
+  orderStatus,
+  orderID,
+  endingDate,
+  amount,
+}) => {
   return (
     <Card style={{ textAlign: "left" }} className="m-2">
       <Card.Body>
@@ -43,6 +50,18 @@ const OrderDetail = ({ orderStatus, orderID, endingDate, amount }) => {
           )}
         </div>
       </Card.Body>
+      {isDelivered ? (
+        <Button
+          onClick={() => {
+            window.location.replace(
+              `http://localhost:4000/${deliveryLink[0]["file"]}`
+            );
+          }}
+          variant="success"
+        >
+          Download File
+        </Button>
+      ) : null}
     </Card>
   );
 };

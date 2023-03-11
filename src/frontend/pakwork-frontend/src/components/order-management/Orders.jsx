@@ -51,7 +51,8 @@ const Orders = () => {
                 <th>Order Status</th>
                 <th>Category</th>
                 <th>Due Date</th>
-                <th>Actions</th>
+                <th></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -91,7 +92,9 @@ const Orders = () => {
                       )}
                     </td>
                     {!order.category ? (
-                      <td>Request Job</td>
+                      <td>
+                        <strong>Buyer Request</strong>
+                      </td>
                     ) : (
                       <td>{order.category}</td>
                     )}

@@ -16,6 +16,23 @@ const pdfFilter = (req, file, cb) => {
   }
 };
 
+const zipFilter = (req, file, cb) => {
+  if (file.mimetype.startsWith("application/zip")) {
+    cb(null, true);
+  } else {
+    cb("Please upload only zip files.", false);
+  }
+};
+
+const storageOptionOrderFiles = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, "resources/zip/");
+  },
+  filename(req, file, cb) {
+    cb(null, `${req.res.locals["userID"]}-${file.originalname}`);
+  },
+});
+
 const storageOptionsVerification = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, "resources/images/verifications");
@@ -67,6 +84,8 @@ module.exports = {
   storageOptionsProfilePic,
   storageOptionsGigs,
   storageOptionsPDFs,
+  storageOptionOrderFiles,
   pdfFilter,
   imageFilter,
+  zipFilter,
 };

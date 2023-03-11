@@ -76,7 +76,9 @@ const server = app.listen(process.env.MAIN_SERVER_PORT, (err) => {
 
 const io = socketio(server);
 
-io.on("connection", (socket) => {
+io.on("connect", (socket) => {
+  console.log("Client ID " + socket.id + " Connected");
+
   //Changing Order Status to Overdue
   socket.on("change_order_status_to_overdue", (data) => {
     const { orderID } = data;

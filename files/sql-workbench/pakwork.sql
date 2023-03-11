@@ -22,8 +22,8 @@ select c.company_name,c.country,p.industry_name,p.year_experience,p.bio,p.linked
 select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id,g.freelancer_id, g.starting_rate, group_concat(gi.image) as images from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id where g.freelancer_id= "eedIJfECuHmzbsT7DHAFCdJEZAMEoowtiFqqXRTJWnHz8" group by gi.gig_id;
 
 /* Get All Orders For a Specific Client */
-select o.title , o.freelancer_username , p.profile_picture , o.amount , o.order_status, o.ending_date from orders o inner join freelancer f inner join profile p on f.username = o.freelancer_username WHERE o.client_id="j9gh7GlB5d6BDxbHjbJD1T4jVstt6lxVnuWSxBVZnCfKk" and f.freelancer_id = p.profile_id;
+select o.title , o.freelancer_username , p.profile_picture , o.amount , o.order_status, o.ending_date , orf.file from orders o inner join freelancer f inner join profile p on f.username = o.freelancer_username inner join order_files orf WHERE (o.client_id="j9gh7GlB5d6BDxbHjbJD1T4jVstt6lxVnuWSxBVZnCfKk" and f.freelancer_id = p.profile_id) or orf.order_id = o.order_id;
 
 /* Get All Order for Freelancer Client */
 /* Maybe Run Another query for Company Client */
-select o.title , c.username , p.profile_picture , o.amount , o.order_status, o.ending_date from orders o inner join client c inner join profile p on c.client_id = o.client_id WHERE o.freelancer_username="NomanAbbasi" and c.client_id = p.profile_id;
+select o.title , c.username , p.profile_picture , o.amount , o.order_status, o.ending_date , ord.file from orders o inner join client c inner join order_files ord inner join profile p on c.client_id = o.client_id WHERE o.freelancer_username="AsaadNA" and c.client_id = p.profile_id;
