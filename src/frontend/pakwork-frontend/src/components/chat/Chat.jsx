@@ -18,6 +18,7 @@ const Chat = () => {
   const [current, setCurrent] = useState(""); //current selected from chatlist
   const [message, setMessage] = useState(""); //typing message
 
+  //This useEffect handles socket stuff
   useEffect(() => {
     //Recieving the private message
     socket.on("private_message", (data) => {
@@ -57,21 +58,37 @@ const Chat = () => {
     setMessageList([]);
   };
 
-  const sendMessage = () => {
-    socket.emit("private_message", {
-      to: current,
-      message: message,
-    });
-
-    setMessageList((prev) => [
-      ...prev,
+  //Sends the message and updates the relevant stuff
+  const sendMessage = async () => {
+    let result = await axios.post(
+      "/chat/",
       {
-        position: "right",
-        type: "text",
-        title: "You",
-        text: message,
+        to: current,
+        message: message,
       },
-    ]);
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken"),
+        },
+      }
+    );
+
+    if (result.status === 200) {
+      console.log("OK");
+      setMessageList((prev) => [
+        ...prev,
+        {
+          position: "right",
+          type: "text",
+          title: "You",
+          text: message,
+        },
+      ]);
+      socket.emit("private_message", {
+        to: current,
+        message: message,
+      });
+    }
   };
 
   const findUser = async (user) => {

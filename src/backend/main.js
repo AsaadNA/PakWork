@@ -10,6 +10,7 @@ const socketio = require("socket.io");
 const randtoken = require("rand-token");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
+const auth = require("./middlewares/auth");
 
 const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
@@ -81,6 +82,38 @@ const io = socketio(server);
 
 var people = {}; //list of all users connected
 
+//This is implemented here because we need some
+//stuff for socket etc
+//When ever a message is posted it goes through the database
+//When data is stored in the db then only the emits take place
+app.post("/api/v1/chat/", auth, (req, res) => {
+  const { message, to } = req.body;
+  const { username } = res.locals;
+  let message_id = randtoken.uid(10);
+  let dateNow = moment(new Date(), "YYYY-MM-DD HH:mm:ss").format(
+    "YYYY-MM-DD HH:mm:ss"
+  );
+  db.query(
+    `INSERT INTO messages (message_id,sender,reciever,timestamp,message) VALUES ("${message_id}" , "${username}" , "${to}" , "${dateNow}" , "${message}");`,
+    (er, re) => {
+      if (er) {
+        console.log(er.message);
+      } else if (re) {
+        if (people[to] === undefined) {
+          res.sendStatus(200); //if the user is not connected to the socket pool it will just sendback a 200
+        } else {
+          people[to].emit("private_message", {
+            username,
+            message,
+          });
+
+          res.sendStatus(200);
+        }
+      }
+    }
+  );
+});
+
 io.use((socket, next) => {
   let { token } = socket.handshake.query;
   if (token) {
@@ -108,18 +141,6 @@ io.use((socket, next) => {
 
   //Add User to the list of connected people
   people[username] = socket;
-
-  //Private Message
-  socket.on("private_message", (data) => {
-    const { to, message } = data;
-
-    if (people.hasOwnProperty(to)) {
-      people[to].emit("private_message", {
-        username,
-        message,
-      });
-    }
-  });
 
   //Changing Order Status to Overdue
   socket.on("change_order_status_to_overdue", (data) => {

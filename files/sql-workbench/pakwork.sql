@@ -27,3 +27,15 @@ select o.title , o.freelancer_username , p.profile_picture , o.amount , o.order_
 /* Get All Order for Freelancer Client */
 /* Maybe Run Another query for Company Client */
 select o.title , c.username , p.profile_picture , o.amount , o.order_status, o.ending_date , ord.file from orders o inner join client c inner join order_files ord inner join profile p on c.client_id = o.client_id WHERE o.freelancer_username="AsaadNA" and c.client_id = p.profile_id;
+
+/* Retrieving chat list for individaul user **/
+select sender as users from messages union select reciever from messages where sender="AsaadNA" or reciever="AsaadNA";
+
+/* Retrive latest message */
+select * from messages where (sender="AliBut" or reciever="AliBut") and (sender="NomanAbbasi" or reciever="NomanAbbasi") ORDER BY timestamp desc limit 1;
+
+/* Retrieve count of unread */
+select count(*) from messages where ((sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA")) and read_status=0 ORDER BY timestamp desc limit 1;
+
+/* Retrieving messages for 2 people by chat time */
+select * from messages where (sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA") ORDER BY timestamp asc;

@@ -13,6 +13,7 @@ const verifyToken = (req, res, next) => {
         decoded.data.client_id ||
         decoded.data.company_client_id ||
         decoded.data.admin_id;
+      res.locals.username = decoded.data.username;
     } catch (err) {
       return res.status(401).send("Invalid token");
     }
