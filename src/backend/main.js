@@ -103,6 +103,7 @@ app.post("/api/v1/chat/", auth, (req, res) => {
           res.sendStatus(200); //if the user is not connected to the socket pool it will just sendback a 200
         } else {
           people[to].emit("private_message", {
+            to,
             username,
             message,
           });

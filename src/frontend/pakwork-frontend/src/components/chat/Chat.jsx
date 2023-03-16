@@ -18,11 +18,76 @@ const Chat = () => {
   const [current, setCurrent] = useState(""); //current selected from chatlist
   const [message, setMessage] = useState(""); //typing message
 
+  const fetchChatList = async () => {
+    const result = await axios.get("/chat/userlist", {
+      headers: {
+        "x-access-token": localStorage.getItem("userToken"),
+      },
+    });
+    if (result.status === 200) {
+      const list = result.data.map((u) => {
+        return {
+          avatar: DefaultProfile,
+          title: u["user"],
+          subtitle: u["latest_message"],
+          date: u["timestamp"],
+          unread: u["unread"],
+        };
+      });
+
+      setUserList(list);
+    }
+  };
+
+  //This will fetch the message list for the current selected user
+  const fetchMessageList = async () => {
+    const result = await axios.get(`/chat/messagelist/${current}`, {
+      headers: {
+        "x-access-token": localStorage.getItem("userToken"),
+      },
+    });
+
+    if (result.status === 200) {
+      let loggedinuser = JSON.parse(localStorage.getItem("user"))["username"];
+      const fetched = result.data.map((m) => {
+        return {
+          position: m["sender"] === loggedinuser ? "right" : "left",
+          type: "text",
+          title: m["sender"] === loggedinuser ? "You" : m["sender"],
+          text: m["message"],
+        };
+      });
+      setMessageList(fetched);
+    }
+  };
+
+  //Fetch usrlist on load
+  useEffect(() => {
+    fetchChatList();
+  }, []);
+
+  //Whenever new user selected fetch the message list
+  useEffect(() => {
+    if (current !== "") {
+      //This basically removes the unread count if the window is open
+      userList.map((u) => {
+        if (u["title"] === current) {
+          u["unread"] = 0;
+        }
+      });
+
+      //Fetches the messsagelist
+      fetchMessageList();
+    }
+  }, [current, userList]);
+
   //This useEffect handles socket stuff
   useEffect(() => {
     //Recieving the private message
     socket.on("private_message", (data) => {
       const { username, message } = data;
+      fetchChatList(); //fetch fresh chat list each time new private message arrives
+      //Update the current selected user messages box
       if (current === username) {
         setMessageList((prev) => [
           ...prev,
@@ -49,13 +114,24 @@ const Chat = () => {
       socket.off("disconnect");
       socket.off("private_message");
     };
-  }, [current, isConnected]);
+  }, [current, isConnected, userList]);
 
   //Handles chat list selection
   const handleSelection = (user) => {
-    setCurrent(user);
-    setIsSelected(true);
-    setMessageList([]);
+    //When the user basically opens / selects the user we reset the unread count to 0
+    let uul = userList.map((u) => {
+      if (u["title"] === user) {
+        u["unread"] = 0;
+      }
+      return u;
+    });
+
+    setUserList(uul);
+
+    if (user !== current) {
+      setCurrent(user);
+      setIsSelected(true);
+    }
   };
 
   //Sends the message and updates the relevant stuff
@@ -73,8 +149,29 @@ const Chat = () => {
       }
     );
 
+    //The message was successfully saved in the database
     if (result.status === 200) {
-      console.log("OK");
+      //
+      /*
+      This will update the userList
+      If i am sending the message
+      
+        1. The timestamp will be updated
+        2. The latest message will be updated
+
+        The unread count will not be updated since i am the one
+           sending the message
+      */
+
+      let updatedUserList = userList.map((u) => {
+        if (u.title === current) {
+          u.subtitle = message;
+          u.date = Date.now();
+        }
+        return u;
+      });
+
+      //This updates the Message List
       setMessageList((prev) => [
         ...prev,
         {
@@ -91,6 +188,7 @@ const Chat = () => {
     }
   };
 
+  //Find user to add to the chatlist
   const findUser = async (user) => {
     const result = await axios.get(`/chat/find/${user}`);
     if (result.status === 200) {
@@ -103,9 +201,9 @@ const Chat = () => {
           {
             avatar: DefaultProfile,
             title: result.data.data["username"],
-            subtitle: "Hello World",
-            date: new Date(),
-            unread: 2,
+            subtitle: "",
+            date: null,
+            unread: 0,
           },
         ]);
     }
@@ -199,3 +297,33 @@ const Chat = () => {
 };
 
 export default Chat;
+
+/*
+/*  
+      //When Private Message is recived
+      //This will update the userList
+      let uul = userList.map((u) => {
+        if (u["title"] === username) {
+          u["subtitle"] = message;
+          u["timestamp"] = new Date();
+          if (current !== username) {
+            u["unread"] = u["unread"] + 1;
+          }
+        }
+        return u;
+      });
+
+      setUserList(uul);
+
+    
+      //If we recieve a message but the userList is not retrieved
+      //We retrieve the user list
+      if (userList.length <= 0) {
+        fetchChatList();
+      }
+
+      //If we have 1 in chatlist but we have another new message
+      //But that user is not in our chat list then we fetch our chatlist again
+      if (userList.find(username)) {
+        fetchChatList();
+      } */

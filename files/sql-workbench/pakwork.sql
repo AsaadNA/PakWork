@@ -32,10 +32,12 @@ select o.title , c.username , p.profile_picture , o.amount , o.order_status, o.e
 select sender as users from messages union select reciever from messages where sender="AsaadNA" or reciever="AsaadNA";
 
 /* Retrive latest message */
-select * from messages where (sender="AliBut" or reciever="AliBut") and (sender="NomanAbbasi" or reciever="NomanAbbasi") ORDER BY timestamp desc limit 1;
+select * from messages where (sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA") ORDER BY timestamp desc limit 1;
 
-/* Retrieve count of unread */
-select count(*) from messages where ((sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA")) and read_status=0 ORDER BY timestamp desc limit 1;
+/* Retrieve count of unread differentiating the send and reciver count*/
+select count(*) as unread from messages where ((sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA")) and reciever != "AliBut" and read_status=0;
 
 /* Retrieving messages for 2 people by chat time */
-select * from messages where (sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA") ORDER BY timestamp asc;
+select * from messages where (sender="AsaadNA" or reciever="AsaadNA") and (sender="AliBut" or reciever="AliBut") ORDER BY timestamp asc;
+select * from messages where ((sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA")) and reciever != "AliBut" and read_status=0;
+
