@@ -9,6 +9,7 @@ const db = require("./configs/database");
 const socketio = require("socket.io");
 const randtoken = require("rand-token");
 const moment = require("moment");
+const jwt = require("jsonwebtoken");
 
 const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
@@ -19,6 +20,7 @@ const searchRoutes = require("./routes/search");
 const jobsRoutes = require("./routes/jobs");
 const requestRoutes = require("./routes/requests");
 const orderRoutes = require("./routes/orders");
+const chatRoutes = require("./routes/chat");
 
 dotenv.config();
 
@@ -54,6 +56,7 @@ app.use("/api/v1/search/", searchRoutes);
 app.use("/api/v1/jobs/", jobsRoutes);
 app.use("/api/v1/requests/", requestRoutes);
 app.use("/api/v1/orders/", orderRoutes);
+app.use("/api/v1/chat/", chatRoutes);
 
 app.get("*", (req, res) => {
   res.send("Wrong endpoint buddy");
@@ -76,8 +79,47 @@ const server = app.listen(process.env.MAIN_SERVER_PORT, (err) => {
 
 const io = socketio(server);
 
-io.on("connect", (socket) => {
-  console.log("Client ID " + socket.id + " Connected");
+var people = {}; //list of all users connected
+
+io.use((socket, next) => {
+  let { token } = socket.handshake.query;
+  if (token) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, (err, d) => {
+      if (err) return next(new Error("Authentication error"));
+      socket.decoded = d;
+      next();
+    });
+  } else {
+    next(new Error("Authentication error"));
+  }
+}).on("connect", (socket) => {
+  //
+  //TODO: IMPLEMENT CC HERE
+  //
+
+  const { username } = socket.decoded.data;
+
+  //Logs Connect & Disconnect of the client
+  console.log(`${username} : ${socket.id} Connected !`);
+  socket.on("disconnect", function () {
+    delete people[username];
+    console.log(`${username} : ${socket.id} Disconnected !`);
+  });
+
+  //Add User to the list of connected people
+  people[username] = socket;
+
+  //Private Message
+  socket.on("private_message", (data) => {
+    const { to, message } = data;
+
+    if (people.hasOwnProperty(to)) {
+      people[to].emit("private_message", {
+        username,
+        message,
+      });
+    }
+  });
 
   //Changing Order Status to Overdue
   socket.on("change_order_status_to_overdue", (data) => {

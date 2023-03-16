@@ -10,18 +10,23 @@ import { Link as RouterLink, NavLink, useNavigate } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
-import { FaFacebookMessenger, FaInbox, FaSearch, FaUser } from "react-icons/fa";
-import { Form, InputGroup } from "react-bootstrap";
+import { FaInbox, FaUser } from "react-icons/fa";
 import SearchBar from "../search-bar/SearchBar";
+
+import { SocketContext } from "../../contexts/socket";
 
 const NavBar = ({ isHome, isGigResult }) => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
 
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+
+  const socket = useContext(SocketContext);
+
   const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("userToken");
+    socket.disconnect(); //NEED TO FORCE DISCONNECT SOCKETS HERE
     navigate("/");
   };
   return (

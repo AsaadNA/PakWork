@@ -26,21 +26,21 @@ const LoginModal = () => {
   const [AlertType, setAlertType] = useState("");
 
   const navigate = useNavigate();
-  
+
   const handleForgotPassword = async () => {
-    if(email === "" || email === null) {
+    if (email === "" || email === null) {
       setshowAlert(true);
-      setAlertMessage("Input Email to send a new password")
+      setAlertMessage("Input Email to send a new password");
       setAlertType("danger");
     } else {
       setloading(true);
       try {
-        let response = await axios.post("/auth/forgot" , {email});
+        let response = await axios.post("/auth/forgot", { email });
         setshowAlert(true);
         setAlertMessage(response.data.message);
         setAlertType("success");
         setloading(false);
-      } catch(error) {
+      } catch (error) {
         console.log(error);
         setshowAlert(true);
         setAlertMessage(error.response.data.error || error.message);
@@ -48,7 +48,7 @@ const LoginModal = () => {
         setloading(false);
       }
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +70,7 @@ const LoginModal = () => {
       let token = response.headers["x-access-token"];
       localStorage.setItem("userToken", token);
       localStorage.setItem("user", JSON.stringify(decodeToken(token).data));
-      navigate("/dashboard/profile");
+      window.location.replace("/dashboard/profile");
       setloading(false); //loading false for button
     } catch (error) {
       console.log(error);

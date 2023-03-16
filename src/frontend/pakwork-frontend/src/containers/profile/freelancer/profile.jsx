@@ -78,7 +78,7 @@ const FreelancerProfile = () => {
               ShowEditGigModal,
               handleShowEditGigModal,
               handleCloseEditGigModal,
-              EditGigInfo
+              EditGigInfo,
               //EditGigID,
             }}
           >

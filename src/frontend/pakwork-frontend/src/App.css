@@ -441,3 +441,8 @@ a {
   cursor: pointer;
   color: rgb(143, 143, 143);
 }
+
+.chat-list-border {
+  border: 2px solid rgb(201, 201, 201);
+  border-radius: 10px;
+}
