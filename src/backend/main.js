@@ -109,6 +109,7 @@ app.post("/api/v1/chat/", auth, (req, res) => {
           res.sendStatus(200); //if the user is not connected to the socket pool it will just sendback a 200
         } else {
           people[to].emit("private_message", {
+            message_id: message_id,
             to,
             username,
             message,
@@ -148,6 +149,18 @@ io.use((socket, next) => {
 
   //Add User to the list of connected people
   people[username] = socket;
+
+  socket.on("window_open_change_reciever_status", (data) => {
+    const { sender, reciever, message_id } = data;
+    db.query(
+      `UPDATE messages SET reciever_status=1 WHERE sender="${sender}" and reciever="${reciever}" and message_id="${message_id}"`,
+      (e, r) => {
+        if (e) {
+          console.log(e.message);
+        }
+      }
+    );
+  });
 
   //Changing Order Status to Overdue
   socket.on("change_order_status_to_overdue", (data) => {

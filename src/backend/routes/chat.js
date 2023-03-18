@@ -15,7 +15,7 @@ router.get("/messagelist/:to", auth, (req, res) => {
         res.sendStatus(400);
       } else if (re.length > 0) {
         db.query(
-          `UPDATE messages set read_status=1 where ((sender="${to}" or reciever="${to}") and (sender="${username}" or reciever="${username}")) and reciever != "${to}" and read_status=0;`,
+          `UPDATE messages set reciever_status=1 where ((sender="${to}" or reciever="${to}") and (sender="${username}" or reciever="${username}")) and reciever != "${to}" and reciever_status=0;`,
           (e, r) => {
             if (e) {
               console.log(e.message);
@@ -57,11 +57,8 @@ router.get("/userlist", auth, (req, res) => {
                   u["latest_message"] = r[0].message;
                   u["timestamp"] = r[0].timestamp;
                   //This will return read count differentiatiing the sender and the reciever
-                  console.log(
-                    `select count(*) as unread from messages where ((sender="${username}" or reciever="${username}") and (sender="${u["user"]}" or reciever="${u["user"]}")) and reciever = "${username}" and read_status=0;`
-                  );
                   db.query(
-                    `select count(*) as unread from messages where ((sender="${username}" or reciever="${username}") and (sender="${u["user"]}" or reciever="${u["user"]}")) and reciever = "${username}" and read_status=0;`,
+                    `select count(*) as unread from messages where ((sender="${username}" or reciever="${username}") and (sender="${u["user"]}" or reciever="${u["user"]}")) and reciever = "${username}" and reciever_status=0;`,
                     (e, r) => {
                       if (r.length > 0) {
                         u["unread"] = r[0].unread;

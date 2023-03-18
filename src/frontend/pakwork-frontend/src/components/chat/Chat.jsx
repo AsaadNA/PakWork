@@ -144,10 +144,15 @@ const Chat = () => {
   useEffect(() => {
     //Recieving the private message
     socket.on("private_message", (data) => {
-      const { username, message } = data;
+      const { username, message, message_id } = data;
       fetchChatList(); //fetch fresh chat list each time new private message arrives
       //Update the current selected user messages box
       if (current === username) {
+        socket.emit("window_open_change_reciever_status", {
+          message_id,
+          sender: username,
+          reciever: JSON.parse(localStorage.getItem("user"))["username"],
+        });
         setMessageList((prev) => [
           ...prev,
           {
@@ -262,7 +267,7 @@ const Chat = () => {
           {
             avatar: DefaultProfile,
             title: result.data.data["username"],
-            subtitle: "",
+            subtitle: "Start chat by sending message",
             date: null,
             unread: 0,
           },
