@@ -150,6 +150,9 @@ io.use((socket, next) => {
   //Add User to the list of connected people
   people[username] = socket;
 
+  //When the window is open then we need change the recieve status
+  //Since it's won't update until a refresh which might lead to errors
+  //if we refresh our window/app
   socket.on("window_open_change_reciever_status", (data) => {
     const { sender, reciever, message_id } = data;
     db.query(

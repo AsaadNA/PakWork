@@ -376,10 +376,10 @@ const Chat = () => {
               )}
             </React.Fragment>
           ) : (
-            <h6 className="mt-5 pt-5" style={{ color: "#545454" }}>
+            <h2 className="mt-5 pt-5" style={{ color: "#545454" }}>
               {" "}
-              Kindly select someone from chatlist to start chatting...
-            </h6>
+              Enter Fancy Design like whatsapp here
+            </h2>
           )}
         </Col>
       </Row>
