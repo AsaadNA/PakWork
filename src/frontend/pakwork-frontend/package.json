@@ -29,6 +29,7 @@
     "react-dropzone": "^14.2.3",
     "react-icons": "^4.6.0",
     "react-jwt": "^1.1.7",
+    "react-loader-spinner": "^5.3.4",
     "react-paginate": "^8.1.4",
     "react-phone-input-2": "^2.15.1",
     "react-responsive-carousel": "^3.2.23",

@@ -39,5 +39,5 @@ select count(*) as unread from messages where ((sender="AliBut" or reciever="Ali
 
 /* Retrieving messages for 2 people by chat time */
 select * from messages where (sender="AsaadNA" or reciever="AsaadNA") and (sender="AliBut" or reciever="AliBut") ORDER BY timestamp asc;
-select * from messages where ((sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA")) and reciever != "AliBut" and read_status=0;
+UPDATE  messages set unread=1 where ((sender="AliBut" or reciever="AliBut") and (sender="AsaadNA" or reciever="AsaadNA")) and reciever != "AsaadNA" and read_status=0;
 

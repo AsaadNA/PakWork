@@ -23,6 +23,12 @@ const requestRoutes = require("./routes/requests");
 const orderRoutes = require("./routes/orders");
 const chatRoutes = require("./routes/chat");
 
+/*
+  One thing to note is that u cannot have
+  multiple instances of same user in different 
+  browser since under on username one socket id is stored
+*/
+
 dotenv.config();
 
 const app = express();

@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `pakwork` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `pakwork`;
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
 -- Host: localhost    Database: pakwork
@@ -45,7 +47,6 @@ CREATE TABLE `bids` (
   `bid_id` varchar(100) NOT NULL,
   `job_id` varchar(45) DEFAULT NULL,
   `amount` int DEFAULT NULL,
-  `accepted` tinyint(1) DEFAULT '0',
   `username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`bid_id`),
   UNIQUE KEY `bid_id_UNIQUE` (`bid_id`),
@@ -194,13 +195,14 @@ CREATE TABLE `jobs` (
   `job_id` varchar(45) NOT NULL,
   `client_id` varchar(45) DEFAULT NULL,
   `company_client_id` varchar(45) DEFAULT NULL,
-  `title` varchar(45) NOT NULL,
+  `title` varchar(100) NOT NULL,
   `description` varchar(500) DEFAULT NULL,
   `category` varchar(45) DEFAULT NULL,
   `starting_date` datetime DEFAULT NULL,
   `ending_date` datetime DEFAULT NULL,
   `starting_amount` int DEFAULT NULL,
   `current_highest_bidder` varchar(45) DEFAULT NULL,
+  `duration` int DEFAULT NULL,
   PRIMARY KEY (`job_id`),
   UNIQUE KEY `title_UNIQUE` (`title`),
   KEY `jobs_client_id_idx` (`client_id`),
@@ -221,9 +223,26 @@ CREATE TABLE `jobs_attached_files` (
   `attached_files_id` varchar(45) NOT NULL,
   `job_id` varchar(45) DEFAULT NULL,
   `file` varchar(300) DEFAULT NULL,
-  PRIMARY KEY (`attached_files_id`),
-  KEY `jobs_attached_files_job_id_idx` (`job_id`),
-  CONSTRAINT `jobs_attached_files_job_id` FOREIGN KEY (`job_id`) REFERENCES `jobs` (`job_id`)
+  PRIMARY KEY (`attached_files_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `messages`
+--
+
+DROP TABLE IF EXISTS `messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `messages` (
+  `message_id` varchar(40) NOT NULL,
+  `sender` varchar(50) DEFAULT NULL,
+  `reciever` varchar(50) DEFAULT NULL,
+  `timestamp` datetime DEFAULT NULL,
+  `message` varchar(500) DEFAULT NULL,
+  `read_status` tinyint(1) DEFAULT '0',
+  PRIMARY KEY (`message_id`),
+  UNIQUE KEY `message_id_UNIQUE` (`message_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -237,7 +256,7 @@ DROP TABLE IF EXISTS `order_files`;
 CREATE TABLE `order_files` (
   `file_id` varchar(45) NOT NULL,
   `order_id` varchar(45) DEFAULT NULL,
-  `file` varchar(300) DEFAULT NULL,
+  `file` varchar(600) DEFAULT NULL,
   PRIMARY KEY (`file_id`),
   KEY `order_files_order_id_idx` (`order_id`),
   CONSTRAINT `order_files_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
@@ -269,24 +288,22 @@ DROP TABLE IF EXISTS `orders`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `orders` (
   `order_id` varchar(45) NOT NULL,
-  `freelancer_id` varchar(45) DEFAULT NULL,
   `company_client_id` varchar(45) DEFAULT NULL,
   `client_id` varchar(45) DEFAULT NULL,
-  `details` varchar(500) DEFAULT NULL,
-  `order_date` date DEFAULT NULL,
-  `duration` date DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL,
+  `ending_date` datetime DEFAULT NULL,
   `amount` int DEFAULT NULL,
-  `quantity` int DEFAULT NULL,
-  `order_type` varchar(45) DEFAULT NULL,
-  `order_status` varchar(45) DEFAULT NULL,
-  `completion_date` date DEFAULT NULL,
+  `order_status` varchar(45) DEFAULT 'In Progress',
+  `category` varchar(45) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `freelancer_username` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`order_id`),
-  KEY `orders_freelancer_id_idx` (`freelancer_id`),
   KEY `orders_company_client_id_idx` (`company_client_id`),
   KEY `orders_client_id_idx` (`client_id`),
+  KEY `orders_freelancer_username_idx` (`freelancer_username`),
   CONSTRAINT `orders_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`client_id`),
   CONSTRAINT `orders_company_client_id` FOREIGN KEY (`company_client_id`) REFERENCES `company_client` (`company_client_id`),
-  CONSTRAINT `orders_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
+  CONSTRAINT `orders_freelancer_username` FOREIGN KEY (`freelancer_username`) REFERENCES `freelancer` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -335,6 +352,7 @@ CREATE TABLE `requests` (
   `client_id` varchar(45) DEFAULT NULL,
   `company_client_id` varchar(45) DEFAULT NULL,
   `budget` int DEFAULT NULL,
+  `duration` int DEFAULT NULL,
   PRIMARY KEY (`request_id`),
   UNIQUE KEY `request_id_UNIQUE` (`request_id`),
   KEY `client_id_idx` (`client_id`),
@@ -383,6 +401,10 @@ CREATE TABLE `verification_images` (
   CONSTRAINT `verification_images_freelancer_id` FOREIGN KEY (`freelancer_id`) REFERENCES `freelancer` (`freelancer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping routines for database 'pakwork'
+--
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -393,4 +415,4 @@ CREATE TABLE `verification_images` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-21 21:38:07
+-- Dump completed on 2023-03-18 12:36:39

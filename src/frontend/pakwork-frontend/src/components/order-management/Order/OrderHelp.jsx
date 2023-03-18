@@ -1,8 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Card, Button } from "react-bootstrap";
 import help_poster from "../../../assets/login_poster.svg";
 
-const OrderHelp = () => {
+const OrderHelp = ({ freelancerUsername }) => {
+  const navigate = useNavigate();
   return (
     <Card className="m-2">
       <Card.Body>
@@ -15,7 +17,17 @@ const OrderHelp = () => {
         <p style={{ fontWeight: "bold", fontSize: "1.1em" }}>
           Need to communicate?
         </p>
-        <Button variant="success" className="w-50">
+        <Button
+          onClick={() => {
+            navigate("/dashboard/inbox", {
+              state: {
+                to: freelancerUsername,
+              },
+            });
+          }}
+          variant="success"
+          className="w-50"
+        >
           Start Chat 💬
         </Button>
       </Card.Body>

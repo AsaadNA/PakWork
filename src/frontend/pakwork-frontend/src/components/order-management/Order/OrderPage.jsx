@@ -97,9 +97,13 @@ const OrderPage = () => {
             <br></br>
           </Col>
 
-          <Col md={4}>
-            <OrderHelp></OrderHelp>
-          </Col>
+          {userType !== "freelancer" ? (
+            <Col md={4}>
+              <OrderHelp
+                freelancerUsername={orderDetails.freelancer_username}
+              ></OrderHelp>
+            </Col>
+          ) : null}
         </Row>
       </Container>
     </>

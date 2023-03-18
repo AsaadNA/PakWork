@@ -11,11 +11,14 @@ import axios from "../../../Api/Api";
 import DefaultProfile from "../../../assets/profile_pic_default.png";
 import NotFound404 from "../../notfound-404/NotFound404";
 import LoginModal from "../../login/LoginModal";
+import { useNavigate } from "react-router-dom";
 
 const Gig = () => {
   const { id } = useParams();
   const [gigData, setGigData] = useState({});
   const [gigNotFound, setgigNotFound] = useState(true);
+  const [userType, setUserType] = useState("");
+  const navigate = useNavigate();
 
   const getGigData = async () => {
     let response = await axios.get(`/gigs/${id}`);
@@ -32,6 +35,7 @@ const Gig = () => {
   };
 
   useEffect(() => {
+    setUserType(JSON.parse(localStorage.getItem("user"))["user_type"]);
     getGigData();
   }, []);
 
@@ -138,11 +142,23 @@ const Gig = () => {
                   </Col>
                 </Row>
                 <br></br>
-                <div className="d-flex justify-content-center align-items-end">
-                  <Button variant="success" className="mx-1 w-100">
-                    Contact Seller 💬
-                  </Button>
-                </div>
+                {userType !== "freelancer" ? (
+                  <div className="d-flex justify-content-center align-items-end">
+                    <Button
+                      onClick={() => {
+                        navigate("/dashboard/inbox", {
+                          state: {
+                            to: gigData.username,
+                          },
+                        });
+                      }}
+                      variant="success"
+                      className="mx-1 w-100"
+                    >
+                      Contact Seller 💬
+                    </Button>
+                  </div>
+                ) : null}
               </div>
             </Col>
           </Row>

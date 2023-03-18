@@ -1,12 +1,31 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Container, Row, Col, InputGroup } from "react-bootstrap";
 import { ChatList, MessageList, Input, Button } from "react-chat-elements";
 import { SocketContext } from "../../contexts/socket";
+import { Comment } from "react-loader-spinner";
 import axios from "../../Api/Api";
 import DefaultProfile from "../../assets/profile_pic_default.png";
 import NavBar from "../navbar/NavBar";
 
+/*
+    Current BUGS
+
+    1.  When window is open and message is sent
+      it does not basically update the message
+      until we reopen the list for the sender
+      2.and until the receiver opens it and updates message
+      list
+      3.the unread count is updated to the sender also
+      since there is one status of read for both sender and reciever
+
+    2. Same user cannot login from different browsers
+       rn, the way the socket is being handled is 1:1 1 socket_id per username 
+*/
+
 const Chat = () => {
+  const location = useLocation();
+
   const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
 
@@ -18,13 +37,18 @@ const Chat = () => {
   const [current, setCurrent] = useState(""); //current selected from chatlist
   const [message, setMessage] = useState(""); //typing message
 
+  const [isLL, setisLL] = useState(false); //userlist loaded or not
+  const [isMLL, setisMLL] = useState(false);
+
   const fetchChatList = async () => {
+    setisLL(false); //userlist loaded ?:
     const result = await axios.get("/chat/userlist", {
       headers: {
         "x-access-token": localStorage.getItem("userToken"),
       },
     });
     if (result.status === 200) {
+      setisLL(true);
       const list = result.data.map((u) => {
         return {
           avatar: DefaultProfile,
@@ -34,13 +58,50 @@ const Chat = () => {
           unread: u["unread"],
         };
       });
-
       setUserList(list);
     }
   };
 
+  useEffect(() => {
+    if (isLL) {
+      //Open window will make unread 0
+      let uul = userList.map((u) => {
+        if (u["title"] === current) {
+          u["unread"] = 0;
+        }
+        return u;
+      });
+
+      setUserList(uul);
+    }
+  }, [isLL, current]);
+
+  //This is for when the user is redirect from the start chat component
+  //Check if userlist is loaded or not
+  useEffect(() => {
+    if (isLL) {
+      if (location.state) {
+        const { to } = location.state;
+        const exists = userList.filter((u) => u["title"] === to);
+        if (exists.length === 0) {
+          setUserList((prev) => [
+            ...prev,
+            {
+              avatar: DefaultProfile,
+              title: to,
+              subtitle: "Start chat by sending message",
+              date: null,
+              unread: 0,
+            },
+          ]);
+        }
+      }
+    }
+  }, [isLL]);
+
   //This will fetch the message list for the current selected user
   const fetchMessageList = async () => {
+    setisMLL(false);
     const result = await axios.get(`/chat/messagelist/${current}`, {
       headers: {
         "x-access-token": localStorage.getItem("userToken"),
@@ -58,6 +119,11 @@ const Chat = () => {
         };
       });
       setMessageList(fetched);
+      //Sets the MLL after 2.5 seconds
+      //for a cool fetching effect delay thingy
+      setTimeout(() => {
+        setisMLL(true);
+      }, 1000);
     }
   };
 
@@ -69,17 +135,10 @@ const Chat = () => {
   //Whenever new user selected fetch the message list
   useEffect(() => {
     if (current !== "") {
-      //This basically removes the unread count if the window is open
-      userList.map((u) => {
-        if (u["title"] === current) {
-          u["unread"] = 0;
-        }
-      });
-
       //Fetches the messsagelist
       fetchMessageList();
     }
-  }, [current, userList]);
+  }, [current]); //, userList
 
   //This useEffect handles socket stuff
   useEffect(() => {
@@ -136,55 +195,57 @@ const Chat = () => {
 
   //Sends the message and updates the relevant stuff
   const sendMessage = async () => {
-    let result = await axios.post(
-      "/chat/",
-      {
-        to: current,
-        message: message,
-      },
-      {
-        headers: {
-          "x-access-token": localStorage.getItem("userToken"),
-        },
-      }
-    );
-
-    //The message was successfully saved in the database
-    if (result.status === 200) {
-      //
-      /*
-      This will update the userList
-      If i am sending the message
-      
-        1. The timestamp will be updated
-        2. The latest message will be updated
-
-        The unread count will not be updated since i am the one
-           sending the message
-      */
-
-      let updatedUserList = userList.map((u) => {
-        if (u.title === current) {
-          u.subtitle = message;
-          u.date = Date.now();
-        }
-        return u;
-      });
-
-      //This updates the Message List
-      setMessageList((prev) => [
-        ...prev,
+    if (message !== "") {
+      let result = await axios.post(
+        "/chat/",
         {
-          position: "right",
-          type: "text",
-          title: "You",
-          text: message,
+          to: current,
+          message: message,
         },
-      ]);
-      socket.emit("private_message", {
-        to: current,
-        message: message,
-      });
+        {
+          headers: {
+            "x-access-token": localStorage.getItem("userToken"),
+          },
+        }
+      );
+
+      //The message was successfully saved in the database
+      if (result.status === 200) {
+        //
+        /*
+        This will update the userList
+        If i am sending the message
+        
+          1. The timestamp will be updated
+          2. The latest message will be updated
+  
+          The unread count will not be updated since i am the one
+             sending the message
+        */
+
+        let updatedUserList = userList.map((u) => {
+          if (u.title === current) {
+            u.subtitle = message;
+            u.date = Date.now();
+          }
+          return u;
+        });
+
+        //This updates the Message List
+        setMessageList((prev) => [
+          ...prev,
+          {
+            position: "right",
+            type: "text",
+            title: "You",
+            text: message,
+          },
+        ]);
+        socket.emit("private_message", {
+          to: current,
+          message: message,
+        });
+      }
     }
   };
 
@@ -257,39 +318,64 @@ const Chat = () => {
         <Col md={8}>
           {isSelected ? (
             <React.Fragment>
-              <div style={{ background: "#e5e5e5" }} className="p-3 mb-3">
-                <MessageList
-                  className="message-list"
-                  lockable={true}
-                  toBottomHeight={"100%"}
-                  dataSource={messageList.map((m) => {
-                    return {
-                      position: m.position,
-                      type: m.type,
-                      title: m.title,
-                      text: m.text,
-                    };
-                  })}
-                />
-              </div>
-              <InputGroup>
-                <Input
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Type here..."
-                  multiline={true}
-                  className="form-control"
-                />
-                <Button
-                  backgroundColor="green"
-                  text={"Send  💬"}
-                  onClick={() => {
-                    sendMessage();
-                  }}
-                  title="Send  💬"
-                />
-              </InputGroup>
+              {isMLL ? (
+                <div style={{ background: "#e5e5e5" }} className="p-3 mb-3">
+                  <MessageList
+                    className="message-list"
+                    lockable={true}
+                    toBottomHeight={"100%"}
+                    dataSource={messageList.map((m) => {
+                      return {
+                        position: m.position,
+                        type: m.type,
+                        title: m.title,
+                        text: m.text,
+                      };
+                    })}
+                  />
+                  <InputGroup>
+                    <Input
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder="Type here..."
+                      multiline={true}
+                      className="form-control mt-4"
+                    />
+                    <Button
+                      backgroundColor="green"
+                      className="mt-4"
+                      text={"Send"}
+                      onClick={() => {
+                        sendMessage();
+                      }}
+                      title="Send  💬"
+                    />
+                  </InputGroup>
+                </div>
+              ) : (
+                <div className="mt-5 pt-5">
+                  <Comment
+                    visible={true}
+                    height="60"
+                    width="60"
+                    ariaLabel="comment-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="comment-wrapper"
+                    color="#FFF"
+                    backgroundColor="#c9c9c9"
+                  />
+                  <h6 style={{ color: "#545454" }}>
+                    {" "}
+                    Loading your messages...
+                  </h6>
+                </div>
+              )}
             </React.Fragment>
-          ) : null}
+          ) : (
+            <h6 className="mt-5 pt-5" style={{ color: "#545454" }}>
+              {" "}
+              Kindly select someone from chatlist to start chatting...
+            </h6>
+          )}
         </Col>
       </Row>
     </Container>
@@ -297,33 +383,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-/*
-/*  
-      //When Private Message is recived
-      //This will update the userList
-      let uul = userList.map((u) => {
-        if (u["title"] === username) {
-          u["subtitle"] = message;
-          u["timestamp"] = new Date();
-          if (current !== username) {
-            u["unread"] = u["unread"] + 1;
-          }
-        }
-        return u;
-      });
-
-      setUserList(uul);
-
-    
-      //If we recieve a message but the userList is not retrieved
-      //We retrieve the user list
-      if (userList.length <= 0) {
-        fetchChatList();
-      }
-
-      //If we have 1 in chatlist but we have another new message
-      //But that user is not in our chat list then we fetch our chatlist again
-      if (userList.find(username)) {
-        fetchChatList();
-      } */

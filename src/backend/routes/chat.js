@@ -15,7 +15,7 @@ router.get("/messagelist/:to", auth, (req, res) => {
         res.sendStatus(400);
       } else if (re.length > 0) {
         db.query(
-          `UPDATE messages set read_status=1 where ((sender="${to}" or reciever="${to}") and (sender="${username}" or reciever="${username}")) and reciever != "${to}" and read_status=0;`,
+          `UPDATE messages set read_status=1 where ((sender="${to}" or reciever="${to}") and (sender="${username}" or reciever="${username}")) and reciever != "${username}" and read_status=0;`,
           (e, r) => {
             if (e) {
               console.log(e.message);
@@ -25,6 +25,8 @@ router.get("/messagelist/:to", auth, (req, res) => {
             }
           }
         );
+      } else {
+        res.status(200).send([]);
       }
     }
   );
@@ -80,7 +82,7 @@ router.get("/userlist", auth, (req, res) => {
           }
         );
       } else {
-        res.sendStatus(400);
+        res.status(200).send([]);
       }
     }
   );
