@@ -7,6 +7,7 @@ import { Comment } from "react-loader-spinner";
 import axios from "../../Api/Api";
 import DefaultProfile from "../../assets/profile_pic_default.png";
 import NavBar from "../navbar/NavBar";
+import "react-chat-elements/dist/main.css";
 
 /*
     Current BUGS
@@ -123,7 +124,7 @@ const Chat = () => {
       //for a cool fetching effect delay thingy
       setTimeout(() => {
         setisMLL(true);
-      }, 1000);
+      }, 1800);
     }
   };
 
@@ -324,20 +325,23 @@ const Chat = () => {
           {isSelected ? (
             <React.Fragment>
               {isMLL ? (
-                <div style={{ background: "#e5e5e5" }} className="p-3 mb-3">
-                  <MessageList
-                    className="message-list"
-                    lockable={true}
-                    toBottomHeight={"100%"}
-                    dataSource={messageList.map((m) => {
-                      return {
-                        position: m.position,
-                        type: m.type,
-                        title: m.title,
-                        text: m.text,
-                      };
-                    })}
-                  />
+                <div className="p-3 mb-3">
+                  <div className="chatbox-shadow pb-3">
+                    <MessageList
+                      className="message-list"
+                      lockable={false}
+                      toBottomHeight={"100%"}
+                      dataSource={messageList.map((m) => {
+                        return {
+                          position: m.position,
+                          type: m.type,
+                          title: m.title,
+                          text: m.text,
+                        };
+                      })}
+                    />
+                  </div>
+
                   <InputGroup>
                     <Input
                       onChange={(e) => setMessage(e.target.value)}
@@ -346,7 +350,7 @@ const Chat = () => {
                       className="form-control mt-4"
                     />
                     <Button
-                      backgroundColor="green"
+                      backgroundColor="#cccccc"
                       className="mt-4"
                       text={"Send"}
                       onClick={() => {
