@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Container, Row, Col, InputGroup } from "react-bootstrap";
 import { ChatList, MessageList, Input, Button } from "react-chat-elements";
@@ -8,21 +8,7 @@ import axios from "../../Api/Api";
 import DefaultProfile from "../../assets/profile_pic_default.png";
 import NavBar from "../navbar/NavBar";
 import "react-chat-elements/dist/main.css";
-
-/*
-    Current BUGS
-
-    1.  When window is open and message is sent
-      it does not basically update the message
-      until we reopen the list for the sender
-      2.and until the receiver opens it and updates message
-      list
-      3.the unread count is updated to the sender also
-      since there is one status of read for both sender and reciever
-
-    2. Same user cannot login from different browsers
-       rn, the way the socket is being handled is 1:1 1 socket_id per username 
-*/
+import moment from "moment/moment";
 
 const Chat = () => {
   const location = useLocation();
@@ -40,6 +26,15 @@ const Chat = () => {
 
   const [isLL, setisLL] = useState(false); //userlist loaded or not
   const [isMLL, setisMLL] = useState(false);
+
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList, isMLL]);
 
   const fetchChatList = async () => {
     setisLL(false); //userlist loaded ?:
@@ -117,6 +112,10 @@ const Chat = () => {
           type: "text",
           title: m["sender"] === loggedinuser ? "You" : m["sender"],
           text: m["message"],
+          date: moment
+            .utc(m["timestamp"])
+            .local()
+            .format("YYYY-MM-DD HH:mm:ss"),
         };
       });
       setMessageList(fetched);
@@ -245,8 +244,10 @@ const Chat = () => {
             type: "text",
             title: "You",
             text: message,
+            date: new Date(),
           },
         ]);
+
         socket.emit("private_message", {
           to: current,
           message: message,
@@ -326,7 +327,7 @@ const Chat = () => {
             <React.Fragment>
               {isMLL ? (
                 <div className="p-3 mb-3">
-                  <div className="chatbox-shadow pb-3">
+                  <div className="chatbox-shadow pt-4 pb-3">
                     <MessageList
                       className="message-list"
                       lockable={false}
@@ -337,9 +338,11 @@ const Chat = () => {
                           type: m.type,
                           title: m.title,
                           text: m.text,
+                          date: m.date,
                         };
                       })}
                     />
+                    <div ref={messagesEndRef} />
                   </div>
 
                   <InputGroup>

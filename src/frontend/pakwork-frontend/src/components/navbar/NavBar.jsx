@@ -7,6 +7,7 @@ import logo from "../../assets/pakwork_logo.svg";
 import { ShowLoginModalContext } from "../../contexts/ModalContext";
 import { Link } from "react-scroll";
 import { Link as RouterLink, NavLink, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
@@ -20,11 +21,31 @@ const NavBar = ({ isHome, isGigResult }) => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
+  const location = useLocation();
 
   const socket = useContext(SocketContext);
 
   //Socket stuff
   useEffect(() => {
+    //Recieivng Outbid info
+    socket.on("outbid_notification", (data) => {
+      const { username, amount } = data.data;
+
+      //Check if its on a different page other than the job bidding
+      if (location.pathname !== "/dashboard/available-jobs") {
+        toast.error(`You have been outbidded by ${username} by $${amount}`, {
+          position: "bottom-right",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    });
+
     //Recieving Messages
     socket.on("private_message", (data) => {
       toast.info(
@@ -46,6 +67,7 @@ const NavBar = ({ isHome, isGigResult }) => {
       socket.off("connect");
       socket.off("disconnect");
       socket.off("private_message");
+      socket.off("outbid_notification");
     };
   }, []);
 

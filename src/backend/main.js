@@ -235,11 +235,12 @@ io.use((socket, next) => {
       else if (r.length > 0) {
         //Check if incoming bid is greater than stored bid
         db.query(
-          `SELECT amount from bids WHERE job_id="${data.jobID}"`,
+          `SELECT username as last_stored_bidder , amount from bids WHERE job_id="${data.jobID}"`,
           (e, r) => {
             if (e) {
               console.log(e.message);
             } else if (r.length > 0) {
+              let last_stored_bidder = r[0]["last_stored_bidder"];
               if (data.amount > r[0]["amount"]) {
                 db.query(
                   `UPDATE jobs SET current_highest_bidder="${data.username}" ,starting_amount=${data.amount} WHERE job_id="${data.jobID}";`,
@@ -255,6 +256,20 @@ io.use((socket, next) => {
                           } else if (ress) {
                             socket.emit("bid", data);
                             socket.broadcast.emit("bid", data);
+
+                            //If the last_bidder is not the same one
+                            //If the last_store_bidder is online or not
+                            if (
+                              people[last_stored_bidder] !== undefined &&
+                              last_stored_bidder !== data.username
+                            ) {
+                              people[last_stored_bidder].emit(
+                                "outbid_notification",
+                                {
+                                  data,
+                                }
+                              );
+                            }
                           } else {
                             console.log("erroro cc");
                           }
