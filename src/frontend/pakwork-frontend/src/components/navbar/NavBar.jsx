@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -14,14 +14,40 @@ import { FaInbox, FaUser } from "react-icons/fa";
 import SearchBar from "../search-bar/SearchBar";
 
 import { SocketContext } from "../../contexts/socket";
+import { ToastContainer, toast } from "react-toastify";
 
 const NavBar = ({ isHome, isGigResult }) => {
   const { handleShowLogin } = useContext(ShowLoginModalContext);
-
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
   const socket = useContext(SocketContext);
+
+  //Socket stuff
+  useEffect(() => {
+    //Recieving Messages
+    socket.on("private_message", (data) => {
+      toast.info(
+        `You have a new message from ${data.username} - "${data.message}"`,
+        {
+          position: "bottom-right",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        }
+      );
+    });
+
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("private_message");
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -30,8 +56,19 @@ const NavBar = ({ isHome, isGigResult }) => {
     navigate("/");
   };
   return (
-    <Navbar collapseOnSelect expand="lg" className="nav-light" variant="light">
+    <Navbar collapseOnSelect expand="lg" className="nav-dark" variant="dark">
       <Container>
+        <ToastContainer
+          position="bottom-right"
+          autoClose={8000}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss={false}
+          draggable
+          pauseOnHover={false}
+          theme="colored"
+        />
         <Navbar.Brand>
           <img src={logo} alt={logo} height="50px" width="150px"></img>
         </Navbar.Brand>

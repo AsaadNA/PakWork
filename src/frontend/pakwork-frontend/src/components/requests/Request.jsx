@@ -1,22 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
 import NavBar from "../navbar/NavBar";
-import { FaEnvelope, FaStar } from "react-icons/fa";
-import Footer from "../footer/Footer";
 import axios from "../../Api/Api";
-import DefaultProfile from "../../assets/profile_pic_default.png";
 import NotFound404 from "../notfound-404/NotFound404";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  InputGroup,
-  Form,
-  Button,
-} from "react-bootstrap";
+import { Container, Row, Col, Table, Button } from "react-bootstrap";
 const Request = () => {
   const { requestID } = useParams();
   const [requestData, setRequestData] = useState({});

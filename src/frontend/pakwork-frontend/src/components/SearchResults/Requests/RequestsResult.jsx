@@ -20,6 +20,7 @@ import axios from "../../../Api/Api";
 import moment from "moment/moment";
 import RequestDetailModal from "./RequestDetailModal";
 import RequestOfferModal from "./RequestOfferModal";
+import { useNavigate } from "react-router-dom";
 
 const RequestsResult = () => {
   const [requests, setRequests] = useState([]);
@@ -29,6 +30,7 @@ const RequestsResult = () => {
   const [showRequestDetailModal, setshowRequestDetailModal] = useState(false);
   const [selectedRequestDetails, setselectedRequestDetails] = useState();
   const [showRequestOfferModal, setshowRequestOfferModal] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseRequestDetailModal = () => {
     setshowRequestDetailModal(false);
@@ -174,7 +176,7 @@ const RequestsResult = () => {
                       <th>Request</th>
                       <th>Budget</th>
                       <th>Project Duration</th>
-                      <th>Actions</th>
+                      <th></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -224,16 +226,18 @@ const RequestsResult = () => {
                                     Already Sent
                                   </Button>
                                 ) : (
-                                  <Button
-                                    onClick={() =>
-                                      handleOpenRequestOfferModal({
-                                        requestID: request.request_id,
-                                      })
-                                    }
-                                    variant="success"
-                                  >
-                                    Send Offer
-                                  </Button>
+                                  <div>
+                                    <Button
+                                      onClick={() =>
+                                        handleOpenRequestOfferModal({
+                                          requestID: request.request_id,
+                                        })
+                                      }
+                                      variant="success"
+                                    >
+                                      Send Offer
+                                    </Button>
+                                  </div>
                                 )}
                               </td>
                             </tr>
