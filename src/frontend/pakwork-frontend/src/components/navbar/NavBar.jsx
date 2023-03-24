@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "../../App.css";
-import { FaInbox, FaUser } from "react-icons/fa";
+import { FaBox, FaInbox, FaUser } from "react-icons/fa";
 import SearchBar from "../search-bar/SearchBar";
 
 import { SocketContext } from "../../contexts/socket";
@@ -190,23 +190,6 @@ const NavBar = ({ isHome, isGigResult }) => {
         ) : (
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link
-                className="mx-md-2"
-                style={{ fontWeight: "bold", textDecoration: "none" }}
-              >
-                <NavLink
-                  to="/dashboard/orders"
-                  className={(navData) =>
-                    navData.isActive
-                      ? "navlink text-dark"
-                      : "navlink text-dark-50"
-                  }
-                  style={{ textDecoration: "none" }}
-                >
-                  Manage Orders
-                </NavLink>
-              </Nav.Link>
-
               {user.user_type === "freelancer" ? (
                 <>
                   <Nav.Link className="mx-md-2" style={{ fontWeight: "bold " }}>
@@ -259,12 +242,28 @@ const NavBar = ({ isHome, isGigResult }) => {
               {user.user_type === "freelancer" ? (
                 <></>
               ) : !isGigResult ? (
-                <SearchBar></SearchBar>
+                <div className="mx-3">
+                  <SearchBar></SearchBar>
+                </div>
               ) : (
                 <></>
               )}
             </Nav>
             <Nav className="d-flex justify-content-center align-items-center">
+              <Nav.Link className="mx-md-2" style={{ fontWeight: "bold" }}>
+                <NavLink
+                  to="/dashboard/orders"
+                  className={(navData) =>
+                    navData.isActive
+                      ? "navlink-btn text-dark"
+                      : "navlink-btn text-dark-50"
+                  }
+                  style={{ textDecoration: "none" }}
+                >
+                  <FaBox style={{ marginBottom: "4px" }}></FaBox>
+                  &nbsp;Manage Orders
+                </NavLink>
+              </Nav.Link>
               <Nav.Link className="text-dark-50" style={{ fontWeight: "bold" }}>
                 <NavLink
                   to="/dashboard/inbox"
@@ -276,7 +275,7 @@ const NavBar = ({ isHome, isGigResult }) => {
                   style={{ textDecoration: "none" }}
                 >
                   <FaInbox style={{ marginBottom: "4px" }}></FaInbox>
-                  &nbsp;
+                  &nbsp;Inbox
                 </NavLink>
               </Nav.Link>
               <Nav.Link className="text-dark-50" style={{ fontWeight: "bold" }}>

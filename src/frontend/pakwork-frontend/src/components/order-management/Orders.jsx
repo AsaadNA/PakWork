@@ -1,14 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  InputGroup,
+  Form,
+  Button,
+} from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import NavBar from "../navbar/NavBar";
 import axios from "../../Api/Api";
 import moment from "moment/moment";
 import { toSentenceCase } from "../../Extras/HelperFunctions";
+import Select from "react-select";
+import {
+  GigJobCategories as JobCategories,
+  SortByPrice,
+  SortByStatus,
+} from "../../Extras/CategoryLists";
+import { FaSearch } from "react-icons/fa";
 
 const Orders = () => {
   const [Orders, setOrders] = useState([]);
   const [userType, setUserType] = useState("");
+  const [InputText, setInputText] = useState("");
+  const [jobCategory, setjobCategory] = useState("show_all");
+  const [FilteredOrders, setFilteredOrders] = useState([]);
+  const [sortState, setsortState] = useState("hightolow");
 
   const fetchOrders = async () => {
     let result = await axios.put(
@@ -24,7 +43,9 @@ const Orders = () => {
     );
 
     if (result.status === 200) {
+      console.log(result.data);
       setOrders(result.data);
+      setFilteredOrders(result.data);
     }
   };
 
@@ -33,9 +54,125 @@ const Orders = () => {
     fetchOrders();
   }, []);
 
+  const filterTitle = (text) => {
+    const tempArr = [];
+    console.log(text);
+    if (text.length <= 0) {
+      setFilteredOrders(Orders);
+    } else {
+      Orders.forEach((job) => {
+        if (job.title.includes(text)) {
+          tempArr.push(job);
+        }
+      });
+      setFilteredOrders(tempArr);
+    }
+  };
+  const filterCategory = (category) => {
+    let tempArr = [];
+    if (category === "Show All") {
+      tempArr = [...Orders];
+    } else {
+      Orders.forEach((order) => {
+        if (order.category === category) {
+          tempArr.push(order);
+        }
+      });
+    }
+    if (sortState === "hightolow") {
+      tempArr.sort((a, b) => parseInt(b.amount) - parseInt(a.amount));
+    } else {
+      tempArr.sort((a, b) => parseInt(a.amount) - parseInt(b.amount));
+    }
+    setFilteredOrders(tempArr);
+  };
+  const sortPrice = (sortBy) => {
+    let tempArr = [...FilteredOrders];
+    setsortState(sortBy);
+    console.log(sortBy);
+    if (sortBy === "desc") {
+      console.log(tempArr);
+      tempArr.sort((a, b) => parseInt(b.amount) - parseInt(a.amount));
+    } else {
+      console.log(tempArr);
+      tempArr.sort((a, b) => parseInt(a.amount) - parseInt(b.amount));
+    }
+    setFilteredOrders(tempArr);
+  };
+  const sortStatus = (status) => {
+    let tempArr = [];
+    Orders.forEach((order) => {
+      if (order.order_status === status) {
+        tempArr.push(order);
+      }
+    });
+    setFilteredOrders(tempArr);
+  };
   return (
     <Container>
       <NavBar></NavBar>
+      <Row className="mt-4">
+        <Col md={12}>
+          <InputGroup className="mb-1">
+            <InputGroup.Text style={{ background: "#006837" }}>
+              <FaSearch color="white"></FaSearch>
+            </InputGroup.Text>
+            <Col md={5}>
+              <Form.Control
+                className="me-2"
+                aria-label="Search Job"
+                placeholder="Search Job..."
+                onInput={(e) => filterTitle(e.target.value)}
+              />
+            </Col>
+            <Select
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  flex: 1,
+                }),
+              }}
+              className="ms-2 me-2"
+              options={JobCategories}
+              isSearchable={false}
+              defaultValue={JobCategories[0]}
+              required
+              name="GigJobCategory"
+              onChange={({ value }) => filterCategory(value)}
+            />
+            <Select
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  flex: 1,
+                }),
+              }}
+              options={SortByPrice}
+              placeholder={"Sort By Price"}
+              defaultValue={SortByPrice[0]}
+              isSearchable={false}
+              required
+              name="SortByPrice"
+              onChange={({ value }) => sortPrice(value)}
+            />
+            <Select
+              styles={{
+                container: (base) => ({
+                  ...base,
+                  flex: 1,
+                }),
+              }}
+              options={SortByStatus}
+              placeholder={"Sort By Status"}
+              defaultValue={SortByStatus[0]}
+              isSearchable={false}
+              required
+              name="SortByStatus"
+              onChange={({ value }) => sortStatus(value)}
+            />
+          </InputGroup>
+        </Col>
+      </Row>
       <Row>
         <Col md={12} className="p-3">
           <Table style={{ textAlign: "left" }}>
@@ -56,7 +193,7 @@ const Orders = () => {
               </tr>
             </thead>
             <tbody>
-              {Orders.map((order) => {
+              {FilteredOrders.map((order) => {
                 return (
                   <tr key={order.order_id}>
                     <td>{order.title}</td>

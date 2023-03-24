@@ -18,7 +18,6 @@ const CreateClientJobModal = () => {
   const [description, setDescription] = useState("");
   const [JobCategory, setJobCategory] = useState("");
   const [JobPrice, setJobPrice] = useState("5");
-  const [StartingDate, setStartingDate] = useState(new Date().toLocaleString());
   const [EndingDate, setEndingDate] = useState(new Date().toLocaleString());
   const [Duration, setDuration] = useState(1);
 
@@ -124,7 +123,7 @@ const CreateClientJobModal = () => {
   };
 
   const handleSetTimeLine = (e, picker) => {
-    setStartingDate(picker.startDate._d);
+    console.log(picker.endDate._d);
     setEndingDate(picker.endDate._d);
   };
 
@@ -156,10 +155,9 @@ const CreateClientJobModal = () => {
         formData.append("description", description);
         formData.append("category", JobCategory.value);
         formData.append("starting_amount", JobPrice);
-
         formData.append(
           "starting_date",
-          moment(StartingDate).format("YYYY-MM-DD HH:mm:ss")
+          moment().format("YYYY-MM-DD HH:mm:ss")
         );
         formData.append(
           "ending_date",
@@ -390,6 +388,8 @@ const CreateClientJobModal = () => {
                     <DateRangePicker
                       initialSettings={{
                         timePicker: true,
+                        singleDatePicker: true,
+                        minDate: new Date(),
                         opens: "left",
                         parentEl: ".date-picker-container",
                       }}

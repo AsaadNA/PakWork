@@ -135,3 +135,9 @@ export const SortByRating = [
     label: "Lowest Rated",
   },
 ];
+
+export const SortByStatus = [
+  { value: "Delivered", label: "Delivered" },
+  { value: "In Progress", label: "In Progress" },
+  { value: "Overdue", label: "Overdue" },
+];

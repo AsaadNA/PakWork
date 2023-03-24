@@ -9,6 +9,7 @@ import DefaultProfile from "../../assets/profile_pic_default.png";
 import NavBar from "../navbar/NavBar";
 import "react-chat-elements/dist/main.css";
 import moment from "moment/moment";
+import { FaSearch } from "react-icons/fa";
 
 const Chat = () => {
   const location = useLocation();
@@ -281,17 +282,27 @@ const Chat = () => {
     <Container>
       <NavBar></NavBar>
       <Row className="mt-4">
-        <Col md={4} style={{ textAlign: "left" }}>
-          <div className="ms-5 me-4">
+        <Col
+          md={4}
+          style={{
+            textAlign: "left",
+            background: "",
+          }}
+        >
+          <div className="d-flex">
             <input
               onChange={(e) => {
                 setFUser(e.target.value);
               }}
               type={"text"}
               placeholder="Example: AsaadNA"
+              className="form-control"
             />
-            <button onClick={() => findUser(fUser)} className="ms-1">
-              Start Chat
+            <button
+              onClick={() => findUser(fUser)}
+              className="ms-1 btn btn-success "
+            >
+              <FaSearch className="mb-1"></FaSearch>
             </button>
           </div>
           {userList.length > 0
@@ -304,7 +315,7 @@ const Chat = () => {
                     }}
                     className={
                       current === ul.title
-                        ? "chat-list chat-list-border mt-4"
+                        ? "chat-list box-shadow  mt-4"
                         : "chat-list mt-4"
                     }
                     dataSource={[
@@ -327,7 +338,10 @@ const Chat = () => {
             <React.Fragment>
               {isMLL ? (
                 <div className="p-3 mb-3">
-                  <div className="chatbox-shadow pt-4 pb-3">
+                  <div
+                    className="chatbox-shadow pt-4 pb-3"
+                    style={{ backgroundColor: "#E4DBD4" }}
+                  >
                     <MessageList
                       className="message-list"
                       lockable={false}
@@ -353,13 +367,13 @@ const Chat = () => {
                       className="form-control mt-4"
                     />
                     <Button
-                      backgroundColor="#cccccc"
+                      backgroundColor="#198754"
                       className="mt-4"
-                      text={"Send"}
+                      text={"Send 💬"}
                       onClick={() => {
                         sendMessage();
                       }}
-                      title="Send  💬"
+                      title="💬"
                     />
                   </InputGroup>
                 </div>
@@ -383,10 +397,26 @@ const Chat = () => {
               )}
             </React.Fragment>
           ) : (
-            <h2 className="mt-5 pt-5" style={{ color: "#545454" }}>
-              {" "}
-              Enter Fancy Design like whatsapp here
-            </h2>
+            <div
+              className="mt-5 pt-5"
+              style={{ color: "#545454", backgroundColor: "#F7F7F7" }}
+            >
+              <img src="https://img.icons8.com/clouds/300/null/chat-messages.png" />
+              <div
+                style={{
+                  padding: "10px",
+                  maxWidth: "550px",
+                  margin: "0 auto",
+                  textAlign: "center",
+                }}
+              >
+                <p style={{ fontSize: "17px", lineHeight: "1.5" }}>
+                  When you click on your inbox, you can access all of your
+                  incoming chats in one convenient place, making it easy to keep
+                  track of your messages and stay on top of your communication.
+                </p>
+              </div>
+            </div>
           )}
         </Col>
       </Row>

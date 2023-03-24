@@ -18,7 +18,7 @@ const CreateOrganizationJobModal = () => {
   const [description, setDescription] = useState("");
   const [JobCategory, setJobCategory] = useState("");
   const [JobPrice, setJobPrice] = useState("5");
-  const [StartingDate, setStartingDate] = useState(new Date().toLocaleString());
+
   const [EndingDate, setEndingDate] = useState(new Date().toLocaleString());
   const [Duration, setDuration] = useState(1);
 
@@ -126,7 +126,6 @@ const CreateOrganizationJobModal = () => {
   };
 
   const handleSetTimeLine = (e, picker) => {
-    setStartingDate(picker.startDate._d);
     setEndingDate(picker.endDate._d);
   };
 
@@ -161,7 +160,7 @@ const CreateOrganizationJobModal = () => {
 
         formData.append(
           "starting_date",
-          moment(StartingDate).format("YYYY-MM-DD HH:mm:ss")
+          moment().format("YYYY-MM-DD HH:mm:ss")
         );
         formData.append(
           "ending_date",
@@ -390,6 +389,8 @@ const CreateOrganizationJobModal = () => {
                     <DateRangePicker
                       initialSettings={{
                         timePicker: true,
+                        singleDatePicker: true,
+                        minDate: new Date(),
                         opens: "left",
                         parentEl: ".date-picker-container",
                       }}

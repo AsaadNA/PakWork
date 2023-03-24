@@ -104,7 +104,7 @@ const OrganizationJobs = () => {
     return requests.map((r) => {
       return (
         <Col key={r.request_id} md={12} className="mb-2">
-          <Card style={{ width: "100%", height: "340px" }}>
+          <Card style={{ width: "100%", height: "auto" }}>
             <Card.Header
               style={{
                 textAlign: "left",
@@ -211,7 +211,7 @@ const OrganizationJobs = () => {
     return jobs.map((j) => {
       return (
         <Col key={j.job_id} md={12} className="mb-2">
-          <Card style={{ width: "100%", height: "380px" }}>
+          <Card style={{ width: "100%", height: "auto" }}>
             <Card.Header
               style={{
                 textAlign: "left",
