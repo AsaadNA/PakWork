@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { Container, Row, Col, InputGroup } from "react-bootstrap";
-import { ChatList, MessageList, Input, Button } from "react-chat-elements";
+import {
+  ChatList,
+  MessageList,
+  Input,
+  Button,
+  Popup,
+} from "react-chat-elements";
 import { SocketContext } from "../../contexts/socket";
 import { Comment } from "react-loader-spinner";
 import axios from "../../Api/Api";
@@ -12,6 +18,8 @@ import moment from "moment/moment";
 import { FaSearch } from "react-icons/fa";
 
 const Chat = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const location = useLocation();
 
   const socket = useContext(SocketContext);
@@ -23,10 +31,10 @@ const Chat = () => {
   const [fUser, setFUser] = useState(""); //find user
   const [isSelected, setIsSelected] = useState(false); //mabe
   const [current, setCurrent] = useState(""); //current selected from chatlist
-  const [message, setMessage] = useState(""); //typing message
+  const [message, setMessage] = useState(""); //typed message
 
   const [isLL, setisLL] = useState(false); //userlist loaded or not
-  const [isMLL, setisMLL] = useState(false);
+  const [isMLL, setisMLL] = useState(false); //messageList loaded or not
 
   const messagesEndRef = useRef(null);
   const scrollToBottom = () => {
@@ -161,6 +169,7 @@ const Chat = () => {
             type: "text",
             title: username,
             text: message,
+            date: new Date(),
           },
         ]);
       }
@@ -217,7 +226,6 @@ const Chat = () => {
 
       //The message was successfully saved in the database
       if (result.status === 200) {
-        //
         /*
         This will update the userList
         If i am sending the message
@@ -349,10 +357,11 @@ const Chat = () => {
                       dataSource={messageList.map((m) => {
                         return {
                           position: m.position,
-                          type: m.type,
+                          type: "text",
                           title: m.title,
                           text: m.text,
                           date: m.date,
+                          data: m.data,
                         };
                       })}
                     />

@@ -99,7 +99,7 @@ app.post("/api/v1/chat/", auth, (req, res) => {
   let dateNow = moment(new Date(), "YYYY-MM-DD HH:mm:ss").format(
     "YYYY-MM-DD HH:mm:ss"
   );
-  db.query(
+  let query = db.query(
     `INSERT INTO messages (message_id,sender,reciever,timestamp,message) VALUES ("${message_id}" , "${username}" , "${to}" , "${dateNow}" , "${message}");`,
     (er, re) => {
       if (er) {
