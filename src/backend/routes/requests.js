@@ -200,6 +200,7 @@ router.post("/", auth, (req, res) => {
         message: "Created Request",
       });
     } else {
+      console.log("FUCJ");
       res.status(400).send({
         error: "Could not create Request",
       });

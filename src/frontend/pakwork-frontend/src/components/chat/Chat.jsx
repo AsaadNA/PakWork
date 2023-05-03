@@ -348,7 +348,7 @@ const Chat = () => {
                 <div className="p-3 mb-3">
                   <div
                     className="chatbox-shadow pt-4 pb-3"
-                    style={{ backgroundColor: "#E4DBD4" }}
+                    style={{ backgroundColor: "#e7e7e7" }}
                   >
                     <MessageList
                       className="message-list"
@@ -407,15 +407,15 @@ const Chat = () => {
             </React.Fragment>
           ) : (
             <div
-              className="mt-5 pt-5"
-              style={{ color: "#545454", backgroundColor: "#F7F7F7" }}
+              className="mt-1 pt-1"
+              style={{ color: "#545454", backgroundColor: "#FFFFFF" }}
             >
               <img src="https://img.icons8.com/clouds/300/null/chat-messages.png" />
               <div
                 style={{
                   padding: "10px",
                   maxWidth: "550px",
-                  margin: "0 auto",
+                  margin: "-30px auto",
                   textAlign: "center",
                 }}
               >

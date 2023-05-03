@@ -50,7 +50,7 @@ app.use(
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-//app.use(morgan("dev"));
+app.use(morgan("dev"));
 
 app.use(express.static(__dirname + "/resources/"));
 
@@ -241,7 +241,8 @@ io.use((socket, next) => {
               console.log(e.message);
             } else if (r.length > 0) {
               let last_stored_bidder = r[0]["last_stored_bidder"];
-              if (data.amount > r[0]["amount"]) {
+              if (data.amount < r[0]["amount"]) {
+                //Check incoming bid with stored bid
                 db.query(
                   `UPDATE jobs SET current_highest_bidder="${data.username}" ,starting_amount=${data.amount} WHERE job_id="${data.jobID}";`,
                   (er, re) => {
@@ -282,7 +283,7 @@ io.use((socket, next) => {
                 );
               } else {
                 socket.emit("invalid_bid", {
-                  msg: "Amount should is < than Current Bid",
+                  msg: "Your Bid Is >= Current Bid Placed",
                 });
               }
             } else {
@@ -301,7 +302,7 @@ io.use((socket, next) => {
             if (e) {
               console.log(e.message);
             } else if (r) {
-              if (data.amount > r[0]["starting_amount"]) {
+              if (data.amount < r[0]["starting_amount"]) {
                 db.query(
                   `INSERT INTO bids (bid_id,job_id,amount,username) VALUES ("${bidID}","${data.jobID}",${data.amount},"${data.username}");`,
                   (e, r) => {
@@ -328,7 +329,7 @@ io.use((socket, next) => {
                 );
               } else {
                 socket.emit("invalid_bid", {
-                  msg: "Amount should be > Starting Amount",
+                  msg: "Amount should be < Starting Amount",
                 });
               }
             } else {

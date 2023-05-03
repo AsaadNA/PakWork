@@ -43,7 +43,6 @@ const Orders = () => {
     );
 
     if (result.status === 200) {
-      console.log(result.data);
       setOrders(result.data);
       setFilteredOrders(result.data);
     }
