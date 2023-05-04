@@ -24,6 +24,7 @@ import OrderPage from "./components/order-management/Order/OrderPage";
 import Orders from "./components/order-management/Orders";
 import Chat from "./components/chat/Chat";
 import { SocketContext, socket } from "./contexts/socket";
+import Footer from "./components/footer/Footer";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);

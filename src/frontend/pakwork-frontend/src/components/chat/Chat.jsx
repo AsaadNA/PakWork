@@ -16,6 +16,7 @@ import NavBar from "../navbar/NavBar";
 import "react-chat-elements/dist/main.css";
 import moment from "moment/moment";
 import { FaSearch } from "react-icons/fa";
+import logo from "../../assets/chat-messages.png";
 
 const Chat = () => {
   const user = JSON.parse(localStorage.getItem("user"));
