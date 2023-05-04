@@ -123,9 +123,6 @@ const Request = () => {
                               >
                                 Reject
                               </Button>
-                              <Button className="ms-2" variant="info">
-                                Message
-                              </Button>
                             </td>
                           </tr>
                         );
