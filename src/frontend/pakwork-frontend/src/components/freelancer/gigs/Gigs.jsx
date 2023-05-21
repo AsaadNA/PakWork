@@ -54,7 +54,7 @@ const Gigs = () => {
       let images = g.images.split(",");
       return (
         <Col key={g.gig_id} className="mt-4" md={4}>
-          <Card style={{ width: "100%", maxWidth: "320px", height: "305px" }}>
+          <Card style={{ width: "100%", maxWidth: "320px", height: "325px" }}>
             <Card.Img
               style={{ width: "100%", maxWidth: "100%", height: "50%" }}
               src={`http://localhost:4000/${images[0]}`}
