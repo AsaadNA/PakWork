@@ -11,6 +11,7 @@ const randtoken = require("rand-token");
 const moment = require("moment");
 const jwt = require("jsonwebtoken");
 const auth = require("./middlewares/auth");
+const rateLimiter = require("express-rate-limit");
 
 const authRoutes = require("./routes/auth.js");
 const profileRoutes = require("./routes/profile");
@@ -53,6 +54,17 @@ app.use(express.json());
 app.use(morgan("dev"));
 
 app.use(express.static(__dirname + "/resources/"));
+
+//Rate limiter
+//Limit this to the whole API endpoint
+const limiter = rateLimiter.rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+app.use(limiter);
 
 app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/profile/", profileRoutes);

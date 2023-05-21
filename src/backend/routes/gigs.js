@@ -7,6 +7,9 @@ const db = require("../configs/database");
 const multer = require("multer");
 const { storageOptionsGigs, imageFilter } = require("../common/storageOptions");
 
+const nodecache = require("node-cache");
+const gigCache = new nodecache({ stdTTL: 3599 });
+
 router.put(
   "/:gigID",
   auth,
@@ -168,18 +171,23 @@ router.get("/:gigID", (req, res) => {
 
 router.get("/", auth, (req, res) => {
   const { userID } = res.locals;
-  db.query(
-    `select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id, g.freelancer_id, g.starting_rate, group_concat(gi.image) as images from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id where g.freelancer_id= "${userID}" group by gi.gig_id;`,
-    (e, r) => {
-      if (e) {
-        res.status(400).send({ error: e.message });
-      } else if (r.length > 0) {
-        res.status(200).send(r);
-      } else {
-        res.status(400).send({ error: "Could not find any gigs" });
+  if (gigCache.has(`gigs-${userID}`)) {
+    res.status(200).send(gigCache.get(`${userID}`));
+  } else {
+    db.query(
+      `select g.title,g.details, g.category, g.posting_date, g.gig_rating, g.gig_id, g.freelancer_id, g.starting_rate, group_concat(gi.image) as images from gigs_images gi inner join gigs g on g.gig_id = gi.gig_id where g.freelancer_id= "${userID}" group by gi.gig_id;`,
+      (e, r) => {
+        if (e) {
+          res.status(400).send({ error: e.message });
+        } else if (r.length > 0) {
+          gigCache.set(`gigs-${userID}`, r);
+          res.status(200).send(r);
+        } else {
+          res.status(400).send({ error: "Could not find any gigs" });
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 module.exports = router;
