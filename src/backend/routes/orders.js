@@ -10,6 +10,35 @@ const randtoken = require("rand-token");
 
 //TODO: Implement Company Client Here
 
+//POST REVIEW FOR THE ORDER
+router.put("/review", auth, (req, res) => {
+  const { comment, rating, freelancer, category, orderID } = req.body;
+  db.query(
+    `UPDATE orders SET comment="${comment}",rating="${rating}" WHERE order_id="${orderID}"`,
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+      } else if (r) {
+        res.status(200).send("OK");
+      }
+    }
+  );
+});
+
+router.get("/reviews/:username", auth, (req, res) => {
+  const { username } = req.params;
+  db.query(
+    `SELECT o.order_id , o.comment,o.rating,o.category,c.username as client_name from orders o inner join client c where c.client_id = o.client_id and o.freelancer_username="${username}" and o.comment != "";`,
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+      } else if (r) {
+        res.status(200).send(r);
+      }
+    }
+  );
+});
+
 router.get("/detail/:orderID", auth, (req, res) => {
   const { orderID } = req.params;
   db.query(`SELECT * FROM orders WHERE order_id="${orderID}"`, (er, re) => {
@@ -45,7 +74,7 @@ router.put("/", auth, (req, res) => {
       query = `select o.order_id, o.title , o.category , c.username , p.profile_picture , o.amount , o.order_status, o.ending_date from orders o inner join client c inner join profile p on c.client_id = o.client_id WHERE o.freelancer_username="${username}" and c.client_id = p.profile_id;`;
       break;
     case "client":
-      query = `select o.order_id, o.title , o.category, o.freelancer_username , p.profile_picture , o.amount , o.order_status, o.ending_date from orders o inner join freelancer f inner join profile p on f.username = o.freelancer_username WHERE o.client_id="${userID}" and f.freelancer_id = p.profile_id;`;
+      query = `select o.comment, o.order_id, o.title , o.category, o.freelancer_username , p.profile_picture , o.amount , o.order_status, o.ending_date from orders o inner join freelancer f inner join profile p on f.username = o.freelancer_username WHERE o.client_id="${userID}" and f.freelancer_id = p.profile_id;`;
       break;
   }
 

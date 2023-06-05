@@ -112,6 +112,29 @@ CREATE TABLE `company_client` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `custom_offers`
+--
+
+DROP TABLE IF EXISTS `custom_offers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `custom_offers` (
+  `custom_offer_id` varchar(45) NOT NULL,
+  `message_id` varchar(45) DEFAULT NULL,
+  `gig_id` varchar(45) DEFAULT NULL,
+  `amount` int DEFAULT NULL,
+  `duration` int DEFAULT NULL,
+  `title` varchar(45) DEFAULT NULL,
+  `is_accepted` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`custom_offer_id`),
+  KEY `message_id_idx` (`message_id`),
+  KEY `gig_id_idx` (`gig_id`),
+  CONSTRAINT `gig_id` FOREIGN KEY (`gig_id`) REFERENCES `gigs` (`gig_id`),
+  CONSTRAINT `message_id` FOREIGN KEY (`message_id`) REFERENCES `messages` (`message_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `freelancer`
 --
 
@@ -203,6 +226,7 @@ CREATE TABLE `jobs` (
   `starting_amount` int DEFAULT NULL,
   `current_highest_bidder` varchar(45) DEFAULT NULL,
   `duration` int DEFAULT NULL,
+  `quiz_data` json DEFAULT NULL,
   PRIMARY KEY (`job_id`),
   UNIQUE KEY `title_UNIQUE` (`title`),
   KEY `jobs_client_id_idx` (`client_id`),
@@ -265,22 +289,6 @@ CREATE TABLE `order_files` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `order_revisions`
---
-
-DROP TABLE IF EXISTS `order_revisions`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `order_revisions` (
-  `revision_id` varchar(45) NOT NULL,
-  `order_id` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`revision_id`),
-  KEY `order_revisions_order_id_idx` (`order_id`),
-  CONSTRAINT `order_revisions_order_id` FOREIGN KEY (`order_id`) REFERENCES `orders` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `orders`
 --
 
@@ -298,6 +306,8 @@ CREATE TABLE `orders` (
   `category` varchar(45) DEFAULT NULL,
   `title` varchar(100) DEFAULT NULL,
   `freelancer_username` varchar(45) DEFAULT NULL,
+  `comment` varchar(500) DEFAULT NULL,
+  `rating` int DEFAULT NULL,
   PRIMARY KEY (`order_id`),
   KEY `orders_company_client_id_idx` (`company_client_id`),
   KEY `orders_client_id_idx` (`client_id`),
@@ -335,6 +345,21 @@ CREATE TABLE `profile` (
   `user_type` varchar(45) DEFAULT NULL,
   `registration_date` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`profile_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `quiztakers`
+--
+
+DROP TABLE IF EXISTS `quiztakers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `quiztakers` (
+  `quiztaker_id` varchar(45) NOT NULL,
+  `job_id` varchar(45) DEFAULT NULL,
+  `freelancer_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`quiztaker_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -416,4 +441,4 @@ CREATE TABLE `verification_images` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-19  0:16:13
+-- Dump completed on 2023-06-05 13:06:43

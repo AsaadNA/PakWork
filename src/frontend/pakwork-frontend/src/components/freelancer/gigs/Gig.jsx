@@ -102,8 +102,7 @@ const Gig = () => {
               <h5>About This Gig</h5>
               <p style={{ overflowWrap: "anywhere" }}>{gigData.details}</p>
               <hr></hr>
-              <h5>Customer Reviews</h5>
-              <Reviews></Reviews>
+              <Reviews username={gigData.username}></Reviews>
             </Col>
             <Col md={5}>
               <div className="gig-price-container p-4">

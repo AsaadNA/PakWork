@@ -29,6 +29,32 @@ const Orders = () => {
   const [FilteredOrders, setFilteredOrders] = useState([]);
   const [sortState, setsortState] = useState("hightolow");
 
+  const handleReview = async (data) => {
+    let comment = prompt("Your Comment");
+    let rating = prompt("Your Rating");
+    const { category, orderID } = data;
+
+    let response = await axios.put(
+      `/orders/review`,
+      {
+        comment,
+        rating,
+        category: category === null ? "Buyer Request" : category,
+        orderID,
+      },
+      {
+        headers: {
+          "x-access-token": localStorage.getItem("userToken"),
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      alert("Review Posted !");
+      window.location.reload();
+    }
+  };
+
   const fetchOrders = async () => {
     let result = await axios.put(
       "/orders/",
@@ -44,6 +70,7 @@ const Orders = () => {
 
     if (result.status === 200) {
       setOrders(result.data);
+      console.log(result.data);
       setFilteredOrders(result.data);
     }
   };
@@ -249,6 +276,24 @@ const Orders = () => {
                         View Details
                       </NavLink>
                     </td>
+                    {order.order_status === "Delivered" &&
+                    userType === "client" &&
+                    order.comment === null ? (
+                      <td>
+                        <NavLink
+                          onClick={() => {
+                            handleReview({
+                              category: order.category,
+                              orderID: order.order_id,
+                            });
+                          }}
+                          className="navlink"
+                          style={{ fontWeight: "bold" }}
+                        >
+                          Give Review
+                        </NavLink>
+                      </td>
+                    ) : null}
                   </tr>
                 );
               })}

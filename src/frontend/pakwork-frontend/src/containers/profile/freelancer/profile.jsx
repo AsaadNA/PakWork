@@ -99,7 +99,11 @@ const FreelancerProfile = () => {
                   </Col>
                   <Col md={8}>
                     <Gigs></Gigs>
-                    <Reviews></Reviews>
+                    <Reviews
+                      username={
+                        JSON.parse(localStorage.getItem("user"))["username"]
+                      }
+                    ></Reviews>
                   </Col>
                 </Row>
               </Container>
