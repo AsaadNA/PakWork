@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Row, Col, Card, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
 import {
   FaUser,
   FaPlus,
@@ -17,6 +19,8 @@ import axios from "../../../Api/Api";
 import moment from "moment/moment";
 
 const ClientJobs = () => {
+  const navigate = useNavigate();
+
   const { handleShowCreateClientJobModal, handleShowEditClientJobModal } =
     useContext(ClientJobModalContext);
 
@@ -37,6 +41,7 @@ const ClientJobs = () => {
     });
 
     if (response.status === 200) {
+      // console.log(JSON.parse(response.data[0]["quiz_data"]));
       setJobs(response.data);
     }
   };
@@ -70,6 +75,18 @@ const ClientJobs = () => {
       }
     } catch (err) {
       console.log(err.message);
+    }
+  };
+
+  const onQuizDelete = async (jobID) => {
+    let response = await axios.delete(`jobs/${jobID}/quiz`, {
+      headers: {
+        "x-access-token": localStorage.getItem("userToken"),
+      },
+    });
+
+    if (response.status === 200) {
+      navigate("/");
     }
   };
 
@@ -306,6 +323,33 @@ const ClientJobs = () => {
                 Delete Job &nbsp;
                 <FaAngleDoubleRight></FaAngleDoubleRight>
               </p>
+              {j.quiz_data !== null ? (
+                <p
+                  onClick={() => onQuizDelete(j.job_id)}
+                  className="text-danger ms-4"
+                  style={{
+                    cursor: "pointer",
+                    fontWeight: "",
+                  }}
+                >
+                  Delete Quiz &nbsp;
+                  <FaAngleDoubleRight></FaAngleDoubleRight>
+                </p>
+              ) : (
+                <p
+                  onClick={() => {
+                    navigate(`/job/${j.job_id}/add-quiz`);
+                  }}
+                  className="text-success ms-4"
+                  style={{
+                    cursor: "pointer",
+                    fontWeight: "",
+                  }}
+                >
+                  Add Quiz &nbsp;
+                  <FaAngleDoubleRight></FaAngleDoubleRight>
+                </p>
+              )}
             </Card.Footer>
           </Card>
         </Col>

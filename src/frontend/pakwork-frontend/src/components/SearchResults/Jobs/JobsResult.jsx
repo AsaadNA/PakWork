@@ -18,6 +18,7 @@ import axios from "../../../Api/Api";
 import moment from "moment/moment";
 import Countdown from "react-countdown";
 import { SocketContext } from "../../../contexts/socket";
+import { useNavigate } from "react-router-dom";
 
 const JobsResult = () => {
   const [jobs, setjobs] = useState([]);
@@ -28,6 +29,8 @@ const JobsResult = () => {
 
   const socket = useContext(SocketContext);
   const [isConnected, setIsConnected] = useState(socket.connected);
+
+  const navigate = useNavigate();
 
   const fetchAllJobs = async () => {
     let response = await axios.get("/jobs/all");
@@ -82,15 +85,40 @@ const JobsResult = () => {
   }, [jobs, isConnected]);
 
   //HANDLE BIDDING POST
-  const onPostBid = (e) => {
+  const onPostBid = async (e) => {
     let jobID = e.target.parentNode.parentNode.id;
-    let bidAmount = prompt(`Enter Bid Amount `);
-    if (bidAmount) {
-      socket.emit("bid", {
-        jobID: jobID,
-        amount: bidAmount,
-        username: JSON.parse(localStorage.getItem("user"))["username"],
-      });
+    let userID = JSON.parse(localStorage.getItem("user"))["freelancer_id"];
+
+    //Check if user has taken the test
+    let response = await axios.get(`/jobs/${userID}/${jobID}/test-taken`, {
+      headers: {
+        "x-access-token": localStorage.getItem("userToken"),
+      },
+    });
+
+    const { status, data } = response;
+
+    //Test not assigned or test has been taken then we can bid
+    if (status === 200 && (data === "TAKEN" || data === "NOT ASSIGNED")) {
+      let bidAmount = prompt(`Enter Bid Amount `);
+      if (bidAmount) {
+        socket.emit("bid", {
+          jobID: jobID,
+          amount: bidAmount,
+          username: JSON.parse(localStorage.getItem("user"))["username"],
+        });
+      }
+    }
+
+    //Otherwise we have to take the test
+    else if (status === 200 && data === "NOT TAKEN") {
+      let text =
+        "A test has been assigned to this job. Do you want to take the test ?";
+
+      //If confirmed navigate to the testing page
+      if (window.confirm(text) == true) {
+        navigate(`/job/${jobID}/quiz`);
+      }
     }
   };
 

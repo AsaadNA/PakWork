@@ -51,7 +51,7 @@ app.use(
 app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(morgan("dev"));
+//app.use(morgan("dev"));
 
 app.use(express.static(__dirname + "/resources/"));
 
@@ -64,7 +64,7 @@ const limiter = rateLimiter.rateLimit({
   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
 });
 
-app.use(limiter);
+//app.use(limiter);
 
 app.use("/api/v1/auth/", authRoutes);
 app.use("/api/v1/profile/", profileRoutes);

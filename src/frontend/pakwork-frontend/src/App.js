@@ -23,8 +23,9 @@ import Request from "./components/requests/Request";
 import OrderPage from "./components/order-management/Order/OrderPage";
 import Orders from "./components/order-management/Orders";
 import Chat from "./components/chat/Chat";
+import QuizGen from "./components/quiz/QuizGen";
+import QuizTaker from "./components/quiz/QuizTaker";
 import { SocketContext, socket } from "./contexts/socket";
-import Footer from "./components/footer/Footer";
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -43,6 +44,16 @@ function App() {
             <Fragment>
               <Routes>
                 <Route element={<AnimatedLayout></AnimatedLayout>}>
+                  <Route
+                    path="/job/:jobID/add-quiz"
+                    exact
+                    element={<QuizGen></QuizGen>}
+                  ></Route>
+                  <Route
+                    path="/job/:jobID/quiz"
+                    exact
+                    element={<QuizTaker></QuizTaker>}
+                  ></Route>
                   <Route path="/" exact element={<IsLoggedIn></IsLoggedIn>}>
                     <Route path="/" exact element={<Home></Home>}></Route>
                   </Route>
@@ -149,6 +160,11 @@ function App() {
                       element={<Chat></Chat>}
                     ></Route>
                   </Route>
+                  <Route
+                    path="/dashboard/inbox"
+                    exact
+                    element={<ProtectedRoute></ProtectedRoute>}
+                  ></Route>
                   <Route path="*" element={<NotFound404></NotFound404>}></Route>
                 </Route>
               </Routes>

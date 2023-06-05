@@ -68,6 +68,55 @@ router.post(
   }
 );
 
+//Update the JSON Data for the quiz
+router.put("/:jobID/quiz", auth, (req, res) => {
+  const { jobID } = req.params;
+  const { quizData } = req.body;
+
+  var responseJson = JSON.stringify(quizData);
+
+  db.query(
+    `UPDATE jobs SET quiz_data=? WHERE job_id="${jobID}"`,
+    [responseJson],
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+        res.status(400).send({
+          error: e.message,
+        });
+      } else if (r) {
+        res.status(200).send("OK");
+      }
+    }
+  );
+});
+
+//Delete the JSON Data for the quiz in the job
+//also all the quiztaker for that specific JOB
+router.delete("/:jobID/quiz", auth, (req, res) => {
+  const { jobID } = req.params;
+  db.query(
+    `UPDATE jobs SET quiz_data=? WHERE job_id="${jobID}"`,
+    [null],
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+        res.status(400).send({
+          error: e.message,
+        });
+      } else if (r) {
+        db.query(`DELETE from quiztakers WHERE job_id="${jobID}"`, (e, r) => {
+          if (e) {
+            console.log(e.message);
+          } else if (r) {
+            res.status(200).send("OK");
+          }
+        });
+      }
+    }
+  );
+});
+
 router.put(
   "/:jobID",
   auth,
@@ -155,9 +204,72 @@ router.delete("/:jobID", auth, (req, res) => {
   );
 });
 
+/*
+  When u click Post BID .. send a request to backend to check
+  if quiz taken or not .. if not then ask to take a quiz
+  redirect it if passed then u can bid otherwise the same error
+*/
+
+router.get("/:jobID/quiz", auth, (req, res) => {
+  const { jobID } = req.params;
+  db.query(`SELECT quiz_data from jobs WHERE job_id="${jobID}"`, (e, r) => {
+    if (e) {
+      console.log(e.message);
+    } else if (r.length > 0) {
+      res.status(200).send(r[0]["quiz_data"]);
+    }
+  });
+});
+
+//Checking if test needs to be taken or not
+router.get("/:userID/:jobID/test-taken", auth, (req, res) => {
+  const { userID, jobID } = req.params;
+  db.query(`SELECT quiz_data from jobs where job_id="${jobID}"`, (e, r) => {
+    if (e) {
+      console.log(e.message);
+      res.status(400).send({ error: e.message });
+    } else if (r[0]["quiz_data"] === null) {
+      res.status(200).send("NOT ASSIGNED");
+    } else {
+      db.query(
+        `SELECT * from quiztakers WHERE job_id="${jobID}" and freelancer_id="${userID}"`,
+        (e, r) => {
+          if (e) {
+            console.log(e.message);
+            res.status(400).send({ error: e.message });
+          } else if (r.length > 0) {
+            res.status(200).send("TAKEN");
+          } else {
+            res.status(200).send("NOT TAKEN");
+          }
+        }
+      );
+    }
+  });
+});
+
+//Change freelancer quiz taken status
+router.put("/:jobID/quiz-passed", (req, res) => {
+  const { jobID } = req.params;
+  const { freelancerID } = req.body;
+
+  let generatedID = randtoken.uid(12);
+  db.query(
+    `INSERT INTO quiztakers (quiztaker_id,job_id,freelancer_id) VALUES ("${generatedID}","${jobID}" , "${freelancerID}");`,
+    (e, r) => {
+      if (e) {
+        console.log(e.message);
+      } else if (r) {
+        res.status(200).send("OK");
+      }
+    }
+  );
+});
+
+//Get all jobs for the JobResult component
 router.get("/all", (req, res) => {
   db.query(
-    `select j.job_id , j.description , j.title, j.category,j.duration, j.starting_date , j.ending_date, j.starting_amount, j.current_highest_bidder , p.profile_picture from jobs j inner join profile p on j.client_id = p.profile_id or j.company_client_id = p.profile_id`,
+    `select j.job_id , j.quiz_data , j.description , j.title, j.category,j.duration, j.starting_date , j.ending_date, j.starting_amount, j.current_highest_bidder , p.profile_picture from jobs j inner join profile p on j.client_id = p.profile_id or j.company_client_id = p.profile_id`,
     (e, r) => {
       if (e) {
         res.status(400).send({ error: e.message });
@@ -191,3 +303,26 @@ router.get("/", auth, (req, res) => {
 });
 
 module.exports = router;
+
+/*
+
+
+  1. Find all the jobs whose test are taken
+  2. Find all the jobs whose test are not taken
+  3. Update the all jobs according to the above two
+  //Update stuff related to quiz
+        let data = JSON.parse(JSON.stringify(r));
+        let updatedData = data.map((d) => {
+          if (d["quiz_data"] !== null) {
+            d["quiz_assigned"] = true;
+            d["quiz_taken"] = false;
+            d["quiz_data"] = null;
+          } else {
+            d["quiz_assigned"] = false;
+          }
+
+          return d;
+        });
+
+        res.status(200).send(updatedData);
+*/
