@@ -1,9 +1,8 @@
 import { useParams, useNavigate } from "react-router-dom";
-
 import React, { useState, useEffect } from "react";
-import NavBar from "../navbar/NavBar";
 import axios from "../../Api/Api";
 import Quiz from "react-quiz-component";
+import { Card, Button } from "react-bootstrap";
 
 //Disabled right click
 //Detecting switch tab
@@ -43,15 +42,15 @@ const QuizTaker = () => {
 
   //This attaches the function to the focus blur window events
   useEffect(() => {
-    window.addEventListener("focus", onFocus);
-    window.addEventListener("blur", onBlur);
-    // Calls onFocus when the window first loads
-    onFocus();
-    // Specify how to clean up after this effect:
-    return () => {
-      window.removeEventListener("focus", onFocus);
-      window.removeEventListener("blur", onBlur);
-    };
+    // window.addEventListener("focus", onFocus);
+    // window.addEventListener("blur", onBlur);
+    // // Calls onFocus when the window first loads
+    // onFocus();
+    // // Specify how to clean up after this effect:
+    // return () => {
+    //   window.removeEventListener("focus", onFocus);
+    //   window.removeEventListener("blur", onBlur);
+    // };
   }, []);
 
   //This prevent the right click from being presssed
@@ -99,14 +98,20 @@ const QuizTaker = () => {
     }
 
     return (
-      <div>
-        <h2>
-          You have completed the quiz. You Got {numberOfCorrectAnswers} out of{" "}
-          {numberOfQuestions} questions.
-        </h2>
-        <h2>
+      <div className="container">
+        <img
+          width="100px"
+          height="300px"
+          src="https://img.icons8.com/external-flatart-icons-flat-flatarticons/150/external-successful-business-and-teamwork-flatart-icons-flat-flatarticons.png"
+          alt="external-successful-business-and-teamwork-flatart-icons-flat-flatarticons"
+        />
+        <h4 className="mt-2">You have completed the quiz.</h4>
+        <p>
+          You Got {numberOfCorrectAnswers} out of {numberOfQuestions} questions.
+        </p>
+        <p>
           You scored {correctPoints} out of {totalPoints}
-        </h2>
+        </p>
         <button
           onClick={() => {
             navigate("/dashboard/available-jobs");
@@ -126,12 +131,31 @@ const QuizTaker = () => {
   return (
     <div>
       {switchTab === true && isQuizFinished === false ? (
-        <div className="pt-5 mt-5 container d-flex align-items-center justify-content-center">
-          <h2>
-            Your Test Has Been Void. Since Window focus is lost. Kindly Refresh
-            Page and refrain from doing the same mistake
-          </h2>
-        </div>
+        <Card className="pt-5 mt-5 container d-flex align-items-center justify-content-center">
+          <Card.Body>
+            <img
+              width="150"
+              height="150"
+              src="https://img.icons8.com/external-others-agus-raharjo/64/external-ban-sign-flat-website-ui-others-agus-raharjo.png"
+              alt="external-ban-sign-flat-website-ui-others-agus-raharjo"
+            />
+            <h4 className="text-center">Your Test Has Been Void</h4>
+            <p className="text-center">
+              Please refresh the page and refrain from repeating the same
+              mistake.
+            </p>
+            <p className="text-center text-black-50">
+              <strong>Reason:</strong> User Tried to Switch Tabs
+            </p>
+            <Button
+              onClick={() => navigate("/")}
+              variant={"danger"}
+              className="w-50"
+            >
+              Exit Test
+            </Button>
+          </Card.Body>
+        </Card>
       ) : quizData !== null ? (
         <div className="pt-5 mt-5 container d-flex align-items-center justify-content-center">
           <Quiz

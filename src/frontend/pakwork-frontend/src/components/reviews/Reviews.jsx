@@ -23,7 +23,7 @@ const Reviews = ({ username }) => {
   }, []);
 
   return (
-    <Col md={12} className="mt-2 mb-2">
+    <Col md={12} className="mt-2 mb-2" style={{ textAlign: "left" }}>
       {Reviews.length !== 0 ? (
         <h5>Recent Reviews</h5>
       ) : (
@@ -52,7 +52,7 @@ const Reviews = ({ username }) => {
                       fontWeight: "bold",
                     }}
                   >
-                    <span
+                    {/* <span
                       className="me-2"
                       style={{ fontSize: "18px", fontWeight: "500" }}
                     >
@@ -61,7 +61,7 @@ const Reviews = ({ username }) => {
                         ? "Buyer Request"
                         : Review.category}{" "}
                       )
-                    </span>
+                    </span> */}
                     {Review.rating}
                     <FaStar
                       style={{
@@ -71,12 +71,12 @@ const Reviews = ({ username }) => {
                       }}
                     ></FaStar>
                   </span>
-                  <span
+                  {/* <span
                     className="ms-2"
                     style={{ fontSize: "18px", fontWeight: "500" }}
                   >
                     #{Review.order_id}
-                  </span>
+                  </span> */}
                 </Card.Header>
                 <Card.Body className="d-flex justify-content-left">
                   <q
