@@ -1,0 +1,44 @@
+version: "3"
+name: "pakwork-container"
+services:
+  backend:
+    image: ahsantahseen/pakwork-backend:latest
+    depends_on:
+      - mysql
+      - mongodb
+    networks:
+      - pakworknetwork
+
+  frontend:
+    image: ahsantahseen/pakwork-frontend:latest
+    ports:
+      - "80:80" # Map host port to container port
+    depends_on:
+      - backend
+    networks:
+      - pakworknetwork
+
+  mysql:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: pakwork
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    networks:
+      - pakworknetwork
+
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    networks:
+      - pakworknetwork
+
+networks:
+  pakworknetwork:
+    driver: bridge

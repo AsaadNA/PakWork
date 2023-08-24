@@ -1,0 +1,31 @@
+# Use an official Node.js runtime as the base image for building the React app
+FROM node:16 as build
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json to the working directory
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install --legacy-peer-deps
+
+# Copy the rest of the application code
+COPY . .
+
+# Copy the .env file for the frontend
+COPY ./src/.env .env
+
+# Build the React app
+RUN npm run build
+
+# Use a smaller Nginx image for serving the built React app
+FROM nginx:alpine
+
+# Copy the built React app from the previous stage to the nginx html directory
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose the default Nginx port
+EXPOSE 80
+
+# The Nginx server starts automatically, no need to specify a CMD
